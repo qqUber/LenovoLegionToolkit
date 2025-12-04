@@ -1,7 +1,9 @@
-﻿; *** Inno Setup version 6.1.0+ arabic messages ***
+﻿; *** Inno Setup version 6.5.0+ arabic messages ***
 ;
 ; Translated by nacer baaziz (nacerstile@gmail.com)
 ;   http://www.jrsoftware.org/files/istrans/
+;
+; Updated for Inno Setup 6.5.0+ compatibility
 ;
 ; Note: When translating this text, do not add periods (.) to the end of
 ; messages that didn't have them already, because on those messages Inno
@@ -212,16 +214,44 @@ ReadyMemoGroup=مجلد قائمة ابدأ:
 ReadyMemoTasks=مهام إضافية:
 
 ; *** TDownloadWizardPage wizard page and DownloadTemporaryFile
-DownloadingLabel=تحميل الملفات الإضافية...
+DownloadingLabel2=تحميل الملفات الإضافية...
 ButtonStopDownload=إي&قاف التحميل
 StopDownload=هل أنت متأكد من أنك ترغب في إيقاف التحميل؟
 ErrorDownloadAborted=تم إلغاء التحميل
 ErrorDownloadFailed=فشل التحميل: %1 %2
 ErrorDownloadSizeFailed=خطأ في قراءة الحجم: %1 %2
-ErrorFileHash1=خطأ في قراءة الهاش الخاص بالملف: %1
-ErrorFileHash2=خطأ في هاش الملف: كان من المتوقع أن يكن : %1, بينما تم إيجاد : %2
+ErrorDownloading=An error occurred while trying to download a file
 ErrorProgress=خطأ في الحصول على نسبة التقدم: %1 من %2
 ErrorFileSize=خطأ في حجم الملف: المتوقع هو : %1, الحجم الذي وجدناه هو : %2
+
+; *** TExtractionWizardPage wizard page
+ExtractingLabel=Extracting files...
+ButtonStopExtraction=&Stop extraction
+StopExtraction=Are you sure you want to stop the extraction?
+ErrorExtractionAborted=Extraction aborted
+ErrorExtractionFailed=Extraction failed: %1
+ErrorExtracting=An error occurred while trying to extract an archive
+
+; *** Archive extraction failure details
+ArchiveIncorrectPassword=The password is incorrect
+ArchiveIsCorrupted=The archive is corrupted
+ArchiveUnsupportedFormat=The archive format is unsupported
+
+; *** Source verification
+SourceVerificationFailed=Verification of the source file failed: %1
+VerificationSignatureDoesntExist=The signature file does not exist
+VerificationSignatureInvalid=The signature file is invalid
+VerificationKeyNotFound=The signature file uses an unknown key
+VerificationFileNameIncorrect=The name of the file is incorrect
+VerificationFileTagIncorrect=The tag of the file is incorrect
+VerificationFileSizeIncorrect=The size of the file is incorrect
+VerificationFileHashIncorrect=The hash of the file is incorrect
+
+; *** Status messages
+StatusDownloadFiles=Downloading files...
+RetryCancelSelectAction=Select action
+RetryCancelRetry=&Try again
+RetryCancelCancel=Cancel
 
 ; *** "Preparing to Install" wizard page
 WizardPreparing=التحضير للتثبيت

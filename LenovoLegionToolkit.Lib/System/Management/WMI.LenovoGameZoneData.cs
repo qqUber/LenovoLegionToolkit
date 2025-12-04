@@ -179,6 +179,23 @@ public static partial class WMI
             [],
             pdc => Convert.ToInt32(pdc["Data"].Value));
 
+        public static Task<int> IsSupportCpuOCAsync() => CallAsync("root\\WMI",
+            $"SELECT * FROM LENOVO_GAMEZONE_DATA",
+            "IsSupportCpuOC",
+            [],
+            pdc => Convert.ToInt32(pdc["Data"].Value));
+
+        public static Task<int> GetCpuOCStatusAsync() => CallAsync("root\\WMI",
+            $"SELECT * FROM LENOVO_GAMEZONE_DATA",
+            "getCpuOCStatus",
+            [],
+            pdc => Convert.ToInt32(pdc["Data"].Value));
+
+        public static Task SetCpuOCStatusAsync(int data) => CallAsync("root\\WMI",
+            $"SELECT * FROM LENOVO_GAMEZONE_DATA",
+            "setCpuOCStatus",
+            new() { { "Data", data } });
+
         public static Task<int> GetPowerChargeModeAsync() => CallAsync("root\\WMI",
             $"SELECT * FROM LENOVO_GAMEZONE_DATA",
             "GetPowerChargeMode",

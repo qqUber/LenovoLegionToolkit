@@ -18,6 +18,7 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.CLI;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
+using LenovoLegionToolkit.WPF.Settings;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows;
 using LenovoLegionToolkit.WPF.Windows.Settings;
@@ -28,6 +29,7 @@ public partial class SettingsPage
 {
     private readonly ApplicationSettings _settings = IoCContainer.Resolve<ApplicationSettings>();
     private readonly IntegrationsSettings _integrationsSettings = IoCContainer.Resolve<IntegrationsSettings>();
+    private readonly DashboardSettings _dashboardSettings = IoCContainer.Resolve<DashboardSettings>();
 
     private readonly VantageDisabler _vantageDisabler = IoCContainer.Resolve<VantageDisabler>();
     private readonly LegionZoneDisabler _legionZoneDisabler = IoCContainer.Resolve<LegionZoneDisabler>();
@@ -91,6 +93,13 @@ public partial class SettingsPage
 
         UpdateAccentColorPicker();
         _accentColorSourceComboBox.SetItems(Enum.GetValues<AccentColorSource>(), _settings.Store.AccentColorSource, t => t.GetDisplayName());
+
+        _sensorsLayoutComboBox.SetItems(Enum.GetValues<SensorsLayout>(), _dashboardSettings.Store.SensorsLayout, t => t switch
+        {
+            SensorsLayout.Cards => Resource.SensorsLayout_Cards,
+            SensorsLayout.Compact => Resource.SensorsLayout_Compact,
+            _ => throw new ArgumentOutOfRangeException(nameof(t))
+        });
 
         _autorunComboBox.SetItems(Enum.GetValues<AutorunState>(), Autorun.State, t => t.GetDisplayName());
         _minimizeToTrayToggle.IsChecked = _settings.Store.MinimizeToTray;
@@ -174,6 +183,7 @@ public partial class SettingsPage
 
         _temperatureComboBox.Visibility = Visibility.Visible;
         _themeComboBox.Visibility = Visibility.Visible;
+        _sensorsLayoutComboBox.Visibility = Visibility.Visible;
         _autorunComboBox.Visibility = Visibility.Visible;
         _minimizeToTrayToggle.Visibility = Visibility.Visible;
         _minimizeOnCloseToggle.Visibility = Visibility.Visible;
@@ -187,6 +197,21 @@ public partial class SettingsPage
         _hwinfoIntegrationToggle.Visibility = Visibility.Visible;
         _cliInterfaceToggle.Visibility = Visibility.Visible;
         _cliPathToggle.Visibility = Visibility.Visible;
+
+        // Custom Background settings
+        _customBackgroundToggle.IsChecked = _settings.Store.CustomBackgroundEnabled;
+        _backgroundOpacitySlider.Value = _settings.Store.CustomBackgroundOpacity;
+        _backgroundOpacityText.Text = $"{(int)(_settings.Store.CustomBackgroundOpacity * 100)}%";
+        _backgroundBlurToggle.IsChecked = _settings.Store.CustomBackgroundBlur;
+        
+        // Tint color picker
+        if (_settings.Store.CustomBackgroundTint.HasValue)
+        {
+            var tint = _settings.Store.CustomBackgroundTint.Value;
+            _backgroundTintPicker.SelectedColor = System.Windows.Media.Color.FromRgb(tint.R, tint.G, tint.B);
+        }
+        
+        UpdateBackgroundButtonStates();
 
         _isRefreshing = false;
     }
@@ -258,6 +283,123 @@ public partial class SettingsPage
         UpdateAccentColorPicker();
 
         _themeManager.Apply();
+    }
+
+    private void SensorsLayoutComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        if (!_sensorsLayoutComboBox.TryGetSelectedItem(out SensorsLayout layout))
+            return;
+
+        _dashboardSettings.Store.SensorsLayout = layout;
+        _dashboardSettings.SynchronizeStore();
+    }
+
+    private void SelectBackgroundButton_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = Resource.SettingsPage_CustomBackground_SelectImage,
+            Filter = "Image files (*.png;*.jpg;*.jpeg;*.bmp;*.gif)|*.png;*.jpg;*.jpeg;*.bmp;*.gif|All files (*.*)|*.*",
+            CheckFileExists = true
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+            _settings.Store.CustomBackgroundPath = dialog.FileName;
+            _settings.SynchronizeStore();
+            UpdateBackgroundButtonStates();
+            ApplyBackgroundToMainWindow();
+        }
+    }
+
+    private void ClearBackgroundButton_Click(object sender, RoutedEventArgs e)
+    {
+        _settings.Store.CustomBackgroundPath = null;
+        _settings.Store.CustomBackgroundEnabled = false;
+        _settings.SynchronizeStore();
+        
+        _customBackgroundToggle.IsChecked = false;
+        UpdateBackgroundButtonStates();
+        ApplyBackgroundToMainWindow();
+    }
+
+    private void CustomBackgroundToggle_Click(object sender, RoutedEventArgs e)
+    {
+        if (string.IsNullOrEmpty(_settings.Store.CustomBackgroundPath))
+        {
+            _customBackgroundToggle.IsChecked = false;
+            return;
+        }
+
+        _settings.Store.CustomBackgroundEnabled = _customBackgroundToggle.IsChecked == true;
+        _settings.SynchronizeStore();
+        ApplyBackgroundToMainWindow();
+    }
+
+    private void BackgroundOpacitySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (_isRefreshing || _backgroundOpacityText == null)
+            return;
+
+        _settings.Store.CustomBackgroundOpacity = _backgroundOpacitySlider.Value;
+        _settings.SynchronizeStore();
+        
+        _backgroundOpacityText.Text = $"{(int)(_backgroundOpacitySlider.Value * 100)}%";
+        ApplyBackgroundToMainWindow();
+    }
+
+    private void BackgroundBlurToggle_Click(object sender, RoutedEventArgs e)
+    {
+        _settings.Store.CustomBackgroundBlur = _backgroundBlurToggle.IsChecked == true;
+        _settings.SynchronizeStore();
+        ApplyBackgroundToMainWindow();
+    }
+
+    private void BackgroundTintPicker_Changed(object sender, EventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        var color = _backgroundTintPicker.SelectedColor;
+        _settings.Store.CustomBackgroundTint = new RGBColor(color.R, color.G, color.B);
+        _settings.SynchronizeStore();
+        ApplyBackgroundToMainWindow();
+    }
+
+    private void ClearTintButton_Click(object sender, RoutedEventArgs e)
+    {
+        _settings.Store.CustomBackgroundTint = null;
+        _settings.SynchronizeStore();
+        _backgroundTintPicker.SelectedColor = System.Windows.Media.Colors.Transparent;
+        ApplyBackgroundToMainWindow();
+    }
+
+    private void UpdateBackgroundButtonStates()
+    {
+        var hasBackground = !string.IsNullOrEmpty(_settings.Store.CustomBackgroundPath);
+        _clearBackgroundButton.IsEnabled = hasBackground;
+        _customBackgroundToggle.IsEnabled = hasBackground;
+        
+        if (hasBackground)
+        {
+            var fileName = System.IO.Path.GetFileName(_settings.Store.CustomBackgroundPath);
+            _selectBackgroundButton.Content = fileName?.Length > 20 ? fileName[..17] + "..." : fileName;
+        }
+        else
+        {
+            _selectBackgroundButton.Content = Resource.SettingsPage_CustomBackground_SelectImage;
+        }
+    }
+
+    private void ApplyBackgroundToMainWindow()
+    {
+        if (Application.Current.MainWindow is MainWindow mainWindow)
+        {
+            mainWindow.ApplyCustomBackground();
+        }
     }
 
     private void UpdateAccentColorPicker()

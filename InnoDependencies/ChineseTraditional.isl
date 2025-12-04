@@ -211,16 +211,44 @@ ReadyMemoGroup=「開始」功能表資料夾:
 ReadyMemoTasks=附加工作:
 
 ; *** TDownloadWizardPage wizard page and DownloadTemporaryFile
-DownloadingLabel=正在下載額外檔案...
+DownloadingLabel2=正在下載額外檔案...
 ButtonStopDownload=停止下載 (&S)
 StopDownload=您確定要停止下載嗎？
 ErrorDownloadAborted=已停止下載
 ErrorDownloadFailed=下載失敗: %1 %2
 ErrorDownloadSizeFailed=取得檔案大小失敗: %1 %2
-ErrorFileHash1=檔案雜湊失敗: %1
-ErrorFileHash2=檔案雜湊無效: 必須為 %1，收到 %2
+ErrorDownloading=下載檔案時發生錯誤
 ErrorProgress=進度無效: %1 之 %2
 ErrorFileSize=檔案大小無效: 必須為 %1，收到 %2
+
+; *** TExtractionWizardPage wizard page
+ExtractingLabel=正在解壓縮檔案...
+ButtonStopExtraction=停止解壓縮 (&S)
+StopExtraction=您確定要停止解壓縮嗎？
+ErrorExtractionAborted=已停止解壓縮
+ErrorExtractionFailed=解壓縮失敗: %1
+ErrorExtracting=解壓縮時發生錯誤
+
+; *** Archive extraction failure details
+ArchiveIncorrectPassword=密碼不正確
+ArchiveIsCorrupted=壓縮檔已損壞
+ArchiveUnsupportedFormat=不支援的壓縮格式
+
+; *** Source verification
+SourceVerificationFailed=來源檔案驗證失敗: %1
+VerificationSignatureDoesntExist=簽章檔案不存在
+VerificationSignatureInvalid=簽章檔案無效
+VerificationKeyNotFound=簽章檔案使用未知金鑰
+VerificationFileNameIncorrect=檔案名稱不正確
+VerificationFileTagIncorrect=檔案標籤不正確
+VerificationFileSizeIncorrect=檔案大小不正確
+VerificationFileHashIncorrect=檔案雜湊不正確
+
+; *** Status messages
+StatusDownloadFiles=正在下載檔案...
+RetryCancelSelectAction=選擇動作
+RetryCancelRetry=重試 (&T)
+RetryCancelCancel=取消
 
 ; *** "Preparing to Install" wizard page
 WizardPreparing=準備安裝程式

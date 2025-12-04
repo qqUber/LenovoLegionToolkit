@@ -65,6 +65,22 @@ public static partial class WMI
                     pdc => Convert.ToInt32(pdc["AddressWidth"].Value)).ConfigureAwait(false);
                 return result.First();
             }
+
+            public static async Task<string> GetManufacturerAsync()
+            {
+                var result = await ReadAsync("root\\CIMV2",
+                    $"SELECT * FROM Win32_Processor",
+                    pdc => (string)pdc["Manufacturer"].Value).ConfigureAwait(false);
+                return result.First();
+            }
+
+            public static async Task<string> GetNameAsync()
+            {
+                var result = await ReadAsync("root\\CIMV2",
+                    $"SELECT * FROM Win32_Processor",
+                    pdc => (string)pdc["Name"].Value).ConfigureAwait(false);
+                return result.First();
+            }
         }
 
         public static class OperatingSystem

@@ -1,4 +1,4 @@
-﻿<wpfui:UiPage
+<wpfui:UiPage
     x:Class="LenovoLegionToolkit.WPF.Pages.BatteryPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -19,155 +19,275 @@
             FontWeight="Medium"
             Text="{x:Static resources:Resource.BatteryPage_Title}" />
 
-        <StackPanel Margin="0,0,0,24" Orientation="Horizontal">
-            <wpfui:SymbolIcon
-                x:Name="_batteryIcon"
-                FontSize="96"
-                Symbol="Battery024" />
-            <StackPanel
-                Margin="16,0,0,0"
-                VerticalAlignment="Center"
-                Orientation="Vertical">
-                <TextBlock
-                    x:Name="_percentRemaining"
-                    Margin="0,0,0,4"
-                    HorizontalAlignment="Left"
-                    AutomationProperties.HelpText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                    AutomationProperties.Name="{x:Static resources:Resource.BatteryPage_Title}"
-                    FlowDirection="LeftToRight"
-                    Focusable="True"
-                    FontSize="32"
-                    FontWeight="Medium" />
-                <TextBlock
-                    x:Name="_status"
-                    Margin="0,0,0,2"
-                    AutomationProperties.HelpText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                    AutomationProperties.Name="{x:Static resources:Resource.BatteryPage_Title}"
-                    Focusable="True"
-                    FontSize="16"
-                    FontWeight="Medium"
-                    Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
-                <TextBlock
-                    x:Name="_lowBattery"
-                    Margin="0,0,0,2"
-                    Focusable="True"
-                    FontSize="14"
-                    Foreground="{DynamicResource SystemFillColorCautionBrush}"
-                    Text="{x:Static resources:Resource.BatteryPage_LowLevel}"
-                    Visibility="Hidden" />
-                <TextBlock
-                    x:Name="_lowWattageCharger"
-                    Focusable="True"
-                    FontSize="14"
-                    Foreground="{DynamicResource SystemFillColorCautionBrush}"
-                    Text="{x:Static resources:Resource.BatteryPage_LowWattageChargerConnected}"
-                    Visibility="Hidden" />
+        <!-- Main Battery Status Card -->
+        <Border
+            Margin="0,0,0,24"
+            Padding="24"
+            Background="{DynamicResource ControlFillColorDefaultBrush}"
+            CornerRadius="8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Battery Icon and Percentage -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Grid Width="80" Height="40" Margin="0,0,16,0">
+                        <!-- Battery Outline -->
+                        <Border
+                            BorderBrush="{DynamicResource TextFillColorPrimaryBrush}"
+                            BorderThickness="2"
+                            CornerRadius="4"
+                            Width="70"
+                            Height="36"
+                            HorizontalAlignment="Left" />
+                        <!-- Battery Tip -->
+                        <Border
+                            Background="{DynamicResource TextFillColorPrimaryBrush}"
+                            CornerRadius="2"
+                            Width="4"
+                            Height="16"
+                            HorizontalAlignment="Right"
+                            Margin="0,0,0,0" />
+                        <!-- Battery Fill -->
+                        <Border
+                            x:Name="_batteryFill"
+                            Background="{DynamicResource SystemFillColorSuccessBrush}"
+                            CornerRadius="2"
+                            Height="28"
+                            Width="60"
+                            HorizontalAlignment="Left"
+                            Margin="4,0,0,0" />
+                    </Grid>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock
+                            x:Name="_percentRemaining"
+                            FontSize="36"
+                            FontWeight="SemiBold"
+                            FlowDirection="LeftToRight" />
+                        <TextBlock
+                            x:Name="_status"
+                            FontSize="14"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Time Remaining / Warnings -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="32,0,0,0">
+                    <TextBlock
+                        x:Name="_timeRemaining"
+                        FontSize="16"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock
+                        x:Name="_lowBattery"
+                        FontSize="14"
+                        Foreground="{DynamicResource SystemFillColorCautionBrush}"
+                        Text="{x:Static resources:Resource.BatteryPage_LowLevel}"
+                        Visibility="Collapsed" />
+                    <TextBlock
+                        x:Name="_lowWattageCharger"
+                        FontSize="14"
+                        Foreground="{DynamicResource SystemFillColorCautionBrush}"
+                        Text="{x:Static resources:Resource.BatteryPage_LowWattageChargerConnected}"
+                        Visibility="Collapsed" />
+                </StackPanel>
+
+                <!-- Battery Health Ring -->
+                <StackPanel Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <TextBlock
+                        Text="{x:Static resources:Resource.BatteryPage_Health}"
+                        FontSize="12"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        HorizontalAlignment="Center"
+                        Margin="0,0,0,4" />
+                    <Grid Width="60" Height="60">
+                        <wpfui:ProgressRing
+                            x:Name="_healthRing"
+                            Progress="100"
+                            IsIndeterminate="False"
+                            Width="60"
+                            Height="60" />
+                        <TextBlock
+                            x:Name="_healthPercentText"
+                            FontSize="14"
+                            FontWeight="SemiBold"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Battery Modes Section -->
+        <TextBlock
+            Margin="0,0,0,12"
+            FontSize="16"
+            FontWeight="SemiBold"
+            Text="{x:Static resources:Resource.BatteryPage_ChargingSettings}" />
+
+        <custom:CardControl x:Name="_batteryModeCard" Margin="0,0,0,8">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl 
+                    x:Name="_batteryModeHeader"
+                    Title="{x:Static resources:Resource.BatteryModeControl_Title}" 
+                    Subtitle="{x:Static resources:Resource.BatteryModeControl_Message}" />
+            </custom:CardControl.Header>
+        </custom:CardControl>
+
+        <custom:CardControl x:Name="_nightChargeCard" Margin="0,0,0,8">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl 
+                    x:Name="_nightChargeHeader"
+                    Title="{x:Static resources:Resource.BatteryNightChargeModeControl_Title}" 
+                    Subtitle="{x:Static resources:Resource.BatteryNightChargeModeControl_Message}" />
+            </custom:CardControl.Header>
+        </custom:CardControl>
+
+        <custom:CardControl x:Name="_autoRefreshRateCard" Margin="0,0,0,24">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl 
+                    x:Name="_autoRefreshRateHeader"
+                    Title="{x:Static resources:Resource.AutoRefreshRateSwitchingControl_Title}" 
+                    Subtitle="{x:Static resources:Resource.AutoRefreshRateSwitchingControl_Message}" />
+            </custom:CardControl.Header>
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" Margin="0,0,16,0">
+                    <TextBlock Text="{x:Static resources:Resource.AutoRefreshRateSwitchingControl_OnBattery}" 
+                               VerticalAlignment="Center" Margin="0,0,8,0" FontSize="12" />
+                    <ComboBox x:Name="_onBatteryRefreshRateComboBox" MinWidth="100" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,16,0">
+                    <TextBlock Text="{x:Static resources:Resource.AutoRefreshRateSwitchingControl_OnAC}" 
+                               VerticalAlignment="Center" Margin="0,0,8,0" FontSize="12" />
+                    <ComboBox x:Name="_onACRefreshRateComboBox" MinWidth="100" />
+                </StackPanel>
+                <wpfui:ToggleSwitch x:Name="_autoRefreshRateToggle" />
             </StackPanel>
-        </StackPanel>
-
-        <custom:CardControl x:Name="_batteryTemperatureCardControl" Margin="0,0,0,24">
-            <custom:CardControl.Header>
-                <controls:CardHeaderControl Title="{x:Static resources:Resource.BatteryPage_BatteryTemperature_Title}" Subtitle="{x:Static resources:Resource.BatteryPage_BatteryTemperature_Message}" />
-            </custom:CardControl.Header>
-            <TextBlock
-                x:Name="_batteryTemperatureText"
-                AutomationProperties.HelpText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                AutomationProperties.Name="{x:Static resources:Resource.BatteryPage_BatteryTemperature_Title}"
-                FlowDirection="LeftToRight"
-                Focusable="True"
-                FontSize="14" />
         </custom:CardControl>
 
-        <custom:CardControl Margin="0,0,0,8">
-            <custom:CardControl.Header>
-                <controls:CardHeaderControl Title="{x:Static resources:Resource.BatteryPage_DischargeRate_Title}" Subtitle="{x:Static resources:Resource.BatteryPage_DischargeRate_Message}" />
-            </custom:CardControl.Header>
-            <TextBlock
-                x:Name="_batteryDischargeRateText"
-                AutomationProperties.HelpText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                AutomationProperties.Name="{x:Static resources:Resource.BatteryPage_DischargeRate_Title}"
-                FlowDirection="LeftToRight"
-                Focusable="True"
-                FontSize="14" />
-        </custom:CardControl>
+        <!-- Live Stats Section -->
+        <TextBlock
+            Margin="0,0,0,12"
+            FontSize="16"
+            FontWeight="SemiBold"
+            Text="{x:Static resources:Resource.BatteryPage_LiveStatistics}" />
 
-        <custom:CardControl Margin="0,0,0,8">
-            <custom:CardControl.Header>
-                <controls:CardHeaderControl Title="{x:Static resources:Resource.BatteryPage_MinDischargeRate_Title}" Subtitle="{x:Static resources:Resource.BatteryPage_MinDischargeRate_Message}" />
-            </custom:CardControl.Header>
-            <TextBlock
-                x:Name="_batteryMinDischargeRateText"
-                AutomationProperties.HelpText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                AutomationProperties.Name="{x:Static resources:Resource.BatteryPage_MinDischargeRate_Title}"
-                FlowDirection="LeftToRight"
-                Focusable="True"
-                FontSize="14" />
-        </custom:CardControl>
+        <Grid Margin="0,0,0,24">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="8" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <custom:CardControl Margin="0,0,0,8">
-            <custom:CardControl.Header>
-                <controls:CardHeaderControl Title="{x:Static resources:Resource.BatteryPage_MaxDischargeRate_Title}" Subtitle="{x:Static resources:Resource.BatteryPage_MaxDischargeRate_Message}" />
-            </custom:CardControl.Header>
-            <TextBlock
-                x:Name="_batteryMaxDischargeRateText"
-                AutomationProperties.HelpText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                AutomationProperties.Name="{x:Static resources:Resource.BatteryPage_MaxDischargeRate_Title}"
-                FlowDirection="LeftToRight"
-                Focusable="True"
-                FontSize="14" />    
-        </custom:CardControl>
+            <!-- Temperature Card -->
+            <Border Grid.Column="0" Padding="16" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8">
+                <StackPanel>
+                    <TextBlock Text="{x:Static resources:Resource.BatteryPage_Temperature}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="_batteryTemperatureText" FontSize="20" FontWeight="SemiBold" FlowDirection="LeftToRight" />
+                </StackPanel>
+            </Border>
 
-        <custom:CardControl Margin="0,0,0,8">
-            <custom:CardControl.Header>
-                <controls:CardHeaderControl Title="{x:Static resources:Resource.BatteryPage_CurrentCapacity_Title}" Subtitle="{x:Static resources:Resource.BatteryPage_CurrentCapacity_Message}" />
-            </custom:CardControl.Header>
-            <TextBlock
-                x:Name="_batteryCapacityText"
-                AutomationProperties.HelpText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                AutomationProperties.Name="{x:Static resources:Resource.BatteryPage_CurrentCapacity_Title}"
-                FlowDirection="LeftToRight"
-                Focusable="True"
-                FontSize="14" />
-        </custom:CardControl>
+            <!-- Discharge Rate Card -->
+            <Border Grid.Column="2" Padding="16" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8">
+                <StackPanel>
+                    <TextBlock Text="{x:Static resources:Resource.BatteryPage_PowerDraw}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="_batteryDischargeRateText" FontSize="20" FontWeight="SemiBold" FlowDirection="LeftToRight" />
+                </StackPanel>
+            </Border>
 
-        <custom:CardControl Margin="0,0,0,8">
-            <custom:CardControl.Header>
-                <controls:CardHeaderControl Title="{x:Static resources:Resource.BatteryPage_FullChargeCapacity_Title}" Subtitle="{x:Static resources:Resource.BatteryPage_FullChargeCapacity_Message}" />
-            </custom:CardControl.Header>
-            <TextBlock
-                x:Name="_batteryFullChargeCapacityText"
-                AutomationProperties.HelpText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                AutomationProperties.Name="{x:Static resources:Resource.BatteryPage_FullChargeCapacity_Title}"
-                FlowDirection="LeftToRight"
-                Focusable="True"
-                FontSize="14" />
-        </custom:CardControl>
+            <!-- Cycle Count Card -->
+            <Border Grid.Column="4" Padding="16" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8">
+                <StackPanel>
+                    <TextBlock Text="{x:Static resources:Resource.BatteryPage_CycleCount_Title}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="_batteryCycleCountText" FontSize="20" FontWeight="SemiBold" />
+                </StackPanel>
+            </Border>
+        </Grid>
 
-        <custom:CardControl Margin="0,0,0,8">
-            <custom:CardControl.Header>
-                <controls:CardHeaderControl Title="{x:Static resources:Resource.BatteryPage_DesignCapacity_Title}" Subtitle="{x:Static resources:Resource.BatteryPage_DesignCapacity_Message}" />
-            </custom:CardControl.Header>
-            <TextBlock
-                x:Name="_batteryDesignCapacityText"
-                AutomationProperties.HelpText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                AutomationProperties.Name="{x:Static resources:Resource.BatteryPage_DesignCapacity_Title}"
-                FlowDirection="LeftToRight"
-                Focusable="True"
-                FontSize="14" />
-        </custom:CardControl>
+        <!-- Capacity Section -->
+        <TextBlock
+            Margin="0,0,0,12"
+            FontSize="16"
+            FontWeight="SemiBold"
+            Text="{x:Static resources:Resource.BatteryPage_CapacityDetails}" />
 
-        <custom:CardControl Margin="0,0,0,24">
-            <custom:CardControl.Header>
-                <controls:CardHeaderControl Title="{x:Static resources:Resource.BatteryPage_BatteryHealth_Title}" Subtitle="{x:Static resources:Resource.BatteryPage_BatteryHealth_Message}" />
-            </custom:CardControl.Header>
-            <TextBlock
-                x:Name="_batteryHealthText"
-                AutomationProperties.HelpText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                AutomationProperties.Name="{x:Static resources:Resource.BatteryPage_BatteryHealth_Title}"
-                FlowDirection="LeftToRight"
-                Focusable="True"
-                FontSize="14" />    
-        </custom:CardControl>
+        <Border Margin="0,0,0,24" Padding="16" Background="{DynamicResource ControlFillColorDefaultBrush}" CornerRadius="8">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="12" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="16" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Current Capacity -->
+                <StackPanel Grid.Row="0" Grid.Column="0">
+                    <TextBlock Text="{x:Static resources:Resource.BatteryPage_Current}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="_batteryCapacityText" FontSize="18" FontWeight="SemiBold" FlowDirection="LeftToRight" />
+                </StackPanel>
+
+                <!-- Full Charge Capacity -->
+                <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center">
+                    <TextBlock Text="{x:Static resources:Resource.BatteryPage_FullCharge}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="_batteryFullChargeCapacityText" FontSize="18" FontWeight="SemiBold" FlowDirection="LeftToRight" />
+                </StackPanel>
+
+                <!-- Design Capacity -->
+                <StackPanel Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right">
+                    <TextBlock Text="{x:Static resources:Resource.BatteryPage_Design}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="_batteryDesignCapacityText" FontSize="18" FontWeight="SemiBold" FlowDirection="LeftToRight" />
+                </StackPanel>
+
+                <!-- Capacity Bar -->
+                <Grid Grid.Row="2" Grid.ColumnSpan="3">
+                    <ProgressBar
+                        x:Name="_capacityBar"
+                        Height="8"
+                        Maximum="100"
+                        Value="100"
+                        Background="{DynamicResource ControlFillColorSecondaryBrush}" />
+                    <ProgressBar
+                        x:Name="_currentCapacityBar"
+                        Height="8"
+                        Maximum="100"
+                        Value="50"
+                        Foreground="{DynamicResource SystemFillColorSuccessBrush}" />
+                </Grid>
+
+                <!-- Discharge Rate Stats -->
+                <StackPanel Grid.Row="4" Grid.Column="0">
+                    <TextBlock Text="{x:Static resources:Resource.BatteryPage_MinDischarge}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="_batteryMinDischargeRateText" FontSize="14" FlowDirection="LeftToRight" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center">
+                    <TextBlock Text="{x:Static resources:Resource.BatteryPage_MaxDischarge}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="_batteryMaxDischargeRateText" FontSize="14" FlowDirection="LeftToRight" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="4" Grid.Column="2" HorizontalAlignment="Right">
+                    <TextBlock Text="{x:Static resources:Resource.BatteryPage_BatteryHealth_Title}" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <TextBlock x:Name="_batteryHealthText" FontSize="14" FontWeight="SemiBold" FlowDirection="LeftToRight" />
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Additional Info Section -->
+        <TextBlock
+            Margin="0,0,0,12"
+            FontSize="16"
+            FontWeight="SemiBold"
+            Text="{x:Static resources:Resource.BatteryPage_AdditionalInformation}" />
 
         <custom:CardControl Margin="0,0,0,8">
             <custom:CardControl.Header>
@@ -175,23 +295,7 @@
             </custom:CardControl.Header>
             <TextBlock
                 x:Name="_onBatterySinceText"
-                AutomationProperties.HelpText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                AutomationProperties.Name="{x:Static resources:Resource.BatteryPage_OnBatterySince_Title}"
                 FlowDirection="LeftToRight"
-                Focusable="True"
-                FontSize="14" />
-        </custom:CardControl>
-
-        <custom:CardControl Margin="0,0,0,8">
-            <custom:CardControl.Header>
-                <controls:CardHeaderControl Title="{x:Static resources:Resource.BatteryPage_CycleCount_Title}" Subtitle="{x:Static resources:Resource.BatteryPage_CycleCount_Message}" />
-            </custom:CardControl.Header>
-            <TextBlock
-                x:Name="_batteryCycleCountText"
-                AutomationProperties.HelpText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                AutomationProperties.Name="{x:Static resources:Resource.BatteryPage_CycleCount_Title}"
-                FlowDirection="LeftToRight"
-                Focusable="True"
                 FontSize="14" />
         </custom:CardControl>
 
@@ -201,10 +305,7 @@
             </custom:CardControl.Header>
             <TextBlock
                 x:Name="_batteryManufactureDateText"
-                AutomationProperties.HelpText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                AutomationProperties.Name="{x:Static resources:Resource.BatteryPage_ManufactureDate_Title}"
                 FlowDirection="LeftToRight"
-                Focusable="True"
                 FontSize="14" />
         </custom:CardControl>
 
@@ -214,12 +315,13 @@
             </custom:CardControl.Header>
             <TextBlock
                 x:Name="_batteryFirstUseDateText"
-                AutomationProperties.HelpText="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}"
-                AutomationProperties.Name="{x:Static resources:Resource.BatteryPage_FirstUseDate_Title}"
                 FlowDirection="LeftToRight"
-                Focusable="True"
                 FontSize="14" />
         </custom:CardControl>
 
     </StackPanel>
 </wpfui:UiPage>
+
+
+
+

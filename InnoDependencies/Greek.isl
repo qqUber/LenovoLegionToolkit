@@ -216,16 +216,44 @@ ReadyMemoGroup=Φάκελος στο μενού Έναρξη:
 ReadyMemoTasks=Επιπλέον ενέργειες:
 
 ; *** TDownloadWizardPage wizard page and DownloadTemporaryFile
-DownloadingLabel=Λήψη πρόσθετων αρχείων...
+DownloadingLabel2=Λήψη πρόσθετων αρχείων...
 ButtonStopDownload=&Διακοπή λήψης
 StopDownload=Είστε βέβαιοι ότι θέλετε να διακόψετε τη λήψη;
 ErrorDownloadAborted=Η λήψη ακυρώθηκε
 ErrorDownloadFailed=Η λήψη απέτυχε: %1 %2
 ErrorDownloadSizeFailed=Η λήψη του μεγέθους απέτυχε: %1 %2
-ErrorFileHash1=Αποτυχία υπολογισμού hash: %1
-ErrorFileHash2=Μη έγκυρο hash: αναμενόμενο %1, βρέθηκε %2
+ErrorDownloading=Παρουσιάστηκε σφάλμα κατά τη λήψη αρχείου
 ErrorProgress=Μη έγκυρη πρόοδος: %1 από %2
 ErrorFileSize=Μη έγκυρο μέγεθος αρχείου: αναμενόμενο %1, βρέθηκε %2
+
+; *** TExtractionWizardPage wizard page
+ExtractingLabel=Εξαγωγή αρχείων...
+ButtonStopExtraction=&Διακοπή εξαγωγής
+StopExtraction=Είστε βέβαιοι ότι θέλετε να διακόψετε την εξαγωγή;
+ErrorExtractionAborted=Η εξαγωγή ακυρώθηκε
+ErrorExtractionFailed=Η εξαγωγή απέτυχε: %1
+ErrorExtracting=Παρουσιάστηκε σφάλμα κατά την εξαγωγή αρχείου
+
+; *** Archive extraction failure details
+ArchiveIncorrectPassword=Ο κωδικός είναι λανθασμένος
+ArchiveIsCorrupted=Το αρχείο είναι κατεστραμμένο
+ArchiveUnsupportedFormat=Η μορφή αρχείου δεν υποστηρίζεται
+
+; *** Source verification
+SourceVerificationFailed=Η επαλήθευση αρχείου πηγής απέτυχε: %1
+VerificationSignatureDoesntExist=Το αρχείο υπογραφής δεν υπάρχει
+VerificationSignatureInvalid=Το αρχείο υπογραφής είναι μη έγκυρο
+VerificationKeyNotFound=Το αρχείο υπογραφής χρησιμοποιεί άγνωστο κλειδί
+VerificationFileNameIncorrect=Το όνομα αρχείου είναι λανθασμένο
+VerificationFileTagIncorrect=Η ετικέτα αρχείου είναι λανθασμένη
+VerificationFileSizeIncorrect=Το μέγεθος αρχείου είναι λανθασμένο
+VerificationFileHashIncorrect=Το hash αρχείου είναι λανθασμένο
+
+; *** Status messages
+StatusDownloadFiles=Λήψη αρχείων...
+RetryCancelSelectAction=Επιλέξτε ενέργεια
+RetryCancelRetry=&Δοκιμή ξανά
+RetryCancelCancel=Ακύρωση
 
 ; *** "Preparing to Install" wizard page
 WizardPreparing=Προετοιμασία Εγκατάστασης

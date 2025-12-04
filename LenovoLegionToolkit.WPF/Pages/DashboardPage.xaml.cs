@@ -20,6 +20,10 @@ public partial class DashboardPage
     private readonly DashboardSettings _dashboardSettings = IoCContainer.Resolve<DashboardSettings>();
 
     private readonly List<DashboardGroupControl> _dashboardGroupControls = [];
+    
+    // Cache for layout state
+    private bool _isExpanded;
+    private double _lastWidth;
 
     public DashboardPage() => InitializeComponent();
 
@@ -32,7 +36,8 @@ public partial class DashboardPage
     {
         _loader.IsLoading = true;
 
-        var initializedTasks = new List<Task> { Task.Delay(TimeSpan.FromSeconds(1)) };
+        // Reduce minimum loading time for snappier feel
+        var loadingTask = Task.Delay(TimeSpan.FromMilliseconds(300));
 
         ScrollHost?.ScrollToTop();
 
@@ -55,11 +60,14 @@ public partial class DashboardPage
         _content.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
         _content.ColumnDefinitions.Add(new ColumnDefinition { Width = new(1, GridUnitType.Star) });
 
-        foreach (var group in groups)
+        // Create controls on UI thread (WPF controls must be created on STA thread)
+        var controls = groups.Select(group => new DashboardGroupControl(group)).ToArray();
+
+        var initializedTasks = new List<Task>(controls.Length + 1) { loadingTask };
+
+        foreach (var control in controls)
         {
             _content.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Auto) });
-
-            var control = new DashboardGroupControl(group);
             _content.Children.Add(control);
             _dashboardGroupControls.Add(control);
             initializedTasks.Add(control.InitializedTask);
@@ -87,10 +95,12 @@ public partial class DashboardPage
 
         _content.Children.Add(editDashboardHyperlink);
 
+        // Force layout calculation
+        _lastWidth = 0;
         LayoutGroups(ActualWidth);
 
+        // Wait for all controls to initialize
         await Task.WhenAll(initializedTasks);
-
         _loader.IsLoading = false;
     }
 
@@ -104,7 +114,20 @@ public partial class DashboardPage
 
     private void LayoutGroups(double width)
     {
-        if (width > 1000)
+        // Skip if width hasn't changed meaningfully (hysteresis)
+        if (Math.Abs(_lastWidth - width) < 50)
+            return;
+
+        _lastWidth = width;
+        var shouldExpand = width > 1000;
+
+        // Skip if state hasn't changed
+        if (shouldExpand == _isExpanded && _dashboardGroupControls.Count > 0)
+            return;
+
+        _isExpanded = shouldExpand;
+
+        if (shouldExpand)
             Expand();
         else
             Collapse();
@@ -119,7 +142,7 @@ public partial class DashboardPage
         for (var index = 0; index < _dashboardGroupControls.Count; index++)
         {
             var control = _dashboardGroupControls[index];
-            Grid.SetRow(control, index - (index % 2));
+            Grid.SetRow(control, index / 2);
             Grid.SetColumn(control, index % 2);
         }
     }

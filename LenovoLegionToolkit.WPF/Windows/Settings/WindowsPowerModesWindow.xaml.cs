@@ -36,7 +36,7 @@ public partial class WindowsPowerModesWindow
     {
         _loader.IsLoading = true;
 
-        var loadingTask = Task.Delay(500);
+        var loadingTask = Task.Delay(150);
 
         var powerModes = Enum.GetValues<WindowsPowerMode>();
         Refresh(_quietModeComboBox, powerModes, PowerModeState.Quiet);

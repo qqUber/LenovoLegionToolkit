@@ -7,6 +7,9 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.Messaging;
@@ -82,6 +85,8 @@ public partial class MainWindow
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
         _contentGrid.Visibility = Visibility.Hidden;
+
+        ApplyCustomBackground();
 
         if (!await KeyboardBacklightPage.IsSupportedAsync())
             _navigationStore.Items.Remove(_keyboardItem);
@@ -374,6 +379,61 @@ public partial class MainWindow
         finally
         {
             Marshal.FreeHGlobal(ptr);
+        }
+    }
+
+    public void ApplyCustomBackground()
+    {
+        try
+        {
+            var enabled = _applicationSettings.Store.CustomBackgroundEnabled;
+            var path = _applicationSettings.Store.CustomBackgroundPath;
+
+            if (!enabled || string.IsNullOrEmpty(path) || !File.Exists(path))
+            {
+                _backgroundImage.Visibility = Visibility.Collapsed;
+                _backgroundTint.Visibility = Visibility.Collapsed;
+                return;
+            }
+
+            var bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.UriSource = new Uri(path, UriKind.Absolute);
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.EndInit();
+            bitmap.Freeze();
+
+            _backgroundImage.Source = bitmap;
+            _backgroundImage.Opacity = _applicationSettings.Store.CustomBackgroundOpacity;
+            _backgroundImage.Visibility = Visibility.Visible;
+
+            if (_applicationSettings.Store.CustomBackgroundBlur)
+            {
+                _backgroundImage.Effect = new BlurEffect { Radius = 15 };
+            }
+            else
+            {
+                _backgroundImage.Effect = null;
+            }
+
+            if (_applicationSettings.Store.CustomBackgroundTint.HasValue)
+            {
+                var tint = _applicationSettings.Store.CustomBackgroundTint.Value;
+                _backgroundTint.Fill = new SolidColorBrush(Color.FromArgb(80, tint.R, tint.G, tint.B));
+                _backgroundTint.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                _backgroundTint.Visibility = Visibility.Collapsed;
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to apply custom background.", ex);
+
+            _backgroundImage.Visibility = Visibility.Collapsed;
+            _backgroundTint.Visibility = Visibility.Collapsed;
         }
     }
 }

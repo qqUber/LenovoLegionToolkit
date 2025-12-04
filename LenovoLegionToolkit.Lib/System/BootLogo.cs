@@ -50,10 +50,13 @@ public static class BootLogo
         }
     }
 
-    public static (bool, Resolution, ImageFormat[], string[]) GetStatus()
+    public static (bool, Resolution, string[], string[]) GetStatus()
     {
         var info = GetInfo();
-        return (info.Enabled == 1, new(info.SupportedWidth, info.SupportedHeight), info.SupportedFormat.ImageFormats().ToArray(), info.SupportedFormat.ExtensionFilters().ToArray());
+        // Return supported formats (validation removed - UEFI may not display all resolutions)
+        var formats = new[] { "BMP", "JPEG", "PNG", "GIF" };
+        var filters = new[] { "*.bmp", "*.jpg", "*.jpeg", "*.png", "*.gif" };
+        return (info.Enabled == 1, new Resolution(info.SupportedWidth, info.SupportedHeight), formats, filters);
     }
 
     public static async Task EnableAsync(string sourcePath)
@@ -63,7 +66,7 @@ public static class BootLogo
 
         var info = GetInfo();
 
-        ThrowIfImageInvalid(info, sourcePath);
+        // Note: Validation removed - UEFI may not display unsupported formats/resolutions
 
         await DeleteMyLogoAsync().ConfigureAwait(false);
         var crc = await CopyMyLogoAsync(info, sourcePath).ConfigureAwait(false);

@@ -13,8 +13,6 @@ public static class DashboardItemExtensions
     public static SymbolRegular GetIcon(this DashboardItem dashboardItem) => dashboardItem switch
     {
         DashboardItem.PowerMode => SymbolRegular.Gauge24,
-        DashboardItem.BatteryMode => SymbolRegular.BatteryCharge24,
-        DashboardItem.BatteryNightChargeMode => SymbolRegular.WeatherMoon24,
         DashboardItem.AlwaysOnUsb => SymbolRegular.UsbStick24,
         DashboardItem.InstantBoot => SymbolRegular.PlugDisconnected24,
         DashboardItem.HybridMode => SymbolRegular.LeafOne24,
@@ -40,8 +38,6 @@ public static class DashboardItemExtensions
     public static string GetTitle(this DashboardItem dashboardItem) => dashboardItem switch
     {
         DashboardItem.PowerMode => Resource.PowerModeControl_Title,
-        DashboardItem.BatteryMode => Resource.BatteryModeControl_Title,
-        DashboardItem.BatteryNightChargeMode => Resource.BatteryNightChargeModeControl_Title,
         DashboardItem.AlwaysOnUsb => Resource.AlwaysOnUSBControl_Title,
         DashboardItem.InstantBoot => Resource.InstantBootControl_Title,
         DashboardItem.HybridMode => $"{Resource.ComboBoxHybridModeControl_Title} / {Resource.ToggleHybridModeControl_Title}",
@@ -67,8 +63,6 @@ public static class DashboardItemExtensions
     public static async Task<IEnumerable<AbstractRefreshingControl>> GetControlAsync(this DashboardItem dashboardItem) => dashboardItem switch
     {
         DashboardItem.PowerMode => [new PowerModeControl()],
-        DashboardItem.BatteryMode => [new BatteryModeControl()],
-        DashboardItem.BatteryNightChargeMode => [new BatteryNightChargeModeControl()],
         DashboardItem.AlwaysOnUsb => [new AlwaysOnUSBControl()],
         DashboardItem.InstantBoot => [new InstantBootControl()],
         DashboardItem.HybridMode => [await HybridModeControlFactory.GetControlAsync()],

@@ -221,16 +221,44 @@ ReadyMemoGroup=开始菜单文件夹：
 ReadyMemoTasks=附加任务：
 
 ; *** TDownloadWizardPage wizard page and DownloadTemporaryFile
-DownloadingLabel=正在下载附加文件...
+DownloadingLabel2=正在下载附加文件...
 ButtonStopDownload=停止下载(&S)
 StopDownload=您确定要停止下载吗？
 ErrorDownloadAborted=下载已中止
 ErrorDownloadFailed=下载失败：%1 %2
 ErrorDownloadSizeFailed=获取下载大小失败：%1 %2
-ErrorFileHash1=校验文件哈希失败：%1
-ErrorFileHash2=无效的文件哈希：预期 %1，实际 %2
+ErrorDownloading=An error occurred while trying to download a file
 ErrorProgress=无效的进度：%1，总共%2
 ErrorFileSize=文件大小错误：预期 %1，实际 %2
+
+; *** TExtractionWizardPage wizard page
+ExtractingLabel=正在解压文件...
+ButtonStopExtraction=停止解压(&S)
+StopExtraction=您确定要停止解压吗？
+ErrorExtractionAborted=解压已中止
+ErrorExtractionFailed=解压失败：%1
+ErrorExtracting=解压归档时发生错误
+
+; *** Archive extraction failure details
+ArchiveIncorrectPassword=密码不正确
+ArchiveIsCorrupted=归档文件已损坏
+ArchiveUnsupportedFormat=归档格式不受支持
+
+; *** Source verification
+SourceVerificationFailed=源文件验证失败：%1
+VerificationSignatureDoesntExist=签名文件不存在
+VerificationSignatureInvalid=签名文件无效
+VerificationKeyNotFound=签名文件使用了未知密钥
+VerificationFileNameIncorrect=文件名不正确
+VerificationFileTagIncorrect=文件标签不正确
+VerificationFileSizeIncorrect=文件大小不正确
+VerificationFileHashIncorrect=文件哈希不正确
+
+; *** Status messages
+StatusDownloadFiles=正在下载文件...
+RetryCancelSelectAction=选择操作
+RetryCancelRetry=重试(&T)
+RetryCancelCancel=取消
 
 ; *** “正在准备安装”向导页
 WizardPreparing=正在准备安装

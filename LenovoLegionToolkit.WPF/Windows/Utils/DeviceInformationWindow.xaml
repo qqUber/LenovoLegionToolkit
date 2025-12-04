@@ -1,4 +1,4 @@
-﻿<local:BaseWindow
+<local:BaseWindow
     x:Class="LenovoLegionToolkit.WPF.Windows.Utils.DeviceInformationWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -159,3 +159,4 @@
             Timeout="1000" />
     </Grid>
 </local:BaseWindow>
+

@@ -163,7 +163,7 @@ public partial class StatusWindow
     private void RefreshPowerMode(PowerModeState? powerModeState, string? godModePresetName)
     {
         _powerModeValueLabel.Content = powerModeState?.GetDisplayName() ?? "-";
-        _powerModeValueIndicator.Fill = powerModeState?.GetSolidColorBrush() ?? new(Colors.Transparent);
+        _powerModeValueIndicator.Background = powerModeState?.GetSolidColorBrush() ?? new(Colors.Transparent);
 
         if (powerModeState == PowerModeState.GodMode)
         {

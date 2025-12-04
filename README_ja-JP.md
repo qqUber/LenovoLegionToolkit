@@ -1,6 +1,6 @@
 <img height="128" align="left" src="assets/logo.png" alt="Logo">
 
-# レノボ・レギオン・ツールキット
+# LOQ ツールキット
 
 [![Build](https://github.com/BartoszCichecki/LenovoLegionToolkit/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/BartoszCichecki/LenovoLegionToolkit/actions/workflows/build.yml)
 [![Crowdin](https://badges.crowdin.net/llt/localized.svg)](https://crowdin.com/project/llt)

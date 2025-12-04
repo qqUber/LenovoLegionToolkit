@@ -275,11 +275,16 @@ public partial class SpectrumKeyboardBacklightControl
 
     protected override async Task OnRefreshAsync()
     {
-        if (!await _controller.IsSupportedAsync())
+        // Run initial checks in parallel
+        var isSupportedTask = _controller.IsSupportedAsync();
+        var vantageStatusTask = _vantageDisabler.GetStatusAsync();
+        
+        await Task.WhenAll(isSupportedTask, vantageStatusTask);
+        
+        if (!isSupportedTask.Result)
             throw new InvalidOperationException("Spectrum Keyboard does not seem to be supported");
 
-        var vantageStatus = await _vantageDisabler.GetStatusAsync();
-        if (vantageStatus == SoftwareStatus.Enabled)
+        if (vantageStatusTask.Result == SoftwareStatus.Enabled)
         {
             _vantageWarningInfoBar.IsOpen = true;
 
@@ -308,8 +313,10 @@ public partial class SpectrumKeyboardBacklightControl
 
         _content.IsEnabled = true;
 
-        await RefreshBrightnessAsync();
-        await RefreshProfileAsync();
+        // Run brightness and profile refresh in parallel
+        var brightnessTask = RefreshBrightnessAsync();
+        var profileTask = RefreshProfileAsync();
+        await Task.WhenAll(brightnessTask, profileTask);
 
         if (IsVisible)
             await StartAnimationAsync();
@@ -443,13 +450,24 @@ public partial class SpectrumKeyboardBacklightControl
     private async Task RefreshProfileAsync()
     {
         var profile = await _controller.GetProfileAsync();
+        
+        // Update UI and fetch description in parallel
         var profileButton = ProfileButtons.FirstOrDefault(pb => pb.Tag.Equals(profile));
-        if (profileButton is null)
-            return;
+        if (profileButton is not null)
+            profileButton.IsChecked = true;
 
-        profileButton.IsChecked = true;
+        // Get profile description (using the already fetched profile)
+        var (_, effects) = await _controller.GetProfileDescriptionAsync(profile);
 
-        await RefreshProfileDescriptionAsync();
+        DeleteAllEffects();
+
+        foreach (var effect in effects)
+        {
+            var control = CreateEffectControl(effect);
+            _effects.Children.Add(control);
+        }
+
+        _noEffectsText.Visibility = effects.IsEmpty() ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private async Task RefreshProfileDescriptionAsync()

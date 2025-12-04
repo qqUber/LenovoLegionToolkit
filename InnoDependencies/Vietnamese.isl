@@ -211,16 +211,44 @@ ReadyMemoGroup=Thư mục bắt đầu:
 ReadyMemoTasks=Các tác vụ bổ sung:
 
 ; *** TDownloadWizardPage wizard page and DownloadTemporaryFile
-DownloadingLabel=Đang tải các tập tin bổ sung...
+DownloadingLabel2=Đang tải các tập tin bổ sung...
 ButtonStopDownload=&Dừng tải xuống
 StopDownload=Bạn có chắc chắn muốn dừng tải xuống không?
 ErrorDownloadAborted=Tải xuống bị hủy bỏ
 ErrorDownloadFailed=Tải xuống không thành công: %1 %2
 ErrorDownloadSizeFailed=Getting size failed: %1 %2
-ErrorFileHash1=File hash failed: %1
-ErrorFileHash2=Invalid file hash: expected %1, found %2
+ErrorDownloading=An error occurred while trying to download a file
 ErrorProgress=Invalid progress: %1 of %2
 ErrorFileSize=Invalid file size: expected %1, found %2
+
+; *** TExtractionWizardPage wizard page
+ExtractingLabel=Extracting files...
+ButtonStopExtraction=&Stop extraction
+StopExtraction=Are you sure you want to stop the extraction?
+ErrorExtractionAborted=Extraction aborted
+ErrorExtractionFailed=Extraction failed: %1
+ErrorExtracting=An error occurred while trying to extract an archive
+
+; *** Archive extraction failure details
+ArchiveIncorrectPassword=The password is incorrect
+ArchiveIsCorrupted=The archive is corrupted
+ArchiveUnsupportedFormat=The archive format is unsupported
+
+; *** Source verification
+SourceVerificationFailed=Verification of the source file failed: %1
+VerificationSignatureDoesntExist=The signature file does not exist
+VerificationSignatureInvalid=The signature file is invalid
+VerificationKeyNotFound=The signature file uses an unknown key
+VerificationFileNameIncorrect=The name of the file is incorrect
+VerificationFileTagIncorrect=The tag of the file is incorrect
+VerificationFileSizeIncorrect=The size of the file is incorrect
+VerificationFileHashIncorrect=The hash of the file is incorrect
+
+; *** Status messages
+StatusDownloadFiles=Downloading files...
+RetryCancelSelectAction=Select action
+RetryCancelRetry=&Try again
+RetryCancelCancel=Cancel
 
 ; *** "Preparing to Install" wizard page
 WizardPreparing=Chuẩn bị cài đặt

@@ -78,6 +78,7 @@ public class NotificationsManager
                 NotificationType.PowerModeQuiet => _settings.Store.Notifications.PowerMode,
                 NotificationType.PowerModeBalance => _settings.Store.Notifications.PowerMode,
                 NotificationType.PowerModePerformance => _settings.Store.Notifications.PowerMode,
+                NotificationType.PowerModeExtreme => _settings.Store.Notifications.PowerMode,
                 NotificationType.PowerModeGodMode => _settings.Store.Notifications.PowerMode,
                 NotificationType.RefreshRate => _settings.Store.Notifications.RefreshRate,
                 NotificationType.RGBKeyboardBacklightOff => _settings.Store.Notifications.KeyboardBacklight,
@@ -126,6 +127,7 @@ public class NotificationsManager
                 NotificationType.PowerModeQuiet => SymbolRegular.Gauge24,
                 NotificationType.PowerModeBalance => SymbolRegular.Gauge24,
                 NotificationType.PowerModePerformance => SymbolRegular.Gauge24,
+                NotificationType.PowerModeExtreme => SymbolRegular.Gauge24,
                 NotificationType.PowerModeGodMode => SymbolRegular.Gauge24,
                 NotificationType.RefreshRate => SymbolRegular.DesktopPulse24,
                 NotificationType.RGBKeyboardBacklightOff => SymbolRegular.Lightbulb24,
@@ -183,6 +185,7 @@ public class NotificationsManager
                 NotificationType.PowerModeQuiet => string.Format("{0}", notification.Args),
                 NotificationType.PowerModeBalance => string.Format("{0}", notification.Args),
                 NotificationType.PowerModePerformance => string.Format("{0}", notification.Args),
+                NotificationType.PowerModeExtreme => string.Format("{0}", notification.Args),
                 NotificationType.PowerModeGodMode => string.Format("{0}", notification.Args),
                 NotificationType.RefreshRate => string.Format("{0}", notification.Args),
                 NotificationType.RGBKeyboardBacklightOff => string.Format("{0}", notification.Args),
@@ -204,6 +207,7 @@ public class NotificationsManager
             {
                 NotificationType.PowerModeQuiet => si => si.Foreground = PowerModeState.Quiet.GetSolidColorBrush(),
                 NotificationType.PowerModePerformance => si => si.Foreground = PowerModeState.Performance.GetSolidColorBrush(),
+                NotificationType.PowerModeExtreme => si => si.Foreground = PowerModeState.Extreme.GetSolidColorBrush(),
                 NotificationType.PowerModeGodMode => si => si.Foreground = PowerModeState.GodMode.GetSolidColorBrush(),
                 _ => null
             };

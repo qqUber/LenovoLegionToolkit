@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Windows;
 using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.Utils;
@@ -24,9 +23,9 @@ public partial class BootLogoWindow
 
     private void Refresh()
     {
-        var (enabled, resolution, formats, _) = BootLogo.GetStatus();
+        var (enabled, _, formats, _) = BootLogo.GetStatus();
 
-        _descriptionTextBlock.Text = string.Format(Resource.BootLogoWindow_Description, resolution.DisplayName, string.Join(", ", formats.Select(f => f.ToString().ToUpper())));
+        _descriptionTextBlock.Text = string.Format(Resource.BootLogoWindow_Description_NoResolutionLimit, string.Join(", ", formats));
 
         _defaultStatus.Visibility = enabled ? Visibility.Collapsed : Visibility.Visible;
         _customStatus.Visibility = enabled ? Visibility.Visible : Visibility.Collapsed;

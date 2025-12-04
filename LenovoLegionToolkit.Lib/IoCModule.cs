@@ -108,6 +108,7 @@ public class IoCModule : Module
         builder.Register<WiFiAutoListener>();
 
         builder.Register<AIController>();
+        builder.Register<AutoRefreshRateController>();
         builder.Register<DisplayBrightnessController>();
         builder.Register<GodModeController>();
         builder.Register<GodModeControllerV1>(true);

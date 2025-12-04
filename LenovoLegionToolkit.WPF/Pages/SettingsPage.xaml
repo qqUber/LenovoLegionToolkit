@@ -1,4 +1,4 @@
-﻿<wpfui:UiPage
+<wpfui:UiPage
     x:Class="LenovoLegionToolkit.WPF.Pages.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -80,6 +80,95 @@
                     MaxDropDownHeight="Auto"
                     SelectionChanged="AccentColorSourceComboBox_SelectionChanged" />
             </StackPanel>
+        </custom:CardControl>
+
+        <!-- Custom Background Section -->
+        <TextBlock
+            Margin="0,0,0,12"
+            FontSize="16"
+            FontWeight="SemiBold"
+            Text="{x:Static resources:Resource.SettingsPage_CustomBackground_Section}" />
+
+        <custom:CardControl Margin="0,0,0,8" Icon="Image24">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_CustomBackground_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_CustomBackground_Message}" />
+            </custom:CardControl.Header>
+            <StackPanel Orientation="Horizontal">
+                <Button
+                    x:Name="_selectBackgroundButton"
+                    Content="{x:Static resources:Resource.SettingsPage_CustomBackground_SelectImage}"
+                    Click="SelectBackgroundButton_Click"
+                    Margin="0,0,8,0" />
+                <Button
+                    x:Name="_clearBackgroundButton"
+                    Content="{x:Static resources:Resource.SettingsPage_CustomBackground_Clear}"
+                    Click="ClearBackgroundButton_Click"
+                    Margin="0,0,8,0" />
+                <wpfui:ToggleSwitch
+                    x:Name="_customBackgroundToggle"
+                    Click="CustomBackgroundToggle_Click" />
+            </StackPanel>
+        </custom:CardControl>
+
+        <custom:CardControl Margin="0,0,0,8" Icon="WeatherSunny24">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_CustomBackground_Opacity_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_CustomBackground_Opacity_Message}" />
+            </custom:CardControl.Header>
+            <StackPanel Orientation="Horizontal">
+                <Slider
+                    x:Name="_backgroundOpacitySlider"
+                    Width="200"
+                    Minimum="0.05"
+                    Maximum="0.5"
+                    SmallChange="0.05"
+                    LargeChange="0.05"
+                    TickFrequency="0.05"
+                    TickPlacement="BottomRight"
+                    IsSnapToTickEnabled="True"
+                    ValueChanged="BackgroundOpacitySlider_ValueChanged" />
+                <TextBlock
+                    x:Name="_backgroundOpacityText"
+                    VerticalAlignment="Center"
+                    Margin="12,0,0,0"
+                    FontWeight="SemiBold" />
+            </StackPanel>
+        </custom:CardControl>
+
+        <custom:CardControl Margin="0,0,0,8" Icon="Drop24">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_CustomBackground_Blur_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_CustomBackground_Blur_Message}" />
+            </custom:CardControl.Header>
+            <wpfui:ToggleSwitch
+                x:Name="_backgroundBlurToggle"
+                Click="BackgroundBlurToggle_Click" />
+        </custom:CardControl>
+
+        <custom:CardControl Margin="0,0,0,24" Icon="ColorBackground24">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_CustomBackground_Tint_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_CustomBackground_Tint_Message}" />
+            </custom:CardControl.Header>
+            <StackPanel Orientation="Horizontal">
+                <controls:ColorPickerControl x:Name="_backgroundTintPicker" ColorChangedDelayed="BackgroundTintPicker_Changed" />
+                <Button
+                    x:Name="_clearTintButton"
+                    Content="{x:Static resources:Resource.SettingsPage_CustomBackground_Clear}"
+                    Click="ClearTintButton_Click"
+                    Margin="8,0,0,0" />
+            </StackPanel>
+        </custom:CardControl>
+
+        <custom:CardControl Margin="0,0,0,24" Icon="DataArea24">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_SensorsLayout_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_SensorsLayout_Description}" />
+            </custom:CardControl.Header>
+            <ComboBox
+                x:Name="_sensorsLayoutComboBox"
+                MinWidth="160"
+                Margin="0,0,0,8"
+                AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_SensorsLayout_Title}"
+                MaxDropDownHeight="Auto"
+                SelectionChanged="SensorsLayoutComboBox_SelectionChanged"
+                Visibility="Hidden" />
         </custom:CardControl>
 
         <custom:CardControl Margin="0,0,0,8">
@@ -385,3 +474,7 @@
         </custom:CardControl>
     </StackPanel>
 </wpfui:UiPage>
+
+
+
+

@@ -49,6 +49,14 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public bool SynchronizeBrightnessToAllPowerPlans { get; set; }
         public ModifierKey SmartFnLockFlags { get; set; }
         public bool ResetBatteryOnSinceTimerOnReboot { get; set; }
+        public bool AutoRefreshRateEnabled { get; set; }
+        public RefreshRate? OnBatteryRefreshRate { get; set; }
+        public RefreshRate? OnACRefreshRate { get; set; }
+        public bool CustomBackgroundEnabled { get; set; }
+        public string? CustomBackgroundPath { get; set; }
+        public double CustomBackgroundOpacity { get; set; } = 0.15;
+        public bool CustomBackgroundBlur { get; set; } = true;
+        public RGBColor? CustomBackgroundTint { get; set; }
     }
 
     public ApplicationSettings() : base("settings.json")

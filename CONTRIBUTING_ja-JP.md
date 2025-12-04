@@ -1,4 +1,4 @@
-## Lenovo Legion Toolkit への貢献ガイドへようこそ！
+## LOQ Toolkit への貢献ガイドへようこそ！
 
 ### この貢献ガイドの他の言語バージョン：
 * [英語版の貢献ガイド](CONTRIBUTING.md)

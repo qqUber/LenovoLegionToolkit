@@ -34,14 +34,14 @@ public partial class ExcludeRefreshRatesWindow
     {
         _loader.IsLoading = true;
 
-        var loadingTask = Task.Delay(500);
+        var loadingTask = Task.Delay(150);
 
         var refreshRates = await _feature.GetAllStatesAsync();
         var excluded = _settings.Store.ExcludedRefreshRates;
 
         if (refreshRates.IsEmpty())
         {
-            await Task.Delay(500);
+            await Task.Delay(150);
 
             var result = await MessageBoxHelper.ShowAsync(this,
                 Resource.ExcludeRefreshRatesWindow_NoRefreshRatesFound_Title,

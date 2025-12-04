@@ -728,6 +728,60 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adaptive Refresh Rate.
+        /// </summary>
+        public static string AdaptiveRefreshRateControl_Title {
+            get {
+                return ResourceManager.GetString("AdaptiveRefreshRateControl_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dynamically adjusts the display refresh rate based on content to save battery when on battery power..
+        /// </summary>
+        public static string AdaptiveRefreshRateControl_Message {
+            get {
+                return ResourceManager.GetString("AdaptiveRefreshRateControl_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto Refresh Rate Switching.
+        /// </summary>
+        public static string AutoRefreshRateSwitchingControl_Title {
+            get {
+                return ResourceManager.GetString("AutoRefreshRateSwitchingControl_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automatically switch display refresh rate when plugging in or unplugging the charger..
+        /// </summary>
+        public static string AutoRefreshRateSwitchingControl_Message {
+            get {
+                return ResourceManager.GetString("AutoRefreshRateSwitchingControl_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to On battery.
+        /// </summary>
+        public static string AutoRefreshRateSwitchingControl_OnBattery {
+            get {
+                return ResourceManager.GetString("AutoRefreshRateSwitchingControl_OnBattery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to On charger.
+        /// </summary>
+        public static string AutoRefreshRateSwitchingControl_OnAC {
+            get {
+                return ResourceManager.GetString("AutoRefreshRateSwitchingControl_OnAC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Connected, charging....
         /// </summary>
         public static string BatteryPage_ACAdapterConnectedAndCharging {
@@ -1008,6 +1062,141 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Charging Settings.
+        /// </summary>
+        public static string BatteryPage_ChargingSettings {
+            get {
+                return ResourceManager.GetString("BatteryPage_ChargingSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Live Statistics.
+        /// </summary>
+        public static string BatteryPage_LiveStatistics {
+            get {
+                return ResourceManager.GetString("BatteryPage_LiveStatistics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Capacity Details.
+        /// </summary>
+        public static string BatteryPage_CapacityDetails {
+            get {
+                return ResourceManager.GetString("BatteryPage_CapacityDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Additional Information.
+        /// </summary>
+        public static string BatteryPage_AdditionalInformation {
+            get {
+                return ResourceManager.GetString("BatteryPage_AdditionalInformation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Health.
+        /// </summary>
+        public static string BatteryPage_Health {
+            get {
+                return ResourceManager.GetString("BatteryPage_Health", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Temperature.
+        /// </summary>
+        public static string BatteryPage_Temperature {
+            get {
+                return ResourceManager.GetString("BatteryPage_Temperature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Power Draw.
+        /// </summary>
+        public static string BatteryPage_PowerDraw {
+            get {
+                return ResourceManager.GetString("BatteryPage_PowerDraw", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} remaining.
+        /// </summary>
+        public static string BatteryPage_Remaining {
+            get {
+                return ResourceManager.GetString("BatteryPage_Remaining", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} to full charge.
+        /// </summary>
+        public static string BatteryPage_ToFullCharge {
+            get {
+                return ResourceManager.GetString("BatteryPage_ToFullCharge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to On battery.
+        /// </summary>
+        public static string BatteryPage_OnBattery {
+            get {
+                return ResourceManager.GetString("BatteryPage_OnBattery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current.
+        /// </summary>
+        public static string BatteryPage_Current {
+            get {
+                return ResourceManager.GetString("BatteryPage_Current", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Full Charge.
+        /// </summary>
+        public static string BatteryPage_FullCharge {
+            get {
+                return ResourceManager.GetString("BatteryPage_FullCharge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Design.
+        /// </summary>
+        public static string BatteryPage_Design {
+            get {
+                return ResourceManager.GetString("BatteryPage_Design", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Min Discharge.
+        /// </summary>
+        public static string BatteryPage_MinDischarge {
+            get {
+                return ResourceManager.GetString("BatteryPage_MinDischarge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max Discharge.
+        /// </summary>
+        public static string BatteryPage_MaxDischarge {
+            get {
+                return ResourceManager.GetString("BatteryPage_MaxDischarge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Customize.
         /// </summary>
         public static string BootLogoWindow_Customize {
@@ -1041,6 +1230,16 @@ namespace LenovoLegionToolkit.WPF.Resources {
         public static string BootLogoWindow_Description {
             get {
                 return ResourceManager.GetString("BootLogoWindow_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Supported formats: {0}.
+        ///Note: UEFI may not display all formats or resolutions..
+        /// </summary>
+        public static string BootLogoWindow_Description_NoResolutionLimit {
+            get {
+                return ResourceManager.GetString("BootLogoWindow_Description_NoResolutionLimit", resourceCulture);
             }
         }
         
@@ -4831,6 +5030,33 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Battery.
+        /// </summary>
+        public static string SensorsControl_Battery_Title {
+            get {
+                return ResourceManager.GetString("SensorsControl_Battery_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Battery Level.
+        /// </summary>
+        public static string SensorsControl_BatteryLevel_Title {
+            get {
+                return ResourceManager.GetString("SensorsControl_BatteryLevel_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Core.
+        /// </summary>
+        public static string SensorsControl_Core_Title {
+            get {
+                return ResourceManager.GetString("SensorsControl_Core_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Core Clock.
         /// </summary>
         public static string SensorsControl_CoreClock_Title {
@@ -4845,6 +5071,15 @@ namespace LenovoLegionToolkit.WPF.Resources {
         public static string SensorsControl_CPU_Title {
             get {
                 return ResourceManager.GetString("SensorsControl_CPU_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disk.
+        /// </summary>
+        public static string SensorsControl_Disk_Title {
+            get {
+                return ResourceManager.GetString("SensorsControl_Disk_Title", resourceCulture);
             }
         }
         
@@ -4885,11 +5120,56 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Memory.
+        /// </summary>
+        public static string SensorsControl_Memory_Title {
+            get {
+                return ResourceManager.GetString("SensorsControl_Memory_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Motherboard.
+        /// </summary>
+        public static string SensorsControl_Motherboard_Title {
+            get {
+                return ResourceManager.GetString("SensorsControl_Motherboard_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PCH Temperature.
+        /// </summary>
+        public static string SensorsControl_PCHTemperature_Title {
+            get {
+                return ResourceManager.GetString("SensorsControl_PCHTemperature_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Power.
+        /// </summary>
+        public static string SensorsControl_Power_Title {
+            get {
+                return ResourceManager.GetString("SensorsControl_Power_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Refresh interval.
         /// </summary>
         public static string SensorsControl_RefreshInterval {
             get {
                 return ResourceManager.GetString("SensorsControl_RefreshInterval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to State.
+        /// </summary>
+        public static string SensorsControl_State_Title {
+            get {
+                return ResourceManager.GetString("SensorsControl_State_Title", resourceCulture);
             }
         }
         
@@ -4908,6 +5188,33 @@ namespace LenovoLegionToolkit.WPF.Resources {
         public static string SensorsControl_Utilization_Title {
             get {
                 return ResourceManager.GetString("SensorsControl_Utilization_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vram.
+        /// </summary>
+        public static string SensorsControl_Vram_Title {
+            get {
+                return ResourceManager.GetString("SensorsControl_Vram_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cards.
+        /// </summary>
+        public static string SensorsLayout_Cards {
+            get {
+                return ResourceManager.GetString("SensorsLayout_Cards", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Compact.
+        /// </summary>
+        public static string SensorsLayout_Compact {
+            get {
+                return ResourceManager.GetString("SensorsLayout_Compact", resourceCulture);
             }
         }
         
@@ -4957,11 +5264,128 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Custom Background.
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Section {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Section", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Background Image.
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set a custom background image for the app window..
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Image.
+        /// </summary>
+        public static string SettingsPage_CustomBackground_SelectImage {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_SelectImage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear.
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Clear {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Clear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Background Brightness.
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Opacity_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Opacity_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adjust the visibility of the background image. Lower values make it more subtle..
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Opacity_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Opacity_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Background Overlay.
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Blur_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Blur_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add a semi-transparent overlay to improve text readability..
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Blur_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Blur_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Color Tint.
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Tint_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Tint_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add a subtle color overlay to match your theme..
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Tint_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Tint_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start minimized to tray when you log in to Windows..
         /// </summary>
         public static string SettingsPage_Autorun_Message {
             get {
                 return ResourceManager.GetString("SettingsPage_Autorun_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose between card layout or compact space-saving layout..
+        /// </summary>
+        public static string SettingsPage_SensorsLayout_Description {
+            get {
+                return ResourceManager.GetString("SettingsPage_SensorsLayout_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sensors Layout.
+        /// </summary>
+        public static string SettingsPage_SensorsLayout_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_SensorsLayout_Title", resourceCulture);
             }
         }
         

@@ -198,16 +198,44 @@ ReadyMemoGroup=Start Menu mape:
 ReadyMemoTasks=Papilduzdevumi:
 
 ; *** TDownloadWizardPage wizard page and DownloadTemporaryFile
-DownloadingLabel=Papildus datņu lejupielāde...
+DownloadingLabel2=Papildus datņu lejupielāde...
 ButtonStopDownload=&Pārtraukt ielādi
 StopDownload=Jūs tiešām vēlaties pārtraukt lejupielādi?
 ErrorDownloadAborted=Lejupielāde pārtraukta
 ErrorDownloadFailed=Lejupielādes kļūda: %1 %2
 ErrorDownloadSizeFailed=Izmēra kļūda: %1 %2
-ErrorFileHash1=Ошибка хэша файла: %1
-ErrorFileHash2=Неверный хэш файла: ожидался %1, получен %2
+ErrorDownloading=An error occurred while trying to download a file
 ErrorProgress=Izpildes kļūda: %1 из %2
 ErrorFileSize=Kļūdains faila izmērs: tika gaidīts %1, iegūts %2
+
+; *** TExtractionWizardPage wizard page
+ExtractingLabel=Extracting files...
+ButtonStopExtraction=&Stop extraction
+StopExtraction=Are you sure you want to stop the extraction?
+ErrorExtractionAborted=Extraction aborted
+ErrorExtractionFailed=Extraction failed: %1
+ErrorExtracting=An error occurred while trying to extract an archive
+
+; *** Archive extraction failure details
+ArchiveIncorrectPassword=The password is incorrect
+ArchiveIsCorrupted=The archive is corrupted
+ArchiveUnsupportedFormat=The archive format is unsupported
+
+; *** Source verification
+SourceVerificationFailed=Verification of the source file failed: %1
+VerificationSignatureDoesntExist=The signature file does not exist
+VerificationSignatureInvalid=The signature file is invalid
+VerificationKeyNotFound=The signature file uses an unknown key
+VerificationFileNameIncorrect=The name of the file is incorrect
+VerificationFileTagIncorrect=The tag of the file is incorrect
+VerificationFileSizeIncorrect=The size of the file is incorrect
+VerificationFileHashIncorrect=The hash of the file is incorrect
+
+; *** Status messages
+StatusDownloadFiles=Downloading files...
+RetryCancelSelectAction=Select action
+RetryCancelRetry=&Try again
+RetryCancelCancel=Cancel
 
 ; *** "Preparing to Install" wizard page
 WizardPreparing=Gatavoties uzstādīšanai

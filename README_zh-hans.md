@@ -1,6 +1,6 @@
 <img height="128" align="left" src="assets/logo.png" alt="Logo">
 
-# 拯救者工具箱 Lenovo Legion Toolkit
+# LOQ 工具箱 LOQ Toolkit
 
 [![Build](https://github.com/BartoszCichecki/LenovoLegionToolkit/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/BartoszCichecki/LenovoLegionToolkit/actions/workflows/build.yml)
 [![Crowdin](https://badges.crowdin.net/llt/localized.svg)](https://crowdin.com/project/llt)
@@ -9,7 +9,7 @@
 
 ---
 
-联想拯救者工具箱 Lenovo Legion Toolkit (LLT) 是为联想拯救者系列笔记本打造的轻量化工具箱。可实现原来联想软件如 Lenovo Vantage、Legion Zone、联想电脑管家才可实现的功能。
+联想 LOQ 工具箱 LOQ Toolkit 是为联想 LOQ 系列笔记本打造的轻量化工具箱。可实现原来联想软件如 Lenovo Vantage、Legion Zone、联想电脑管家才可实现的功能。
 
 **本软件仅适配拯救者系列，如果你不是拯救者系列笔记本则这个软件不适合你，请不要提出兼容 Issue ，如果提出将被直接关闭不作受理。**
 

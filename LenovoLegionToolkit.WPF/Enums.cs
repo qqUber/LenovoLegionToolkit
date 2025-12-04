@@ -9,11 +9,15 @@ public enum DashboardGroupType
     Custom
 }
 
+public enum SensorsLayout
+{
+    Cards,
+    Compact
+}
+
 public enum DashboardItem
 {
     PowerMode,
-    BatteryMode,
-    BatteryNightChargeMode,
     AlwaysOnUsb,
     InstantBoot,
     HybridMode,

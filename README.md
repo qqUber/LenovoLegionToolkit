@@ -12,7 +12,7 @@
 > – Bartosz
 
 
-# Lenovo Legion Toolkit
+# LOQ Toolkit
 
 [![Build](https://github.com/BartoszCichecki/LenovoLegionToolkit/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/BartoszCichecki/LenovoLegionToolkit/actions/workflows/build.yml)
 [![Crowdin](https://badges.crowdin.net/llt/localized.svg)](https://crowdin.com/project/llt)
@@ -29,7 +29,7 @@
 
 <br />
 
-Lenovo Legion Toolkit (LLT) is a utility created for Lenovo Legion (and similar) series laptops, that allows changing a couple of features that are only available in Lenovo Vantage or Legion Zone.
+LOQ Toolkit is a utility created for Lenovo LOQ (and similar) series laptops, that allows changing a couple of features that are only available in Lenovo Vantage or Legion Zone.
 
 It runs no background services, uses less memory, uses virtually no CPU, and contains no telemetry. Just like Lenovo Vantage, this application is Windows only.
 
@@ -125,9 +125,15 @@ Join the [Legion Series Discord](https://discord.com/invite/legionseries) and he
 
 ## Compatibility
 
-Lenovo Legion Toolkit is made for Lenovo Legion laptops, and other similar laptops like Ideapad Gaming, LOQ and their Chinese variants.
+LOQ Toolkit is made for Lenovo LOQ laptops, and other similar laptops like Legion, Ideapad Gaming, and their Chinese variants.
 
-Generations 6 (MY2021), 7 (MY2022), 8 (MY2023) and 9 (MY2024) are supported, although some features also work on the 5th generation (MY2020). Issues related to devices older than Gen 6 or that are not Legions are out of scope of this project.
+Generations 6 (MY2021), 7 (MY2022), 8 (MY2023), 9 (MY2024) and **10 (MY2025)** are supported, although some features also work on the 5th generation (MY2020). Issues related to devices older than Gen 6 or that are not Legions are out of scope of this project.
+
+**Gen 10 Support includes:**
+- Legion 9i Gen 10 (18IAX10)
+- Legion 5i/7i/Pro 5i/Pro 7i Gen 10 (16IAX10, 15IAX10)
+- LOQ Gen 10 Intel (15IRX10, 17IRX10)
+- LOQ Gen 10 AMD (15AHP10)
 
 If you are getting an incompatible message on startup, you can check the *Contribution* section down at the bottom, to see how can you help. Keep in mind, that not always I can make all options compatible with all hardware since I do not have access to it.
 
@@ -377,7 +383,7 @@ CLI does not need to be ran as Administrator.
 
 ## Donate
 
-If you enjoy using the Lenovo Legion Toolkit, consider donating.
+If you enjoy using LOQ Toolkit, consider donating.
 
 [Donate with PayPal](https://www.paypal.com/donate/?hosted_button_id=22AZE2NBP3HTL)
 
@@ -577,8 +583,8 @@ In all troubleshooting situations, logs provide important information. **Always*
 
 To collect logs:
 
-1. Make sure that Lenovo Legion Toolkit is not running (also gone from tray area).
-2. Open `Run` (Win+R) and type there: `"%LOCALAPPDATA%\Programs\LenovoLegionToolkit\Lenovo Legion Toolkit.exe" --trace` and hit OK
+1. Make sure that LOQ Toolkit is not running (also gone from tray area).
+2. Open `Run` (Win+R) and type there: `"%LOCALAPPDATA%\Programs\LOQToolkit\LOQ Toolkit.exe" --trace` and hit OK
 3. LLT will start and in the title bar you should see: `[LOGGING ENABLED]`
 4. Reproduce the issue you have (i.e. try to use the option that causes issues)
 5. Close LLT (also make sure it's gone from tray area)
@@ -597,7 +603,7 @@ Pull Requests are also welcome, but make sure to check out [CONTRIBUTING.md](CON
 
 It would be great to expand the list of compatible devices, but to do it your help is needed!
 
-If you are willing to check if this app works correctly on your device that is currently unsupported, click _Continue_ on the popup you saw on startup. Lenovo Legion Toolkit will start logging automatically so you can submit them if anything goes wrong.
+If you are willing to check if this app works correctly on your device that is currently unsupported, click _Continue_ on the popup you saw on startup. LOQ Toolkit will start logging automatically so you can submit them if anything goes wrong.
 
 *Remember that some functions may not function properly.*
 

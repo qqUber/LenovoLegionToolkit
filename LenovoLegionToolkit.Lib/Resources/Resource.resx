@@ -252,6 +252,9 @@
   <data name="PowerModeState_Performance" xml:space="preserve">
     <value>Performance</value>
   </data>
+  <data name="PowerModeState_Extreme" xml:space="preserve">
+    <value>Extreme</value>
+  </data>
   <data name="PowerModeState_Quiet" xml:space="preserve">
     <value>Quiet</value>
   </data>

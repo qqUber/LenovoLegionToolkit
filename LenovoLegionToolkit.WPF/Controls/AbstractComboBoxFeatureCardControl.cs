@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
@@ -23,7 +23,7 @@ public abstract class AbstractComboBoxFeatureCardControl<T> : AbstractRefreshing
 
     private readonly CardHeaderControl _cardHeaderControl = new();
 
-    private readonly ComboBox _comboBox = new();
+    protected readonly ComboBox InternalComboBox = new();
 
     protected SymbolRegular Icon
     {
@@ -37,7 +37,7 @@ public abstract class AbstractComboBoxFeatureCardControl<T> : AbstractRefreshing
         set
         {
             _cardHeaderControl.Title = value;
-            AutomationProperties.SetName(_comboBox, value);
+            AutomationProperties.SetName(InternalComboBox, value);
         }
     }
 
@@ -57,12 +57,12 @@ public abstract class AbstractComboBoxFeatureCardControl<T> : AbstractRefreshing
 
     private void InitializeComponent()
     {
-        _comboBox.SelectionChanged += ComboBox_SelectionChanged;
-        _comboBox.MinWidth = 165;
-        _comboBox.Visibility = Visibility.Hidden;
-        _comboBox.Margin = new(8, 0, 0, 0);
+        InternalComboBox.SelectionChanged += ComboBox_SelectionChanged;
+        InternalComboBox.MinWidth = 165;
+        InternalComboBox.Visibility = Visibility.Hidden;
+        InternalComboBox.Margin = new(8, 0, 0, 0);
 
-        _cardHeaderControl.Accessory = GetAccessory(_comboBox);
+        _cardHeaderControl.Accessory = GetAccessory(InternalComboBox);
         _cardControl.Header = _cardHeaderControl;
         _cardControl.Margin = new(0, 0, 0, 8);
 
@@ -71,12 +71,12 @@ public abstract class AbstractComboBoxFeatureCardControl<T> : AbstractRefreshing
 
     private async void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        await OnStateChangeAsync(_comboBox, Feature, e.GetNewValue<T>(), e.GetOldValue<T>());
+        await OnStateChangeAsync(InternalComboBox, Feature, e.GetNewValue<T>(), e.GetOldValue<T>());
     }
 
-    protected bool TryGetSelectedItem(out T value) => _comboBox.TryGetSelectedItem(out value);
+    protected bool TryGetSelectedItem(out T value) => InternalComboBox.TryGetSelectedItem(out value);
 
-    protected int ItemsCount => _comboBox.Items.Count;
+    protected int ItemsCount => InternalComboBox.Items.Count;
 
     protected virtual FrameworkElement GetAccessory(ComboBox comboBox) => comboBox;
 
@@ -95,9 +95,9 @@ public abstract class AbstractComboBoxFeatureCardControl<T> : AbstractRefreshing
         var items = await Feature.GetAllStatesAsync();
         var selectedItem = await Feature.GetStateAsync();
 
-        _comboBox.SetItems(items, selectedItem, ComboBoxItemDisplayName);
-        _comboBox.IsEnabled = items.Length != 0;
-        _comboBox.Visibility = Visibility.Visible;
+        InternalComboBox.SetItems(items, selectedItem, ComboBoxItemDisplayName);
+        InternalComboBox.IsEnabled = items.Length != 0;
+        InternalComboBox.Visibility = Visibility.Visible;
     }
 
     protected override void OnFinishedLoading()
@@ -120,7 +120,7 @@ public abstract class AbstractComboBoxFeatureCardControl<T> : AbstractRefreshing
             if (IsRefreshing)
                 return;
 
-            _comboBox.IsEnabled = false;
+            InternalComboBox.IsEnabled = false;
 
             if (oldValue is null)
                 return;
@@ -150,7 +150,7 @@ public abstract class AbstractComboBoxFeatureCardControl<T> : AbstractRefreshing
             if (delay > TimeSpan.Zero)
                 await Task.Delay(delay);
 
-            _comboBox.IsEnabled = true;
+            InternalComboBox.IsEnabled = true;
         }
 
         if (exceptionOccurred)

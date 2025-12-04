@@ -10,8 +10,6 @@ public readonly struct DashboardGroup(DashboardGroupType type, string? customNam
     [
         new(DashboardGroupType.Power, null,
             DashboardItem.PowerMode,
-            DashboardItem.BatteryMode,
-            DashboardItem.BatteryNightChargeMode,
             DashboardItem.AlwaysOnUsb,
             DashboardItem.InstantBoot,
             DashboardItem.FlipToStart),

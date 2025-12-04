@@ -10,12 +10,12 @@
     xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.GodModeSettingsWindow_Title}"
-    Width="800"
-    Height="700"
-    MinWidth="800"
-    MinHeight="500"
+    Width="850"
+    Height="750"
+    MinWidth="850"
+    MinHeight="550"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
-    ResizeMode="CanMinimize"
+    ResizeMode="CanResize"
     ShowInTaskbar="False"
     WindowStartupLocation="CenterOwner">
     <Grid>
@@ -74,59 +74,83 @@
                         IsOpen="False"
                         Severity="Error" />
 
-                    <TextBlock
-                        Margin="0,16,0,24"
-                        Focusable="True"
-                        FontSize="24"
-                        FontWeight="Medium"
-                        Text="{x:Static resources:Resource.GodModeSettingsWindow_ActivePreset_Title}" />
+                    <!-- Active Preset Section -->
+                    <Border 
+                        Margin="0,16,0,24" 
+                        Padding="20" 
+                        Background="{DynamicResource ControlFillColorDefaultBrush}" 
+                        CornerRadius="8">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                <wpfui:SymbolIcon Symbol="Options24" FontSize="24" Foreground="{DynamicResource SystemAccentColorPrimaryBrush}" />
+                                <TextBlock
+                                    Margin="12,0,0,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="18"
+                                    FontWeight="SemiBold"
+                                    Text="{x:Static resources:Resource.GodModeSettingsWindow_ActivePreset_Title}" />
+                            </StackPanel>
 
-                    <Grid Margin="0,0,0,16">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
 
-                        <ComboBox
-                            x:Name="_presetsComboBox"
-                            Grid.Column="0"
-                            SelectionChanged="PresetsComboBox_SelectionChanged" />
+                                <ComboBox
+                                    x:Name="_presetsComboBox"
+                                    Grid.Column="0"
+                                    Height="38"
+                                    SelectionChanged="PresetsComboBox_SelectionChanged" />
 
-                        <wpfui:Button
-                            Grid.Column="1"
-                            Margin="8,0,0,0"
-                            VerticalAlignment="Stretch"
-                            Click="EditPresetsButton_Click"
-                            Icon="Edit24"
-                            ToolTip="{x:Static resources:Resource.Edit}" />
-                        <wpfui:Button
-                            x:Name="_deletePresetsButton"
-                            Grid.Column="2"
-                            Margin="8,0,0,0"
-                            VerticalAlignment="Stretch"
-                            Click="DeletePresetsButton_Click"
-                            Icon="Dismiss24"
-                            ToolTip="{x:Static resources:Resource.Delete}" />
-                        <wpfui:Button
-                            x:Name="_addPresetsButton"
-                            Grid.Column="3"
-                            Margin="8,0,0,0"
-                            VerticalAlignment="Stretch"
-                            Appearance="Primary"
-                            Click="AddPresetsButton_Click"
-                            Content="{x:Static resources:Resource.Add}"
-                            Icon="Add24" />
-                    </Grid>
+                                <wpfui:Button
+                                    Grid.Column="1"
+                                    Margin="8,0,0,0"
+                                    Padding="10"
+                                    VerticalAlignment="Stretch"
+                                    Click="EditPresetsButton_Click"
+                                    Icon="Edit24"
+                                    ToolTip="{x:Static resources:Resource.Edit}" />
+                                <wpfui:Button
+                                    x:Name="_deletePresetsButton"
+                                    Grid.Column="2"
+                                    Margin="8,0,0,0"
+                                    Padding="10"
+                                    VerticalAlignment="Stretch"
+                                    Click="DeletePresetsButton_Click"
+                                    Icon="Dismiss24"
+                                    ToolTip="{x:Static resources:Resource.Delete}" />
+                                <wpfui:Button
+                                    x:Name="_addPresetsButton"
+                                    Grid.Column="3"
+                                    Margin="8,0,0,0"
+                                    Padding="12,8"
+                                    VerticalAlignment="Stretch"
+                                    Appearance="Primary"
+                                    Click="AddPresetsButton_Click"
+                                    Content="{x:Static resources:Resource.Add}"
+                                    Icon="Add24" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
 
-                    <TextBlock
-                        x:Name="_cpuSectionTitle"
-                        Margin="0,16,0,24"
-                        Focusable="True"
-                        FontSize="24"
-                        FontWeight="Medium"
-                        Text="{x:Static resources:Resource.GodModeSettingsWindow_CPU_Title}" />
+                    <!-- CPU Section -->
+                    <StackPanel x:Name="_cpuSectionTitle" Orientation="Horizontal" Margin="0,8,0,16">
+                        <Border 
+                            Width="40" Height="40" 
+                            Background="{DynamicResource SystemFillColorCriticalBackgroundBrush}" 
+                            CornerRadius="8">
+                            <wpfui:SymbolIcon Symbol="Laptop24" FontSize="20" Foreground="{DynamicResource SystemFillColorCriticalBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <TextBlock
+                            Margin="12,0,0,0"
+                            VerticalAlignment="Center"
+                            FontSize="20"
+                            FontWeight="SemiBold"
+                            Text="{x:Static resources:Resource.GodModeSettingsWindow_CPU_Title}" />
+                    </StackPanel>
 
                     <godMode:GodModeValueControl
                         x:Name="_cpuLongTermPowerLimitControl"
@@ -177,13 +201,21 @@
                         Description="{x:Static resources:Resource.GodModeSettingsWindow_CPU_TempLimit_Description}"
                         Unit="°C" />
 
-                    <TextBlock
-                        x:Name="_gpuSectionTitle"
-                        Margin="0,16,0,24"
-                        Focusable="True"
-                        FontSize="24"
-                        FontWeight="Medium"
-                        Text="{x:Static resources:Resource.GodModeSettingsWindow_GPU_Title}" />
+                    <!-- GPU Section -->
+                    <StackPanel x:Name="_gpuSectionTitle" Orientation="Horizontal" Margin="0,24,0,16">
+                        <Border 
+                            Width="40" Height="40" 
+                            Background="{DynamicResource SystemFillColorSuccessBackgroundBrush}" 
+                            CornerRadius="8">
+                            <wpfui:SymbolIcon Symbol="Board24" FontSize="20" Foreground="{DynamicResource SystemFillColorSuccessBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <TextBlock
+                            Margin="12,0,0,0"
+                            VerticalAlignment="Center"
+                            FontSize="20"
+                            FontWeight="SemiBold"
+                            Text="{x:Static resources:Resource.GodModeSettingsWindow_GPU_Title}" />
+                    </StackPanel>
 
                     <godMode:GodModeValueControl
                         x:Name="_gpuPowerBoostControl"
@@ -220,13 +252,21 @@
                         Description="{x:Static resources:Resource.GodModeSettingsWindow_GPU_ToCpuDynamicBoostControl_Description}"
                         Unit="W" />
 
-                    <TextBlock
-                        x:Name="_fanSectionTitle"
-                        Margin="0,16,0,24"
-                        Focusable="True"
-                        FontSize="24"
-                        FontWeight="Medium"
-                        Text="{x:Static resources:Resource.GodModeSettingsWindow_Fans_Title}" />
+                    <!-- Fan Section -->
+                    <StackPanel x:Name="_fanSectionTitle" Orientation="Horizontal" Margin="0,24,0,16">
+                        <Border 
+                            Width="40" Height="40" 
+                            Background="{DynamicResource SystemFillColorCautionBackgroundBrush}" 
+                            CornerRadius="8">
+                            <wpfui:SymbolIcon Symbol="WeatherSqualls24" FontSize="20" Foreground="{DynamicResource SystemFillColorCautionBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <TextBlock
+                            Margin="12,0,0,0"
+                            VerticalAlignment="Center"
+                            FontSize="20"
+                            FontWeight="SemiBold"
+                            Text="{x:Static resources:Resource.GodModeSettingsWindow_Fans_Title}" />
+                    </StackPanel>
 
                     <custom:CardControl
                         x:Name="_fanCurveCardControl"
@@ -260,19 +300,28 @@
                             Click="FanFullSpeedToggle_Click" />
                     </custom:CardControl>
 
-                    <TextBlock
-                        x:Name="_advancedSectionTitle"
-                        Margin="0,16,0,8"
-                        Focusable="True"
-                        FontSize="24"
-                        FontWeight="Medium"
-                        Text="{x:Static resources:Resource.GodModeSettingsWindow_Advanced_Title}" />
+                    <!-- Advanced Section -->
+                    <StackPanel x:Name="_advancedSectionTitle" Orientation="Horizontal" Margin="0,24,0,8">
+                        <Border 
+                            Width="40" Height="40" 
+                            Background="{DynamicResource ControlFillColorSecondaryBrush}" 
+                            CornerRadius="8">
+                            <wpfui:SymbolIcon Symbol="Settings24" FontSize="20" Foreground="{DynamicResource TextFillColorSecondaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <TextBlock
+                            Margin="12,0,0,0"
+                            VerticalAlignment="Center"
+                            FontSize="20"
+                            FontWeight="SemiBold"
+                            Text="{x:Static resources:Resource.GodModeSettingsWindow_Advanced_Title}" />
+                    </StackPanel>
 
                     <TextBlock
                         x:Name="_advancedSectionMessage"
-                        Margin="0,0,0,24"
+                        Margin="52,0,0,16"
                         Focusable="True"
                         FontSize="12"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                         Text="{x:Static resources:Resource.GodModeSettingsWindow_Advanced_Message}" />
 
                     <custom:CardControl x:Name="_maxValueOffsetCardControl" Margin="0,0,0,8">
@@ -309,39 +358,47 @@
             </wpfui:DynamicScrollViewer>
         </controls:LoadableControl>
 
-        <Grid
+        <Border
             x:Name="_buttonsStackPanel"
             Grid.Row="2"
-            Margin="12"
+            Background="{DynamicResource ControlFillColorDefaultBrush}"
+            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+            BorderThickness="0,1,0,0"
             Visibility="Collapsed">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
+            <Grid
+                Margin="16,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-            <wpfui:Button
-                x:Name="_loadButton"
-                Grid.Column="0"
-                MinWidth="120"
-                Click="LoadButton_Click"
-                Content="{x:Static resources:Resource.Load}"
-                Icon="ChevronDown24" />
+                <wpfui:Button
+                    x:Name="_loadButton"
+                    Grid.Column="0"
+                    MinWidth="120"
+                    Padding="16,10"
+                    Click="LoadButton_Click"
+                    Content="{x:Static resources:Resource.Load}"
+                    Icon="ChevronDown24" />
 
-            <wpfui:Button
-                Grid.Column="2"
-                MinWidth="120"
-                Click="SaveButton_Click"
-                Content="{x:Static resources:Resource.Save}" />
-            <wpfui:Button
-                Grid.Column="3"
-                MinWidth="120"
-                Margin="12,0,0,0"
-                Appearance="Primary"
-                Click="SaveAndCloseButton_Click"
-                Content="{x:Static resources:Resource.SaveAndClose}" />
-        </Grid>
+                <wpfui:Button
+                    Grid.Column="2"
+                    MinWidth="120"
+                    Padding="16,10"
+                    Click="SaveButton_Click"
+                    Content="{x:Static resources:Resource.Save}" />
+                <wpfui:Button
+                    Grid.Column="3"
+                    MinWidth="140"
+                    Margin="12,0,0,0"
+                    Padding="16,10"
+                    Appearance="Primary"
+                    Click="SaveAndCloseButton_Click"
+                    Content="{x:Static resources:Resource.SaveAndClose}" />
+            </Grid>
+        </Border>
 
         <wpfui:Snackbar
             x:Name="_snackBar"

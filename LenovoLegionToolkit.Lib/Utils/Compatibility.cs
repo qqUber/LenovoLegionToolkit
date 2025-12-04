@@ -26,7 +26,16 @@ public static partial class Compatibility
     private const string ALLOWED_VENDOR = "LENOVO";
 
     private static readonly string[] AllowedModelsPrefix = [
-        // Worldwide variants
+        // Worldwide variants - Gen 10 (MY2025)
+        "18IAX",  // Legion 9i Gen 10 18" Intel Arrow Lake
+        "17IAX",  // LOQ Tower Gen 10, Legion 17" Intel Arrow Lake
+        "17IRX",  // LOQ 17" Intel Raptor Lake Gen 10
+        "16IAX",  // Legion 5i/7i/Pro 5i/Pro 7i Gen 10 16" Intel Arrow Lake
+        "15IAX",  // Legion 5i Gen 10 15" Intel Arrow Lake
+        "15IRX",  // LOQ 15" Intel Raptor Lake Gen 10
+        "15AHP",  // LOQ 15" AMD Hawk Point Gen 10
+
+        // Worldwide variants - Gen 9 and earlier
         "17ACH",
         "17ARH",
         "17ITH",
@@ -39,13 +48,11 @@ public static partial class Compatibility
         "16ARP",
         "16ARX",
         "16IAH",
-        "16IAX",
         "16IRH",
         "16IRX",
         "16ITH",
 
         "15ACH",
-        "15AHP",
         "15APH",
         "15ARH",
         "15ARP",
@@ -424,8 +431,15 @@ public static partial class Compatibility
     {
         var machineTypes = new[]
         {
-            "83G0", // Gen 9
-            "83AG"  // Gen 8
+            // Gen 10
+            "83EY", // Legion 9i Gen 10
+            "83JE", // LOQ 15IRX10
+            "83JH", // LOQ 17IRX10
+            "83KC", // LOQ 15IRX10 CTO
+            // Gen 9
+            "83G0",
+            // Gen 8
+            "83AG"
         };
         return machineTypes.Contains(machineType);
     }

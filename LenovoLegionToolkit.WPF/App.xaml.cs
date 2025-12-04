@@ -2,6 +2,7 @@
 using LenovoLegionToolkit.Lib.System;
 #endif
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
@@ -125,20 +126,36 @@ public partial class App
 
         AutomationPage.EnableHybridModeAutomation = flags.EnableHybridModeAutomation;
 
-        await LogSoftwareStatusAsync();
-        await InitPowerModeFeatureAsync();
-        await InitBatteryFeatureAsync();
-        await InitRgbKeyboardControllerAsync();
-        await InitSpectrumKeyboardControllerAsync();
-        await InitGpuOverclockControllerAsync();
+        // Run independent initialization tasks in parallel for faster startup
+        var initTasks = new List<Task>
+        {
+            LogSoftwareStatusAsync(),
+            InitPowerModeFeatureAsync(),
+            InitBatteryFeatureAsync(),
+            InitRgbKeyboardControllerAsync(),
+            InitSpectrumKeyboardControllerAsync(),
+            InitGpuOverclockControllerAsync(),
+            InitAutoRefreshRateControllerAsync()
+        };
+        
+        await Task.WhenAll(initTasks);
+        
+        // These must run after parallel init
         await InitHybridModeAsync();
         await InitAutomationProcessorAsync();
         InitMacroController();
 
-        await IoCContainer.Resolve<AIController>().StartIfNeededAsync();
-        await IoCContainer.Resolve<HWiNFOIntegration>().StartStopIfNeededAsync();
-        await IoCContainer.Resolve<IpcServer>().StartStopIfNeededAsync();
-        await IoCContainer.Resolve<BatteryDischargeRateMonitorService>().StartStopIfNeededAsync();
+        // Start background services in parallel
+        var servicesTasks = new[]
+        {
+            IoCContainer.Resolve<AIController>().StartIfNeededAsync(),
+            IoCContainer.Resolve<HWiNFOIntegration>().StartStopIfNeededAsync(),
+            IoCContainer.Resolve<IpcServer>().StartStopIfNeededAsync(),
+            IoCContainer.Resolve<BatteryDischargeRateMonitorService>().StartStopIfNeededAsync()
+        };
+        
+        // Don't await services - let them start in background
+        _ = Task.WhenAll(servicesTasks);
 
 #if !DEBUG
         Autorun.Validate();
@@ -589,6 +606,23 @@ public partial class App
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Couldn't overclock GPU.", ex);
+        }
+    }
+
+    private static async Task InitAutoRefreshRateControllerAsync()
+    {
+        try
+        {
+            var controller = IoCContainer.Resolve<AutoRefreshRateController>();
+            await controller.StartAsync();
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Auto refresh rate controller initialized.");
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Couldn't initialize auto refresh rate controller.", ex);
         }
     }
 
