@@ -56,7 +56,15 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public string? CustomBackgroundPath { get; set; }
         public double CustomBackgroundOpacity { get; set; } = 0.15;
         public bool CustomBackgroundBlur { get; set; } = true;
+        public double CustomBackgroundBlurRadius { get; set; } = 15;
         public RGBColor? CustomBackgroundTint { get; set; }
+        
+        // Enhanced background features
+        public CustomBackgroundType CustomBackgroundType { get; set; } = CustomBackgroundType.Image;
+        public List<string> SlideshowImages { get; set; } = [];
+        public int SlideshowIntervalSeconds { get; set; } = 30;
+        public bool SlideshowShuffle { get; set; }
+        public string? SelectedPreset { get; set; }
     }
 
     public ApplicationSettings() : base("settings.json")

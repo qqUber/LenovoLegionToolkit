@@ -65,9 +65,18 @@ public partial class DashboardPage
 
         var initializedTasks = new List<Task>(controls.Length + 1) { loadingTask };
 
-        foreach (var control in controls)
+        // Add enough row definitions for single-column layout (we'll reuse them for 2-column)
+        for (var i = 0; i < controls.Length; i++)
         {
             _content.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Auto) });
+        }
+
+        for (var index = 0; index < controls.Length; index++)
+        {
+            var control = controls[index];
+            // Set initial row/column (will be recalculated in LayoutGroups)
+            Grid.SetRow(control, index);
+            Grid.SetColumn(control, 0);
             _content.Children.Add(control);
             _dashboardGroupControls.Add(control);
             initializedTasks.Add(control.InitializedTask);
@@ -145,6 +154,14 @@ public partial class DashboardPage
             Grid.SetRow(control, index / 2);
             Grid.SetColumn(control, index % 2);
         }
+
+        // Update hyperlink row position for 2-column layout
+        var hyperlink = _content.Children.OfType<Hyperlink>().FirstOrDefault();
+        if (hyperlink is not null)
+        {
+            var rowCount = (_dashboardGroupControls.Count + 1) / 2;
+            Grid.SetRow(hyperlink, rowCount);
+        }
     }
 
     private void Collapse()
@@ -158,6 +175,13 @@ public partial class DashboardPage
             var control = _dashboardGroupControls[index];
             Grid.SetRow(control, index);
             Grid.SetColumn(control, 0);
+        }
+
+        // Update hyperlink row position for single-column layout
+        var hyperlink = _content.Children.OfType<Hyperlink>().FirstOrDefault();
+        if (hyperlink is not null)
+        {
+            Grid.SetRow(hyperlink, _dashboardGroupControls.Count);
         }
     }
 }

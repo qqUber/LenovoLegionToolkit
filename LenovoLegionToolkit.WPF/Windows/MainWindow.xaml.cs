@@ -382,50 +382,45 @@ public partial class MainWindow
         }
     }
 
+    private System.Windows.Threading.DispatcherTimer? _slideshowTimer;
+    private int _currentSlideshowIndex;
+    private System.Collections.Generic.List<string>? _shuffledImages;
+
     public void ApplyCustomBackground()
     {
         try
         {
             var enabled = _applicationSettings.Store.CustomBackgroundEnabled;
-            var path = _applicationSettings.Store.CustomBackgroundPath;
+            var bgType = _applicationSettings.Store.CustomBackgroundType;
 
-            if (!enabled || string.IsNullOrEmpty(path) || !File.Exists(path))
+            // Stop slideshow timer if running
+            _slideshowTimer?.Stop();
+
+            if (!enabled)
             {
                 _backgroundImage.Visibility = Visibility.Collapsed;
                 _backgroundTint.Visibility = Visibility.Collapsed;
+                _backgroundGradient.Visibility = Visibility.Collapsed;
                 return;
             }
 
-            var bitmap = new BitmapImage();
-            bitmap.BeginInit();
-            bitmap.UriSource = new Uri(path, UriKind.Absolute);
-            bitmap.CacheOption = BitmapCacheOption.OnLoad;
-            bitmap.EndInit();
-            bitmap.Freeze();
-
-            _backgroundImage.Source = bitmap;
-            _backgroundImage.Opacity = _applicationSettings.Store.CustomBackgroundOpacity;
-            _backgroundImage.Visibility = Visibility.Visible;
-
-            if (_applicationSettings.Store.CustomBackgroundBlur)
+            switch (bgType)
             {
-                _backgroundImage.Effect = new BlurEffect { Radius = 15 };
-            }
-            else
-            {
-                _backgroundImage.Effect = null;
+                case CustomBackgroundType.Image:
+                    ApplyImageBackground();
+                    break;
+                case CustomBackgroundType.Video:
+                    ApplyVideoBackground();
+                    break;
+                case CustomBackgroundType.Slideshow:
+                    ApplySlideshowBackground();
+                    break;
+                case CustomBackgroundType.Preset:
+                    ApplyPresetBackground();
+                    break;
             }
 
-            if (_applicationSettings.Store.CustomBackgroundTint.HasValue)
-            {
-                var tint = _applicationSettings.Store.CustomBackgroundTint.Value;
-                _backgroundTint.Fill = new SolidColorBrush(Color.FromArgb(80, tint.R, tint.G, tint.B));
-                _backgroundTint.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                _backgroundTint.Visibility = Visibility.Collapsed;
-            }
+            ApplyBackgroundEffects();
         }
         catch (Exception ex)
         {
@@ -433,6 +428,162 @@ public partial class MainWindow
                 Log.Instance.Trace($"Failed to apply custom background.", ex);
 
             _backgroundImage.Visibility = Visibility.Collapsed;
+            _backgroundTint.Visibility = Visibility.Collapsed;
+            _backgroundGradient.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private void ApplyImageBackground()
+    {
+        var path = _applicationSettings.Store.CustomBackgroundPath;
+        if (string.IsNullOrEmpty(path) || !File.Exists(path))
+        {
+            _backgroundImage.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        var bitmap = new BitmapImage();
+        bitmap.BeginInit();
+        bitmap.UriSource = new Uri(path, UriKind.Absolute);
+        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+        bitmap.EndInit();
+        bitmap.Freeze();
+
+        _backgroundImage.Source = bitmap;
+        _backgroundImage.Visibility = Visibility.Visible;
+        _backgroundGradient.Visibility = Visibility.Collapsed;
+    }
+
+    private void ApplyVideoBackground()
+    {
+        // Video backgrounds use the same path mechanism as images
+        // The MediaElement would need to be added to MainWindow.xaml
+        // For now, fall back to image behavior
+        ApplyImageBackground();
+    }
+
+    private void ApplySlideshowBackground()
+    {
+        var images = _applicationSettings.Store.SlideshowImages;
+        if (images.Count == 0)
+        {
+            _backgroundImage.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        // Initialize shuffled list if shuffle is enabled
+        if (_applicationSettings.Store.SlideshowShuffle)
+        {
+            if (_shuffledImages == null || _shuffledImages.Count != images.Count)
+            {
+                _shuffledImages = images.OrderBy(_ => Guid.NewGuid()).ToList();
+            }
+        }
+        else
+        {
+            _shuffledImages = images.ToList();
+        }
+
+        // Show first/current image
+        ShowSlideshowImage(_currentSlideshowIndex % _shuffledImages.Count);
+
+        // Start timer
+        _slideshowTimer = new System.Windows.Threading.DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(_applicationSettings.Store.SlideshowIntervalSeconds)
+        };
+        _slideshowTimer.Tick += (_, _) =>
+        {
+            _currentSlideshowIndex++;
+            if (_shuffledImages != null && _shuffledImages.Count > 0)
+                ShowSlideshowImage(_currentSlideshowIndex % _shuffledImages.Count);
+        };
+        _slideshowTimer.Start();
+    }
+
+    private void ShowSlideshowImage(int index)
+    {
+        if (_shuffledImages == null || index >= _shuffledImages.Count)
+            return;
+
+        var path = _shuffledImages[index];
+        if (!File.Exists(path))
+            return;
+
+        var bitmap = new BitmapImage();
+        bitmap.BeginInit();
+        bitmap.UriSource = new Uri(path, UriKind.Absolute);
+        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+        bitmap.EndInit();
+        bitmap.Freeze();
+
+        _backgroundImage.Source = bitmap;
+        _backgroundImage.Visibility = Visibility.Visible;
+        _backgroundGradient.Visibility = Visibility.Collapsed;
+    }
+
+    private void ApplyPresetBackground()
+    {
+        var preset = _applicationSettings.Store.SelectedPreset;
+        _backgroundImage.Visibility = Visibility.Collapsed;
+
+        if (string.IsNullOrEmpty(preset) || preset == "None")
+        {
+            _backgroundGradient.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        var gradient = preset switch
+        {
+            "Gradient1" => CreateGradientBrush("#8B5CF6", "#3B82F6"),  // Purple Haze
+            "Gradient2" => CreateGradientBrush("#0EA5E9", "#22D3EE"),  // Ocean Blue
+            "Gradient3" => CreateGradientBrush("#F97316", "#EF4444"),  // Sunset
+            "Gradient4" => CreateGradientBrush("#22C55E", "#10B981"),  // Forest
+            "Gradient5" => CreateGradientBrush("#1E293B", "#334155"),  // Midnight
+            _ => null
+        };
+
+        if (gradient != null)
+        {
+            _backgroundGradient.Fill = gradient;
+            _backgroundGradient.Opacity = _applicationSettings.Store.CustomBackgroundOpacity * 3; // Presets need more visibility
+            _backgroundGradient.Visibility = Visibility.Visible;
+        }
+        else
+        {
+            _backgroundGradient.Visibility = Visibility.Collapsed;
+        }
+    }
+
+    private static LinearGradientBrush CreateGradientBrush(string color1, string color2)
+    {
+        return new LinearGradientBrush(
+            (Color)ColorConverter.ConvertFromString(color1),
+            (Color)ColorConverter.ConvertFromString(color2),
+            45);
+    }
+
+    private void ApplyBackgroundEffects()
+    {
+        _backgroundImage.Opacity = _applicationSettings.Store.CustomBackgroundOpacity;
+
+        if (_applicationSettings.Store.CustomBackgroundBlur && _backgroundImage.Visibility == Visibility.Visible)
+        {
+            _backgroundImage.Effect = new BlurEffect { Radius = _applicationSettings.Store.CustomBackgroundBlurRadius };
+        }
+        else
+        {
+            _backgroundImage.Effect = null;
+        }
+
+        if (_applicationSettings.Store.CustomBackgroundTint.HasValue)
+        {
+            var tint = _applicationSettings.Store.CustomBackgroundTint.Value;
+            _backgroundTint.Fill = new SolidColorBrush(Color.FromArgb(80, tint.R, tint.G, tint.B));
+            _backgroundTint.Visibility = Visibility.Visible;
+        }
+        else
+        {
             _backgroundTint.Visibility = Visibility.Collapsed;
         }
     }

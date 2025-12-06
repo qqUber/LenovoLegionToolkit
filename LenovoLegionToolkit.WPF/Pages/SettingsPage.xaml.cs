@@ -199,10 +199,20 @@ public partial class SettingsPage
         _cliPathToggle.Visibility = Visibility.Visible;
 
         // Custom Background settings
+        _backgroundTypeComboBox.SetItems(Enum.GetValues<CustomBackgroundType>(), _settings.Store.CustomBackgroundType);
         _customBackgroundToggle.IsChecked = _settings.Store.CustomBackgroundEnabled;
+        _videoBackgroundToggle.IsChecked = _settings.Store.CustomBackgroundEnabled;
         _backgroundOpacitySlider.Value = _settings.Store.CustomBackgroundOpacity;
         _backgroundOpacityText.Text = $"{(int)(_settings.Store.CustomBackgroundOpacity * 100)}%";
         _backgroundBlurToggle.IsChecked = _settings.Store.CustomBackgroundBlur;
+        _blurRadiusSlider.Value = _settings.Store.CustomBackgroundBlurRadius;
+        _blurRadiusText.Text = $"{(int)_settings.Store.CustomBackgroundBlurRadius}px";
+        _blurRadiusCard.Visibility = _settings.Store.CustomBackgroundBlur ? Visibility.Visible : Visibility.Collapsed;
+        
+        // Slideshow settings
+        _slideshowShuffleToggle.IsChecked = _settings.Store.SlideshowShuffle;
+        UpdateSlideshowIntervalComboBox();
+        UpdateSlideshowCountText();
         
         // Tint color picker
         if (_settings.Store.CustomBackgroundTint.HasValue)
@@ -211,7 +221,11 @@ public partial class SettingsPage
             _backgroundTintPicker.SelectedColor = System.Windows.Media.Color.FromRgb(tint.R, tint.G, tint.B);
         }
         
+        // Initialize preset gallery
+        InitializePresetGallery();
+        
         UpdateBackgroundButtonStates();
+        UpdateBackgroundTypeVisibility();
 
         _isRefreshing = false;
     }
@@ -355,6 +369,195 @@ public partial class SettingsPage
     {
         _settings.Store.CustomBackgroundBlur = _backgroundBlurToggle.IsChecked == true;
         _settings.SynchronizeStore();
+        _blurRadiusCard.Visibility = _backgroundBlurToggle.IsChecked == true ? Visibility.Visible : Visibility.Collapsed;
+        ApplyBackgroundToMainWindow();
+    }
+
+    private void BlurRadiusSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (_isRefreshing || _blurRadiusText == null)
+            return;
+
+        _settings.Store.CustomBackgroundBlurRadius = _blurRadiusSlider.Value;
+        _settings.SynchronizeStore();
+        
+        _blurRadiusText.Text = $"{(int)_blurRadiusSlider.Value}px";
+        ApplyBackgroundToMainWindow();
+    }
+
+    private void BackgroundTypeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        if (!_backgroundTypeComboBox.TryGetSelectedItem(out CustomBackgroundType backgroundType))
+            return;
+
+        _settings.Store.CustomBackgroundType = backgroundType;
+        _settings.SynchronizeStore();
+        UpdateBackgroundTypeVisibility();
+        ApplyBackgroundToMainWindow();
+    }
+
+    private void UpdateBackgroundTypeVisibility()
+    {
+        var bgType = _settings.Store.CustomBackgroundType;
+        
+        _imageCard.Visibility = bgType == CustomBackgroundType.Image ? Visibility.Visible : Visibility.Collapsed;
+        _videoCard.Visibility = bgType == CustomBackgroundType.Video ? Visibility.Visible : Visibility.Collapsed;
+        _slideshowCard.Visibility = bgType == CustomBackgroundType.Slideshow ? Visibility.Visible : Visibility.Collapsed;
+        _presetCard.Visibility = bgType == CustomBackgroundType.Preset ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void SelectVideoButton_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = "Select Video",
+            Filter = "Video files (*.mp4;*.webm;*.wmv;*.avi)|*.mp4;*.webm;*.wmv;*.avi|All files (*.*)|*.*",
+            CheckFileExists = true
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+            _settings.Store.CustomBackgroundPath = dialog.FileName;
+            _settings.Store.CustomBackgroundEnabled = true;
+            _settings.SynchronizeStore();
+            _videoBackgroundToggle.IsChecked = true;
+            UpdateBackgroundButtonStates();
+            ApplyBackgroundToMainWindow();
+        }
+    }
+
+    private void AddSlideshowImagesButton_Click(object sender, RoutedEventArgs e)
+    {
+        var dialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = "Add Images",
+            Filter = "Image files (*.png;*.jpg;*.jpeg;*.bmp;*.gif)|*.png;*.jpg;*.jpeg;*.bmp;*.gif|All files (*.*)|*.*",
+            CheckFileExists = true,
+            Multiselect = true
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+            foreach (var fileName in dialog.FileNames)
+            {
+                if (!_settings.Store.SlideshowImages.Contains(fileName))
+                    _settings.Store.SlideshowImages.Add(fileName);
+            }
+            _settings.Store.CustomBackgroundEnabled = _settings.Store.SlideshowImages.Count > 0;
+            _settings.SynchronizeStore();
+            UpdateSlideshowCountText();
+            ApplyBackgroundToMainWindow();
+        }
+    }
+
+    private void ClearSlideshowButton_Click(object sender, RoutedEventArgs e)
+    {
+        _settings.Store.SlideshowImages.Clear();
+        _settings.Store.CustomBackgroundEnabled = false;
+        _settings.SynchronizeStore();
+        UpdateSlideshowCountText();
+        ApplyBackgroundToMainWindow();
+    }
+
+    private void SlideshowIntervalComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        if (_slideshowIntervalComboBox.SelectedItem is ComboBoxItem item && int.TryParse(item.Tag?.ToString(), out var interval))
+        {
+            _settings.Store.SlideshowIntervalSeconds = interval;
+            _settings.SynchronizeStore();
+            ApplyBackgroundToMainWindow();
+        }
+    }
+
+    private void SlideshowShuffleToggle_Click(object sender, RoutedEventArgs e)
+    {
+        _settings.Store.SlideshowShuffle = _slideshowShuffleToggle.IsChecked == true;
+        _settings.SynchronizeStore();
+        ApplyBackgroundToMainWindow();
+    }
+
+    private void UpdateSlideshowCountText()
+    {
+        var count = _settings.Store.SlideshowImages.Count;
+        _slideshowCountText.Text = $"{count} image{(count != 1 ? "s" : "")}";
+    }
+
+    private void UpdateSlideshowIntervalComboBox()
+    {
+        var interval = _settings.Store.SlideshowIntervalSeconds;
+        foreach (ComboBoxItem item in _slideshowIntervalComboBox.Items)
+        {
+            if (int.TryParse(item.Tag?.ToString(), out var itemInterval) && itemInterval == interval)
+            {
+                _slideshowIntervalComboBox.SelectedItem = item;
+                break;
+            }
+        }
+    }
+
+    private void InitializePresetGallery()
+    {
+        _presetGallery.Children.Clear();
+        
+        var presets = new[]
+        {
+            ("None", (System.Windows.Media.Brush)System.Windows.Media.Brushes.Transparent),
+            ("Gradient1", CreateGradient("#8B5CF6", "#3B82F6")),  // Purple Haze
+            ("Gradient2", CreateGradient("#0EA5E9", "#22D3EE")),  // Ocean Blue
+            ("Gradient3", CreateGradient("#F97316", "#EF4444")),  // Sunset
+            ("Gradient4", CreateGradient("#22C55E", "#10B981")),  // Forest
+            ("Gradient5", CreateGradient("#1E293B", "#334155")),  // Midnight
+        };
+
+        foreach (var (name, brush) in presets)
+        {
+            var border = new Border
+            {
+                Width = 80,
+                Height = 50,
+                Margin = new Thickness(0, 0, 8, 8),
+                CornerRadius = new CornerRadius(8),
+                Background = brush,
+                Cursor = System.Windows.Input.Cursors.Hand,
+                BorderThickness = new Thickness(_settings.Store.SelectedPreset == name ? 2 : 0),
+                Tag = name
+            };
+            border.SetResourceReference(Border.BorderBrushProperty, "SystemAccentColorPrimaryBrush");
+            border.MouseLeftButtonDown += PresetBorder_Click;
+            
+            _presetGallery.Children.Add(border);
+        }
+    }
+
+    private static System.Windows.Media.LinearGradientBrush CreateGradient(string color1, string color2)
+    {
+        return new System.Windows.Media.LinearGradientBrush(
+            (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(color1),
+            (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(color2),
+            45);
+    }
+
+    private void PresetBorder_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
+    {
+        if (sender is not Border border || border.Tag is not string presetName)
+            return;
+
+        _settings.Store.SelectedPreset = presetName;
+        _settings.Store.CustomBackgroundEnabled = presetName != "None";
+        _settings.SynchronizeStore();
+        
+        // Update selection visuals
+        foreach (Border child in _presetGallery.Children)
+        {
+            child.BorderThickness = new Thickness(child.Tag?.ToString() == presetName ? 2 : 0);
+        }
+        
         ApplyBackgroundToMainWindow();
     }
 

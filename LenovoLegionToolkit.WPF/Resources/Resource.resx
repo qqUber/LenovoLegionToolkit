@@ -1207,16 +1207,73 @@ Make sure that your script runs correctly first.</value>
     <value>Adjust the visibility of the background image. Lower values make it more subtle.</value>
   </data>
   <data name="SettingsPage_CustomBackground_Blur_Title" xml:space="preserve">
-    <value>Background Overlay</value>
+    <value>Background Blur</value>
   </data>
   <data name="SettingsPage_CustomBackground_Blur_Message" xml:space="preserve">
-    <value>Add a semi-transparent overlay to improve text readability.</value>
+    <value>Apply blur effect to the background image.</value>
+  </data>
+  <data name="SettingsPage_CustomBackground_BlurRadius_Title" xml:space="preserve">
+    <value>Blur Intensity</value>
+  </data>
+  <data name="SettingsPage_CustomBackground_BlurRadius_Message" xml:space="preserve">
+    <value>Adjust how much blur is applied to the background.</value>
   </data>
   <data name="SettingsPage_CustomBackground_Tint_Title" xml:space="preserve">
     <value>Color Tint</value>
   </data>
   <data name="SettingsPage_CustomBackground_Tint_Message" xml:space="preserve">
     <value>Add a subtle color overlay to match your theme.</value>
+  </data>
+  <data name="SettingsPage_CustomBackground_Type_Title" xml:space="preserve">
+    <value>Background Type</value>
+  </data>
+  <data name="SettingsPage_CustomBackground_Type_Message" xml:space="preserve">
+    <value>Choose between static image, video, slideshow, or preset backgrounds.</value>
+  </data>
+  <data name="SettingsPage_CustomBackground_Presets_Title" xml:space="preserve">
+    <value>Background Presets</value>
+  </data>
+  <data name="SettingsPage_CustomBackground_Presets_Message" xml:space="preserve">
+    <value>Choose from built-in background presets.</value>
+  </data>
+  <data name="SettingsPage_CustomBackground_SelectVideo" xml:space="preserve">
+    <value>Select Video</value>
+  </data>
+  <data name="SettingsPage_CustomBackground_Slideshow_Title" xml:space="preserve">
+    <value>Slideshow Settings</value>
+  </data>
+  <data name="SettingsPage_CustomBackground_Slideshow_Message" xml:space="preserve">
+    <value>Configure slideshow interval and behavior.</value>
+  </data>
+  <data name="SettingsPage_CustomBackground_Slideshow_AddImages" xml:space="preserve">
+    <value>Add Images</value>
+  </data>
+  <data name="SettingsPage_CustomBackground_Slideshow_ClearAll" xml:space="preserve">
+    <value>Clear All</value>
+  </data>
+  <data name="SettingsPage_CustomBackground_Slideshow_Interval" xml:space="preserve">
+    <value>Interval (seconds)</value>
+  </data>
+  <data name="SettingsPage_CustomBackground_Slideshow_Shuffle" xml:space="preserve">
+    <value>Shuffle</value>
+  </data>
+  <data name="SettingsPage_CustomBackground_Preset_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="SettingsPage_CustomBackground_Preset_Gradient1" xml:space="preserve">
+    <value>Purple Haze</value>
+  </data>
+  <data name="SettingsPage_CustomBackground_Preset_Gradient2" xml:space="preserve">
+    <value>Ocean Blue</value>
+  </data>
+  <data name="SettingsPage_CustomBackground_Preset_Gradient3" xml:space="preserve">
+    <value>Sunset</value>
+  </data>
+  <data name="SettingsPage_CustomBackground_Preset_Gradient4" xml:space="preserve">
+    <value>Forest</value>
+  </data>
+  <data name="SettingsPage_CustomBackground_Preset_Gradient5" xml:space="preserve">
+    <value>Midnight</value>
   </data>
   <data name="SettingsPage_Autorun_Message" xml:space="preserve">
     <value>Start minimized to tray when you log in to Windows.</value>

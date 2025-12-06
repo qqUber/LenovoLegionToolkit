@@ -26,6 +26,7 @@
         </Grid.RowDefinitions>
 
         <!-- Custom Background Layer -->
+        <Rectangle x:Name="_backgroundGradient" Grid.RowSpan="6" Visibility="Collapsed" />
         <Image x:Name="_backgroundImage" Grid.RowSpan="6" Stretch="UniformToFill" Visibility="Collapsed" />
         <Rectangle x:Name="_backgroundTint" Grid.RowSpan="6" Visibility="Collapsed" />
 

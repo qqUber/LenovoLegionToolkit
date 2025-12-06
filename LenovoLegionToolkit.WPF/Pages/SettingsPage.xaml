@@ -89,7 +89,32 @@
             FontWeight="SemiBold"
             Text="{x:Static resources:Resource.SettingsPage_CustomBackground_Section}" />
 
-        <custom:CardControl Margin="0,0,0,8" Icon="Image24">
+        <!-- Background Type Selection -->
+        <custom:CardControl Margin="0,0,0,8" Icon="Wallpaper24">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_CustomBackground_Type_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_CustomBackground_Type_Message}" />
+            </custom:CardControl.Header>
+            <ComboBox
+                x:Name="_backgroundTypeComboBox"
+                MinWidth="160"
+                MaxDropDownHeight="Auto"
+                SelectionChanged="BackgroundTypeComboBox_SelectionChanged" />
+        </custom:CardControl>
+
+        <!-- Preset Gallery (visible when type is Preset) -->
+        <custom:CardControl x:Name="_presetCard" Margin="0,0,0,8" Icon="GridKanban20">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_CustomBackground_Presets_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_CustomBackground_Presets_Message}" />
+            </custom:CardControl.Header>
+            <StackPanel>
+                <WrapPanel x:Name="_presetGallery" Orientation="Horizontal" Margin="0,0,0,8">
+                    <!-- Presets will be added dynamically -->
+                </WrapPanel>
+            </StackPanel>
+        </custom:CardControl>
+
+        <!-- Image Selection (visible when type is Image) -->
+        <custom:CardControl x:Name="_imageCard" Margin="0,0,0,8" Icon="Image24">
             <custom:CardControl.Header>
                 <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_CustomBackground_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_CustomBackground_Message}" />
             </custom:CardControl.Header>
@@ -107,6 +132,68 @@
                 <wpfui:ToggleSwitch
                     x:Name="_customBackgroundToggle"
                     Click="CustomBackgroundToggle_Click" />
+            </StackPanel>
+        </custom:CardControl>
+
+        <!-- Video Selection (visible when type is Video) -->
+        <custom:CardControl x:Name="_videoCard" Margin="0,0,0,8" Icon="Video24">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_CustomBackground_SelectVideo}" Subtitle="{x:Static resources:Resource.SettingsPage_CustomBackground_Message}" />
+            </custom:CardControl.Header>
+            <StackPanel Orientation="Horizontal">
+                <Button
+                    x:Name="_selectVideoButton"
+                    Content="{x:Static resources:Resource.SettingsPage_CustomBackground_SelectVideo}"
+                    Click="SelectVideoButton_Click"
+                    Margin="0,0,8,0" />
+                <Button
+                    x:Name="_clearVideoButton"
+                    Content="{x:Static resources:Resource.SettingsPage_CustomBackground_Clear}"
+                    Click="ClearBackgroundButton_Click"
+                    Margin="0,0,8,0" />
+                <wpfui:ToggleSwitch
+                    x:Name="_videoBackgroundToggle"
+                    Click="CustomBackgroundToggle_Click" />
+            </StackPanel>
+        </custom:CardControl>
+
+        <!-- Slideshow Settings (visible when type is Slideshow) -->
+        <custom:CardControl x:Name="_slideshowCard" Margin="0,0,0,8" Icon="SlideMultiple24">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_CustomBackground_Slideshow_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_CustomBackground_Slideshow_Message}" />
+            </custom:CardControl.Header>
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                    <Button
+                        x:Name="_addSlideshowImagesButton"
+                        Content="{x:Static resources:Resource.SettingsPage_CustomBackground_Slideshow_AddImages}"
+                        Click="AddSlideshowImagesButton_Click"
+                        Margin="0,0,8,0" />
+                    <Button
+                        x:Name="_clearSlideshowButton"
+                        Content="{x:Static resources:Resource.SettingsPage_CustomBackground_Slideshow_ClearAll}"
+                        Click="ClearSlideshowButton_Click"
+                        Margin="0,0,8,0" />
+                    <TextBlock x:Name="_slideshowCountText" VerticalAlignment="Center" Margin="8,0,0,0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                    <TextBlock Text="{x:Static resources:Resource.SettingsPage_CustomBackground_Slideshow_Interval}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <ComboBox
+                        x:Name="_slideshowIntervalComboBox"
+                        MinWidth="100"
+                        SelectionChanged="SlideshowIntervalComboBox_SelectionChanged">
+                        <ComboBoxItem Content="10" Tag="10" />
+                        <ComboBoxItem Content="30" Tag="30" />
+                        <ComboBoxItem Content="60" Tag="60" />
+                        <ComboBoxItem Content="120" Tag="120" />
+                        <ComboBoxItem Content="300" Tag="300" />
+                    </ComboBox>
+                    <wpfui:ToggleSwitch
+                        x:Name="_slideshowShuffleToggle"
+                        Content="{x:Static resources:Resource.SettingsPage_CustomBackground_Slideshow_Shuffle}"
+                        Margin="16,0,0,0"
+                        Click="SlideshowShuffleToggle_Click" />
+                </StackPanel>
             </StackPanel>
         </custom:CardControl>
 
@@ -138,9 +225,35 @@
             <custom:CardControl.Header>
                 <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_CustomBackground_Blur_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_CustomBackground_Blur_Message}" />
             </custom:CardControl.Header>
-            <wpfui:ToggleSwitch
-                x:Name="_backgroundBlurToggle"
-                Click="BackgroundBlurToggle_Click" />
+            <StackPanel Orientation="Horizontal">
+                <wpfui:ToggleSwitch
+                    x:Name="_backgroundBlurToggle"
+                    Click="BackgroundBlurToggle_Click" />
+            </StackPanel>
+        </custom:CardControl>
+
+        <custom:CardControl x:Name="_blurRadiusCard" Margin="0,0,0,8" Icon="Drop24">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_CustomBackground_BlurRadius_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_CustomBackground_BlurRadius_Message}" />
+            </custom:CardControl.Header>
+            <StackPanel Orientation="Horizontal">
+                <Slider
+                    x:Name="_blurRadiusSlider"
+                    Width="200"
+                    Minimum="5"
+                    Maximum="50"
+                    SmallChange="5"
+                    LargeChange="5"
+                    TickFrequency="5"
+                    TickPlacement="BottomRight"
+                    IsSnapToTickEnabled="True"
+                    ValueChanged="BlurRadiusSlider_ValueChanged" />
+                <TextBlock
+                    x:Name="_blurRadiusText"
+                    VerticalAlignment="Center"
+                    Margin="12,0,0,0"
+                    FontWeight="SemiBold" />
+            </StackPanel>
         </custom:CardControl>
 
         <custom:CardControl Margin="0,0,0,24" Icon="ColorBackground24">

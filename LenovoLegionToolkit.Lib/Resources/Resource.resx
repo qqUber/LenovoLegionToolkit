@@ -390,6 +390,18 @@
   <data name="Theme_System" xml:space="preserve">
     <value>System</value>
   </data>
+  <data name="BackgroundType_Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="BackgroundType_Video" xml:space="preserve">
+    <value>Video</value>
+  </data>
+  <data name="BackgroundType_Slideshow" xml:space="preserve">
+    <value>Slideshow</value>
+  </data>
+  <data name="BackgroundType_Preset" xml:space="preserve">
+    <value>Preset</value>
+  </data>
   <data name="TouchpadLockState_Off" xml:space="preserve">
     <value>Off</value>
     <comment>Informs the user that Touchpad Lock is or will be turned off.</comment>

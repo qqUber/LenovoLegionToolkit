@@ -583,6 +583,18 @@ public enum Theme
     Dark
 }
 
+public enum CustomBackgroundType
+{
+    [Display(ResourceType = typeof(Resource), Name = "BackgroundType_Image")]
+    Image,
+    [Display(ResourceType = typeof(Resource), Name = "BackgroundType_Video")]
+    Video,
+    [Display(ResourceType = typeof(Resource), Name = "BackgroundType_Slideshow")]
+    Slideshow,
+    [Display(ResourceType = typeof(Resource), Name = "BackgroundType_Preset")]
+    Preset
+}
+
 public enum AccentColorSource
 {
     [Display(ResourceType = typeof(Resource), Name = "AccentColorSource_System")]

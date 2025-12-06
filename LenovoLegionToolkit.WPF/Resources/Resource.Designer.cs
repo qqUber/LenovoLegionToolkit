@@ -5363,6 +5363,123 @@ namespace LenovoLegionToolkit.WPF.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Background Type.
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Type_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Type_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose between static image, video, slideshow, or preset backgrounds..
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Type_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Type_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Background Presets.
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Presets_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Presets_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose from built-in background presets..
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Presets_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Presets_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Video.
+        /// </summary>
+        public static string SettingsPage_CustomBackground_SelectVideo {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_SelectVideo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Slideshow Settings.
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Slideshow_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Slideshow_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configure slideshow interval and behavior..
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Slideshow_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Slideshow_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Images.
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Slideshow_AddImages {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Slideshow_AddImages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear All.
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Slideshow_ClearAll {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Slideshow_ClearAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interval (seconds).
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Slideshow_Interval {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Slideshow_Interval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shuffle.
+        /// </summary>
+        public static string SettingsPage_CustomBackground_Slideshow_Shuffle {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_Slideshow_Shuffle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blur Intensity.
+        /// </summary>
+        public static string SettingsPage_CustomBackground_BlurRadius_Title {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_BlurRadius_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adjust how much blur is applied to the background..
+        /// </summary>
+        public static string SettingsPage_CustomBackground_BlurRadius_Message {
+            get {
+                return ResourceManager.GetString("SettingsPage_CustomBackground_BlurRadius_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Start minimized to tray when you log in to Windows..
         /// </summary>
         public static string SettingsPage_Autorun_Message {
