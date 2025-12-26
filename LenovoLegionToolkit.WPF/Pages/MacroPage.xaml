@@ -1,4 +1,4 @@
-<wpfui:UiPage
+<compat:UiPage
     x:Class="LenovoLegionToolkit.WPF.Pages.MacroPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,10 +7,10 @@
     xmlns:macro="clr-namespace:LenovoLegionToolkit.WPF.Controls.Macro"
     xmlns:resources="clr-namespace:LenovoLegionToolkit.WPF.Resources"
     xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
+    xmlns:compat="clr-namespace:LenovoLegionToolkit.WPF.Compat"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.MacroPage_Title}"
-    FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
-    Scrollable="True">
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
 
     <StackPanel Margin="0,0,16,12">
         <TextBlock
@@ -182,7 +182,7 @@
 
         </Grid>
     </StackPanel>
-</wpfui:UiPage>
+</compat:UiPage>
 
 
 

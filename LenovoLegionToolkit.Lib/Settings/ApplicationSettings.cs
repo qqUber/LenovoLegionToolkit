@@ -31,7 +31,7 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public Dictionary<PowerModeState, Guid> PowerPlans { get; set; } = [];
         public Dictionary<PowerModeState, WindowsPowerMode> PowerModes { get; set; } = [];
         public bool MinimizeToTray { get; set; } = true;
-        public bool MinimizeOnClose { get; set; }
+        public bool MinimizeOnClose { get; set; } = true;
         public WindowSize? WindowSize { get; set; }
         public bool DontShowNotifications { get; set; }
         public NotificationPosition NotificationPosition { get; set; } = NotificationPosition.BottomCenter;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,8 +10,9 @@ using LenovoLegionToolkit.WPF.Controls.Dashboard;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Settings;
 using LenovoLegionToolkit.WPF.Windows.Dashboard;
-using Wpf.Ui.Common;
+
 using Wpf.Ui.Controls;
+using HyperlinkButton = Wpf.Ui.Controls.HyperlinkButton;
 
 namespace LenovoLegionToolkit.WPF.Pages;
 
@@ -36,13 +37,16 @@ public partial class DashboardPage
     {
         _loader.IsLoading = true;
 
+        // Reset layout state BEFORE rebuilding - this fixes the overlap bug on minimize/restart
+        _isExpanded = false;
+        _lastWidth = 0;
+
         // Reduce minimum loading time for snappier feel
         var loadingTask = Task.Delay(TimeSpan.FromMilliseconds(300));
 
-        ScrollHost?.ScrollToTop();
-
         _sensors.Visibility = _dashboardSettings.Store.ShowSensors ? Visibility.Visible : Visibility.Collapsed;
 
+        // Clear all previous content
         _dashboardGroupControls.Clear();
         _content.ColumnDefinitions.Clear();
         _content.RowDefinitions.Clear();
@@ -84,9 +88,9 @@ public partial class DashboardPage
 
         _content.RowDefinitions.Add(new RowDefinition { Height = new(1, GridUnitType.Auto) });
 
-        var editDashboardHyperlink = new Hyperlink
+        var editDashboardHyperlink = new HyperlinkButton
         {
-            Icon = SymbolRegular.Edit24,
+            Icon = new SymbolIcon { Symbol = SymbolRegular.Settings24 },
             Content = Resource.DashboardPage_Customize,
             Margin = new(0, 16, 0, 0),
             HorizontalAlignment = HorizontalAlignment.Center
@@ -104,12 +108,12 @@ public partial class DashboardPage
 
         _content.Children.Add(editDashboardHyperlink);
 
-        // Force layout calculation
-        _lastWidth = 0;
-        LayoutGroups(ActualWidth);
-
-        // Wait for all controls to initialize
+        // Wait for all controls to initialize FIRST
         await Task.WhenAll(initializedTasks);
+
+        // THEN force layout calculation after controls are ready
+        LayoutGroupsForce(ActualWidth);
+
         _loader.IsLoading = false;
     }
 
@@ -119,6 +123,20 @@ public partial class DashboardPage
             return;
 
         LayoutGroups(e.NewSize.Width);
+    }
+
+    /// <summary>
+    /// Forces layout calculation bypassing all caching. Used on refresh to fix overlap issues.
+    /// </summary>
+    private void LayoutGroupsForce(double width)
+    {
+        _lastWidth = width;
+        _isExpanded = width > 1000;
+
+        if (_isExpanded)
+            Expand();
+        else
+            Collapse();
     }
 
     private void LayoutGroups(double width)
@@ -156,7 +174,7 @@ public partial class DashboardPage
         }
 
         // Update hyperlink row position for 2-column layout
-        var hyperlink = _content.Children.OfType<Hyperlink>().FirstOrDefault();
+        var hyperlink = _content.Children.OfType<HyperlinkButton>().FirstOrDefault();
         if (hyperlink is not null)
         {
             var rowCount = (_dashboardGroupControls.Count + 1) / 2;
@@ -178,7 +196,7 @@ public partial class DashboardPage
         }
 
         // Update hyperlink row position for single-column layout
-        var hyperlink = _content.Children.OfType<Hyperlink>().FirstOrDefault();
+        var hyperlink = _content.Children.OfType<HyperlinkButton>().FirstOrDefault();
         if (hyperlink is not null)
         {
             Grid.SetRow(hyperlink, _dashboardGroupControls.Count);

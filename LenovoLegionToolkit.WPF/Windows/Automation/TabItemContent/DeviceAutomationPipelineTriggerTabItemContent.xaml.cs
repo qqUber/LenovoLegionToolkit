@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -9,8 +9,8 @@ using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Automation.Pipeline.Triggers;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.Lib.System;
-using Wpf.Ui.Common;
-using Wpf.Ui.Controls;
+
+using WpfUiControls = Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent;
 
@@ -152,16 +152,16 @@ public partial class DeviceAutomationPipelineTriggerTabItemContent : IAutomation
 
     private void RefreshButtons()
     {
-        _onlySelectedButton.Appearance = _onlySelected ? ControlAppearance.Primary : ControlAppearance.Secondary;
-        _onlyConnectedButton.Appearance = _onlyConnected ? ControlAppearance.Primary : ControlAppearance.Secondary;
-        _onlyRemovableButton.Appearance = _onlyRemovable ? ControlAppearance.Primary : ControlAppearance.Secondary;
+        _onlySelectedButton.Appearance = _onlySelected ? WpfUiControls.ControlAppearance.Primary : WpfUiControls.ControlAppearance.Secondary;
+        _onlyConnectedButton.Appearance = _onlyConnected ? WpfUiControls.ControlAppearance.Primary : WpfUiControls.ControlAppearance.Secondary;
+        _onlyRemovableButton.Appearance = _onlyRemovable ? WpfUiControls.ControlAppearance.Primary : WpfUiControls.ControlAppearance.Secondary;
     }
 
     public INativeWindowsMessagePipelineTrigger GetTrigger() => _trigger.DeepCopy([.. _instanceIds]);
 
     private class ListItem : UserControl
     {
-        private readonly CardControl _cardControl = new()
+        private readonly WpfUiControls.CardControl _cardControl = new()
         {
             Margin = new(0, 0, 0, 8)
         };

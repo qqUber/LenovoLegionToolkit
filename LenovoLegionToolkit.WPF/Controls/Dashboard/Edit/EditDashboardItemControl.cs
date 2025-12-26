@@ -1,9 +1,10 @@
-﻿using System;
+using System;
 using System.Windows.Automation;
 using System.Windows.Controls;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
-using Wpf.Ui.Common;
+using LenovoLegionToolkit.WPF.Compat;
+
 using Button = Wpf.Ui.Controls.Button;
 using CardControl = LenovoLegionToolkit.WPF.Controls.Custom.CardControl;
 
@@ -27,7 +28,7 @@ public class EditDashboardItemControl : UserControl
 
     private readonly Button _moveUpButton = new()
     {
-        Icon = SymbolRegular.ArrowUp24,
+        Icon = SymbolRegular.ArrowUp24.ToIconElement(),
         ToolTip = Resource.MoveUp,
         MinWidth = 34,
         Height = 34,
@@ -36,7 +37,7 @@ public class EditDashboardItemControl : UserControl
 
     private readonly Button _moveDownButton = new()
     {
-        Icon = SymbolRegular.ArrowDown24,
+        Icon = SymbolRegular.ArrowDown24.ToIconElement(),
         ToolTip = Resource.MoveDown,
         MinWidth = 34,
         Height = 34,
@@ -45,7 +46,7 @@ public class EditDashboardItemControl : UserControl
 
     private readonly Button _deleteButton = new()
     {
-        Icon = SymbolRegular.Dismiss24,
+        Icon = SymbolRegular.Dismiss24.ToIconElement(),
         ToolTip = Resource.Delete,
         MinWidth = 34,
         Height = 34,

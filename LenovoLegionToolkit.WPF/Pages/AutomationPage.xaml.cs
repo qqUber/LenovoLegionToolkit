@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,8 +16,8 @@ using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows.Automation;
 using LenovoLegionToolkit.WPF.Windows.Utils;
-using Wpf.Ui.Common;
-using MenuItem = Wpf.Ui.Controls.MenuItem;
+
+using MenuItem = LenovoLegionToolkit.WPF.Compat.MenuItem;
 
 namespace LenovoLegionToolkit.WPF.Pages;
 
@@ -258,13 +258,13 @@ public partial class AutomationPage
             moveDownMenuItem.IsEnabled = false;
         menuItems.Add(moveDownMenuItem);
 
-        var renameMenuItem = new MenuItem { SymbolIcon = SymbolRegular.Edit24, Header = Resource.Rename };
+        var renameMenuItem = new MenuItem { SymbolIcon = SymbolRegular.TextDescription24, Header = Resource.Rename };
         renameMenuItem.Click += async (_, _) => await RenamePipelineAsync(control);
         menuItems.Add(renameMenuItem);
 
         if (control.AutomationPipeline.Trigger is null)
         {
-            var changeIconMenuItem = new MenuItem { SymbolIcon = SymbolRegular.Edit24, Header = Resource.AutomationPage_ChangeIcon };
+            var changeIconMenuItem = new MenuItem { SymbolIcon = SymbolRegular.ImageCopy24, Header = Resource.AutomationPage_ChangeIcon };
             changeIconMenuItem.Click += async (_, _) => await ChangePipelineIconAsync(control);
             menuItems.Add(changeIconMenuItem);
         }

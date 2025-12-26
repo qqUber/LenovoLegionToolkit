@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,7 +11,7 @@ using LenovoLegionToolkit.Lib.Messaging;
 using LenovoLegionToolkit.Lib.Messaging.Messages;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.WPF.Extensions;
-using Wpf.Ui.Common;
+
 using Wpf.Ui.Controls;
 using Button = Wpf.Ui.Controls.Button;
 using MenuItem = System.Windows.Controls.MenuItem;

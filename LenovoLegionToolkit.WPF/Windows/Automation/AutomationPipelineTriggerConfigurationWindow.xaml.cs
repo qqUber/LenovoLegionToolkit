@@ -1,13 +1,15 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib.Automation.Pipeline.Triggers;
+using LenovoLegionToolkit.WPF.Compat;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent;
 using Wpf.Ui.Controls;
+using TextBlock = System.Windows.Controls.TextBlock;
 
 namespace LenovoLegionToolkit.WPF.Windows.Automation;
 

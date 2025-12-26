@@ -36,7 +36,7 @@
                             FontSize="18"
                             FontWeight="Medium"
                             Foreground="{DynamicResource SystemFillColorSuccessBrush}"
-                            Symbol="ArrowSync24" />
+                            Symbol="ArrowRepeatAll24" />
                         <TextBlock
                             FontSize="14"
                             FontWeight="Medium"

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -177,8 +177,6 @@ public partial class FanCurveControl
 
     private void DrawGraph()
     {
-        var color = Application.Current.Resources["ControlFillColorDefaultBrush"] as SolidColorBrush;
-
         _canvas.Children.Clear();
 
         var points = _sliders
@@ -189,8 +187,12 @@ public partial class FanCurveControl
         if (points.IsEmpty())
             return;
 
-        // Line
+        // Use system accent color
+        var accentColor = (Color)Application.Current.Resources["SystemAccentColorSecondary"];
+        var lineColor = new SolidColorBrush(accentColor);
+        var fillColor = new SolidColorBrush(Color.FromArgb(80, accentColor.R, accentColor.G, accentColor.B));
 
+        // Line
         var pathSegmentCollection = new PathSegmentCollection();
         foreach (var point in points.Skip(1))
             pathSegmentCollection.Add(new LineSegment { Point = point });
@@ -198,16 +200,16 @@ public partial class FanCurveControl
 
         var path = new Path
         {
-            StrokeThickness = 2,
-            Stroke = color,
+            StrokeThickness = 3,
+            Stroke = lineColor,
             StrokeStartLineCap = PenLineCap.Round,
             StrokeEndLineCap = PenLineCap.Round,
+            StrokeLineJoin = PenLineJoin.Round,
             Data = new PathGeometry { Figures = [pathFigure] },
         };
         _canvas.Children.Add(path);
 
         // Fill
-
         var pointCollection = new PointCollection { new(points[0].X, _canvas.ActualHeight - 1) };
         foreach (var point in points)
             pointCollection.Add(point);
@@ -215,7 +217,7 @@ public partial class FanCurveControl
 
         var polygon = new Polygon
         {
-            Fill = color,
+            Fill = fillColor,
             Points = pointCollection
         };
         _canvas.Children.Add(polygon);

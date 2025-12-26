@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,10 +18,10 @@ using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows.Automation;
-using Wpf.Ui.Common;
+
 using Button = Wpf.Ui.Controls.Button;
 using CardExpander = LenovoLegionToolkit.WPF.Controls.Custom.CardExpander;
-using MenuItem = Wpf.Ui.Controls.MenuItem;
+using MenuItem = LenovoLegionToolkit.WPF.Compat.MenuItem;
 
 namespace LenovoLegionToolkit.WPF.Controls.Automation;
 

@@ -1,4 +1,4 @@
-<wpfui:UiPage
+<compat:UiPage
     x:Class="LenovoLegionToolkit.WPF.Pages.PackagesPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,6 +6,7 @@
     xmlns:custom="clr-namespace:LenovoLegionToolkit.WPF.Controls.Custom"
     xmlns:resources="clr-namespace:LenovoLegionToolkit.WPF.Resources"
     xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
+    xmlns:compat="clr-namespace:LenovoLegionToolkit.WPF.Compat"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.PackagesPage_Title}"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}">
@@ -264,6 +265,6 @@
 
         </Grid>
     </Grid>
-</wpfui:UiPage>
+</compat:UiPage>
 
 

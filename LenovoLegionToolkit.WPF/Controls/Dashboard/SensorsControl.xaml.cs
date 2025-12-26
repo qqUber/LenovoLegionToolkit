@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Management;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,8 +14,8 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Settings;
 using LenovoLegionToolkit.WPF.Utils;
-using Wpf.Ui.Common;
-using MenuItem = Wpf.Ui.Controls.MenuItem;
+
+using MenuItem = LenovoLegionToolkit.WPF.Compat.MenuItem;
 
 namespace LenovoLegionToolkit.WPF.Controls.Dashboard;
 
@@ -77,7 +77,7 @@ public partial class SensorsControl
         foreach (var interval in new[] { 1, 2, 3, 5 })
         {
             var item = new MenuItem
-  {
+            {
                 SymbolIcon = _dashboardSettings.Store.SensorsRefreshIntervalSeconds == interval ? SymbolRegular.Checkmark24 : SymbolRegular.Empty,
                 Header = TimeSpan.FromSeconds(interval).Humanize(culture: Resource.Culture)
             };
@@ -263,7 +263,10 @@ public partial class SensorsControl
         {
             hwReadings = _hwMonitor.GetReadings();
         }
-        catch { }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error getting hardware readings: {ex.Message}");
+        }
 
         // CPU values
         _cpuUtilizationCompact.Text = data.CPU.Utilization >= 0 ? $"{data.CPU.Utilization}%" : "-";
@@ -381,7 +384,10 @@ public partial class SensorsControl
                 return $"{usedGB:0}/{totalGB:0} GB";
             }
         }
-        catch { }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error getting disk usage: {ex.Message}");
+        }
         
         return "-";
     }
@@ -426,7 +432,10 @@ public partial class SensorsControl
                 }
             }
         }
-        catch { }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error getting GPU VRAM size: {ex.Message}");
+        }
         
         return "-";
     }
@@ -465,7 +474,10 @@ public partial class SensorsControl
                 }
             }
         }
-        catch { }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error reading VRAM from registry: {ex.Message}");
+        }
         
         return 0;
     }

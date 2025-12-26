@@ -1,4 +1,4 @@
-﻿#if !DEBUG
+#if !DEBUG
 using LenovoLegionToolkit.Lib.System;
 #endif
 using System;
@@ -103,7 +103,8 @@ public partial class App
             Log.Instance.Trace($"Starting... [version={Assembly.GetEntryAssembly()?.GetName().Version}, build={Assembly.GetEntryAssembly()?.GetBuildDateTimeString()}, os={Environment.OSVersion}, dotnet={Environment.Version}]");
 
         WinFormsApp.SetHighDpiMode(WinFormsHighDpiMode.PerMonitorV2);
-        RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly;
+        // Note: Removed RenderMode.SoftwareOnly - it was causing extreme slowness
+        // Hardware rendering should be used for acceptable performance
 
         IoCContainer.Initialize(
             new Lib.IoCModule(),
@@ -126,41 +127,7 @@ public partial class App
 
         AutomationPage.EnableHybridModeAutomation = flags.EnableHybridModeAutomation;
 
-        // Run independent initialization tasks in parallel for faster startup
-        var initTasks = new List<Task>
-        {
-            LogSoftwareStatusAsync(),
-            InitPowerModeFeatureAsync(),
-            InitBatteryFeatureAsync(),
-            InitRgbKeyboardControllerAsync(),
-            InitSpectrumKeyboardControllerAsync(),
-            InitGpuOverclockControllerAsync(),
-            InitAutoRefreshRateControllerAsync()
-        };
-        
-        await Task.WhenAll(initTasks);
-        
-        // These must run after parallel init
-        await InitHybridModeAsync();
-        await InitAutomationProcessorAsync();
-        InitMacroController();
-
-        // Start background services in parallel
-        var servicesTasks = new[]
-        {
-            IoCContainer.Resolve<AIController>().StartIfNeededAsync(),
-            IoCContainer.Resolve<HWiNFOIntegration>().StartStopIfNeededAsync(),
-            IoCContainer.Resolve<IpcServer>().StartStopIfNeededAsync(),
-            IoCContainer.Resolve<BatteryDischargeRateMonitorService>().StartStopIfNeededAsync()
-        };
-        
-        // Don't await services - let them start in background
-        _ = Task.WhenAll(servicesTasks);
-
-#if !DEBUG
-        Autorun.Validate();
-#endif
-
+        // Create and show window IMMEDIATELY for fast perceived startup
         var mainWindow = new MainWindow
         {
             WindowStartupLocation = WindowStartupLocation.CenterScreen,
@@ -189,7 +156,11 @@ public partial class App
         }
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Start up complete");
+            Log.Instance.Trace($"Window shown - starting background initialization...");
+
+        // DEFER all heavy initialization to AFTER window is visible
+        // This makes the app appear instantly while work happens in background
+        _ = InitializeInBackgroundAsync(flags);
     }
 
     private void Application_Exit(object sender, ExitEventArgs e)
@@ -211,6 +182,58 @@ public partial class App
         };
         MainWindow = mainWindow;
         mainWindow.Show();
+    }
+
+    /// <summary>
+    /// Runs all heavy initialization in the background AFTER the window is visible.
+    /// This dramatically improves perceived startup time.
+    /// </summary>
+    private async Task InitializeInBackgroundAsync(Flags flags)
+    {
+        try
+        {
+            // Yield to let the UI thread render
+            await Task.Yield();
+
+            // Run independent initialization tasks in parallel for faster startup
+            var initTasks = new List<Task>
+            {
+                LogSoftwareStatusAsync(),
+                InitPowerModeFeatureAsync(),
+                InitBatteryFeatureAsync(),
+                InitRgbKeyboardControllerAsync(),
+                InitSpectrumKeyboardControllerAsync(),
+                InitGpuOverclockControllerAsync(),
+                InitAutoRefreshRateControllerAsync()
+            };
+            
+            await Task.WhenAll(initTasks).ConfigureAwait(false);
+            
+            // These must run after parallel init
+            await InitHybridModeAsync().ConfigureAwait(false);
+            await InitAutomationProcessorAsync().ConfigureAwait(false);
+            InitMacroController();
+
+            // Start background services in parallel (don't await)
+            _ = Task.WhenAll(
+                IoCContainer.Resolve<AIController>().StartIfNeededAsync(),
+                IoCContainer.Resolve<HWiNFOIntegration>().StartStopIfNeededAsync(),
+                IoCContainer.Resolve<IpcServer>().StartStopIfNeededAsync(),
+                IoCContainer.Resolve<BatteryDischargeRateMonitorService>().StartStopIfNeededAsync()
+            );
+
+#if !DEBUG
+            Autorun.Validate();
+#endif
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Background initialization complete");
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Background initialization error", ex);
+        }
     }
 
     public async Task ShutdownAsync()
@@ -306,6 +329,17 @@ public partial class App
 
     private void Application_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
+        // Suppress WPF-UI initialization errors (known issue in WPF-UI 3.x)
+        if ((e.Exception is ArgumentNullException || e.Exception is NullReferenceException) &&
+            (e.Exception.StackTrace?.Contains("HwndSource") == true || 
+             e.Exception.StackTrace?.Contains("Wpf.Ui") == true))
+        {
+            e.Handled = true;
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Suppressed WPF-UI initialization error", e.Exception);
+            return;
+        }
+
         Log.Instance.ErrorReport("Application_DispatcherUnhandledException", e.Exception);
         Log.Instance.Trace($"Unhandled exception occurred.", e.Exception);
 

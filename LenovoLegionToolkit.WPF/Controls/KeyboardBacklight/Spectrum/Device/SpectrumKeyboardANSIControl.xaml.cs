@@ -1,4 +1,4 @@
-﻿namespace LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.Spectrum.Device;
+namespace LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.Spectrum.Device;
 
 public partial class SpectrumKeyboardANSIControl
 {

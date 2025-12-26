@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
@@ -8,7 +8,8 @@ using LenovoLegionToolkit.Lib.Messaging;
 using LenovoLegionToolkit.Lib.Messaging.Messages;
 using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Extensions;
-using Wpf.Ui.Common;
+using LenovoLegionToolkit.WPF.Compat;
+
 using Wpf.Ui.Controls;
 using CardControl = LenovoLegionToolkit.WPF.Controls.Custom.CardControl;
 

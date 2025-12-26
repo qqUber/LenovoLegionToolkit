@@ -7,6 +7,7 @@
     xmlns:local="clr-namespace:LenovoLegionToolkit.WPF.Windows"
     xmlns:resources="clr-namespace:LenovoLegionToolkit.WPF.Resources"
     xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
+    xmlns:compat="clr-namespace:LenovoLegionToolkit.WPF.Compat"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.DeviceInformationWindow_Title}"
     Width="500"
@@ -24,7 +25,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <wpfui:TitleBar
+        <compat:TitleBar
             Grid.Row="0"
             CanMaximize="false"
             ShowMaximize="false"
@@ -33,7 +34,7 @@
 
         <Grid
             Grid.Row="0"
-            Height="24"
+            Height="32"
             Margin="12,8,12,8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -46,6 +47,19 @@
                 FontSize="12"
                 IsHitTestVisible="False"
                 Text="{x:Static resources:Resource.DeviceInformationWindow_Title}" />
+
+            <!-- Close Button -->
+            <Button
+                Grid.Column="1"
+                Width="32"
+                Height="32"
+                Background="Transparent"
+                BorderThickness="0"
+                Click="CloseButton_Click"
+                Cursor="Hand"
+                ToolTip="Close">
+                <TextBlock FontSize="14" Text="✕" />
+            </Button>
 
         </Grid>
 
@@ -93,7 +107,7 @@
                     <TextBlock x:Name="_biosLabel" Focusable="True" />
                 </custom:CardControl>
 
-                <StackPanel x:Name="_warrantyInfo" Visibility="Hidden">
+                <StackPanel x:Name="_warrantyInfo" Visibility="Visible">
                     <Grid Margin="0,16,0,24">
 
                         <Grid.ColumnDefinitions>
@@ -111,8 +125,9 @@
                             x:Name="_refreshWarrantyButton"
                             Grid.Column="1"
                             Click="RefreshWarrantyButton_OnClick"
-                            Icon="ArrowClockwise32"
-                            ToolTip="{x:Static resources:Resource.DeviceInformationWindow_Refresh}" />
+                            ToolTip="{x:Static resources:Resource.DeviceInformationWindow_Refresh}">
+                            <wpfui:SymbolIcon Symbol="ArrowCounterclockwise24" />
+                        </wpfui:Button>
                     </Grid>
 
                     <custom:CardControl Margin="0,0,0,8">
@@ -141,7 +156,6 @@
                         Margin="0,8,0,8"
                         Click="WarrantyLinkCardAction_OnClick"
                         Content="{x:Static resources:Resource.DeviceInformationWindow_LenovoSupport}"
-                        Icon="Open24"
                         IsChevronVisible="False"
                         IsEnabled="False" />
                 </StackPanel>
@@ -150,12 +164,11 @@
 
         </wpfui:DynamicScrollViewer>
 
-        <wpfui:Snackbar
+        <compat:Snackbar
             x:Name="_snackBar"
             Grid.Row="1"
             HorizontalAlignment="Center"
             CloseButtonEnabled="False"
-            Icon="Checkmark24"
             Timeout="1000" />
     </Grid>
 </local:BaseWindow>

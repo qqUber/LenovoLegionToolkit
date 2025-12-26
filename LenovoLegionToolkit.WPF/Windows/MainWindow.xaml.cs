@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
@@ -50,7 +51,7 @@ public partial class MainWindow
     public bool DisableConflictingSoftwareWarning { get; set; }
     public bool SuppressClosingEventHandler { get; set; }
 
-    public Snackbar Snackbar => _snackbar;
+    public Snackbar Snackbar => Snackbar;
 
     public MainWindow()
     {
@@ -64,32 +65,25 @@ public partial class MainWindow
         StateChanged += MainWindow_StateChanged;
 
 #if DEBUG
-        _title.Text += Debugger.IsAttached ? " [DEBUGGER ATTACHED]" : " [DEBUG]";
+        Title += Debugger.IsAttached ? " [DEBUGGER ATTACHED]" : " [DEBUG]";
 #else
         var version = Assembly.GetEntryAssembly()?.GetName().Version;
         if (version is not null && version.IsBeta())
-            _title.Text += " [BETA]";
+            Title += " [BETA]";
 #endif
 
         if (Log.Instance.IsTraceEnabled)
         {
-            _title.Text += " [LOGGING ENABLED]";
-            _openLogIndicator.Visibility = Visibility.Visible;
+            Title += " [LOGGING ENABLED]";
+            // _openLogIndicator.Visibility = Visibility.Visible;
         }
-
-        Title = _title.Text;
     }
 
     private void MainWindow_SourceInitialized(object? sender, EventArgs e) => RestoreSize();
 
     private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
     {
-        _contentGrid.Visibility = Visibility.Hidden;
-
-        ApplyCustomBackground();
-
-        if (!await KeyboardBacklightPage.IsSupportedAsync())
-            _navigationStore.Items.Remove(_keyboardItem);
+        _contentGrid.Visibility = Visibility.Visible;
 
         SmartKeyHelper.Instance.BringToForeground = () => Dispatcher.Invoke(BringToForeground);
 
@@ -99,23 +93,60 @@ public partial class MainWindow
                 Dispatcher.Invoke(BringToForeground);
         };
 
-        _contentGrid.Visibility = Visibility.Visible;
-
-        LoadDeviceInfo();
-        UpdateIndicators();
-        CheckForUpdates();
+            // Defer heavier startup work to let the UI render quickly
+            _ = InitializePostLoadAsync();
 
         InputBindings.Add(new KeyBinding(new ActionCommand(_navigationStore.NavigateToNext), Key.Tab, ModifierKeys.Control));
         InputBindings.Add(new KeyBinding(new ActionCommand(_navigationStore.NavigateToPrevious), Key.Tab, ModifierKeys.Control | ModifierKeys.Shift));
 
         var key = (int)Key.D1;
         foreach (var item in _navigationStore.Items.OfType<NavigationItem>())
-            InputBindings.Add(new KeyBinding(new ActionCommand(() => _navigationStore.Navigate(item.PageTag)), (Key)key++, ModifierKeys.Control));
+        {
+            if (item.PageTag is not null)
+                InputBindings.Add(new KeyBinding(new ActionCommand(() => _navigationStore.Navigate(item.PageTag)), (Key)key++, ModifierKeys.Control));
+        }
 
         var trayHelper = new TrayHelper(_navigationStore, BringToForeground, TrayTooltipEnabled);
         await trayHelper.InitializeAsync();
         trayHelper.MakeVisible();
         _trayHelper = trayHelper;
+    }
+
+    private async Task InitializePostLoadAsync()
+    {
+        // Yield to allow first render before heavier work
+        await Task.Yield();
+
+        try
+        {
+            // Run in parallel where possible
+            var backgroundTask = ApplyCustomBackgroundDeferredAsync();
+            var keyboardSupportTask = EnsureKeyboardSupportAsync();
+
+            LoadDeviceInfo();
+            UpdateIndicators();
+            CheckForUpdates();
+
+            await Task.WhenAll(backgroundTask, keyboardSupportTask).ConfigureAwait(true);
+        }
+        catch
+        {
+            // Swallow to avoid impacting startup; optional logging can be added here.
+        }
+    }
+
+    private Task ApplyCustomBackgroundDeferredAsync()
+    {
+        return Dispatcher.InvokeAsync(ApplyCustomBackground, DispatcherPriority.Background).Task;
+    }
+
+    private async Task EnsureKeyboardSupportAsync()
+    {
+        var isSupported = await KeyboardBacklightPage.IsSupportedAsync().ConfigureAwait(false);
+        if (isSupported)
+            return;
+
+        await Dispatcher.InvokeAsync(() => _navigationStore.Items.Remove(_keyboardItem));
     }
 
     private async void MainWindow_Closing(object? sender, CancelEventArgs e)
@@ -128,10 +159,10 @@ public partial class MainWindow
         if (_applicationSettings.Store.MinimizeOnClose)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Minimizing...");
+                Log.Instance.Trace($"Hiding to tray...");
 
-            WindowState = WindowState.Minimized;
             e.Cancel = true;
+            SendToTray();
         }
         else
         {
@@ -157,12 +188,48 @@ public partial class MainWindow
         {
             case WindowState.Minimized:
                 SetEfficiencyMode(true);
+                // Pause sensor updates when minimized to save resources
+                HardwareMonitorService.Instance.SetUpdateMode(HardwareMonitorService.UpdateMode.Paused);
                 SendToTray();
                 break;
             case WindowState.Normal:
+            case WindowState.Maximized:
                 SetEfficiencyMode(false);
-                BringToForeground();
+                // Resume normal sensor updates
+                HardwareMonitorService.Instance.SetUpdateMode(HardwareMonitorService.UpdateMode.Normal);
+                if (WindowState == WindowState.Normal)
+                    BringToForeground();
                 break;
+        }
+    }
+
+    private void UpdateMaximizeIcon()
+    {
+        _maximizeIcon.Symbol = WindowState == WindowState.Maximized
+            ? SymbolRegular.SquareMultiple24
+            : SymbolRegular.Maximize24;
+        _maximizeButton.ToolTip = WindowState == WindowState.Maximized ? "Restore" : "Maximize";
+    }
+
+    private void MinimizeButton_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+
+    private void MaximizeButton_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+        UpdateMaximizeIcon();
+    }
+
+    private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
+
+    private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ClickCount == 2)
+        {
+            MaximizeButton_Click(sender, e);
+        }
+        else if (e.LeftButton == MouseButtonState.Pressed)
+        {
+            try { DragMove(); } catch { /* Ignore */ }
         }
     }
 
@@ -206,12 +273,22 @@ public partial class MainWindow
 
     private void LoadDeviceInfo()
     {
-        Task.Run(Compatibility.GetMachineInformationAsync)
-            .ContinueWith(mi =>
+        Task.Run(async () =>
+        {
+            try
             {
-                _deviceInfoIndicator.Content = mi.Result.Model;
-                _deviceInfoIndicator.Visibility = Visibility.Visible;
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+                var machineInfo = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    _deviceInfoIndicator.Text = machineInfo.Model;
+                    _deviceInfoBorder.Visibility = Visibility.Visible;
+                });
+            }
+            catch
+            {
+                // Swallow to avoid crashing UI; optionally add logging here.
+            }
+        });
     }
 
     private void UpdateIndicators()
@@ -242,44 +319,50 @@ public partial class MainWindow
         });
     }
 
-    public void CheckForUpdates(bool manualCheck = false)
-    {
-        Task.Run(() => _updateChecker.CheckAsync(manualCheck))
-            .ContinueWith(async updatesAvailable =>
-            {
-                var result = updatesAvailable.Result;
-                if (result is null)
-                {
-                    _updateIndicator.Visibility = Visibility.Collapsed;
+    public void CheckForUpdates(bool manualCheck = false) => _ = CheckForUpdatesAsync(manualCheck);
 
-                    if (manualCheck && WindowState != WindowState.Minimized)
+    private async Task CheckForUpdatesAsync(bool manualCheck)
+    {
+        try
+        {
+            var result = await _updateChecker.CheckAsync(manualCheck).ConfigureAwait(true);
+
+            if (result is null)
+            {
+                _updateIndicator.Visibility = Visibility.Collapsed;
+
+                if (manualCheck && WindowState != WindowState.Minimized)
+                {
+                    switch (_updateChecker.Status)
                     {
-                        switch (_updateChecker.Status)
-                        {
-                            case UpdateCheckStatus.Success:
-                                await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Success_Title);
-                                break;
-                            case UpdateCheckStatus.RateLimitReached:
-                                await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message, SnackbarType.Error);
-                                break;
-                            case UpdateCheckStatus.Error:
-                                await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_Unknown_Message, SnackbarType.Error);
-                                break;
-                        }
+                        case UpdateCheckStatus.Success:
+                            await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Success_Title);
+                            break;
+                        case UpdateCheckStatus.RateLimitReached:
+                            await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message, SnackbarType.Error);
+                            break;
+                        case UpdateCheckStatus.Error:
+                            await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_Unknown_Message, SnackbarType.Error);
+                            break;
                     }
                 }
-                else
-                {
-                    var versionNumber = result.ToString(3);
+            }
+            else
+            {
+                var versionNumber = result.ToString(3);
 
-                    _updateIndicatorText.Text =
-                        string.Format(Resource.MainWindow_UpdateAvailableWithVersion, versionNumber);
-                    _updateIndicator.Visibility = Visibility.Visible;
+                _updateIndicatorText.Text =
+                    string.Format(Resource.MainWindow_UpdateAvailableWithVersion, versionNumber);
+                _updateIndicator.Visibility = Visibility.Visible;
 
-                    if (WindowState == WindowState.Minimized)
-                        MessagingCenter.Publish(new NotificationMessage(NotificationType.UpdateAvailable, versionNumber));
-                }
-            }, TaskScheduler.FromCurrentSynchronizationContext());
+                if (WindowState == WindowState.Minimized)
+                    MessagingCenter.Publish(new NotificationMessage(NotificationType.UpdateAvailable, versionNumber));
+            }
+        }
+        catch
+        {
+            // Swallow errors to avoid UI disruption; optionally add logging here.
+        }
     }
 
     private void RestoreSize()
@@ -342,11 +425,16 @@ public partial class MainWindow
     public void SendToTray()
     {
         if (!_applicationSettings.Store.MinimizeToTray)
+        {
+            // Even if MinimizeToTray is disabled, still hide the window to keep it cached
+            Hide();
+            ShowInTaskbar = false;
             return;
+        }
 
         SetEfficiencyMode(true);
         Hide();
-        ShowInTaskbar = true;
+        ShowInTaskbar = false;
     }
 
     private static unsafe void SetEfficiencyMode(bool enabled)
@@ -446,6 +534,7 @@ public partial class MainWindow
         bitmap.BeginInit();
         bitmap.UriSource = new Uri(path, UriKind.Absolute);
         bitmap.CacheOption = BitmapCacheOption.OnLoad;
+        bitmap.DecodePixelWidth = 1920; // Limit decoded size to reduce memory
         bitmap.EndInit();
         bitmap.Freeze();
 
@@ -514,6 +603,7 @@ public partial class MainWindow
         bitmap.BeginInit();
         bitmap.UriSource = new Uri(path, UriKind.Absolute);
         bitmap.CacheOption = BitmapCacheOption.OnLoad;
+        bitmap.DecodePixelWidth = 1920; // Limit decoded size to reduce memory
         bitmap.EndInit();
         bitmap.Freeze();
 

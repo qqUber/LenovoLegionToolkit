@@ -229,7 +229,7 @@
                     Margin="8,0,0,0"
                     Appearance="Secondary"
                     Click="ResetToDefaultButton_Click"
-                    Icon="ArrowClockwise24"
+                    Icon="ArrowRepeatAll24"
                     ToolTip="{x:Static resources:Resource.SpectrumKeyboardBacklightControl_ResetToDefault_Tooltip}" />
 
                 <wpfui:Button

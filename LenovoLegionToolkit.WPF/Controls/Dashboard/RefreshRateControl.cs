@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -7,7 +7,7 @@ using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
-using Wpf.Ui.Common;
+
 
 namespace LenovoLegionToolkit.WPF.Controls.Dashboard;
 

@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using LenovoLegionToolkit.WPF.Extensions;
 
 namespace LenovoLegionToolkit.WPF.Pages;

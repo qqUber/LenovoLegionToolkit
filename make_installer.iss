@@ -7,7 +7,7 @@
 #define MyAppExeName "LOQ Toolkit.exe"
 
 #ifndef MyAppVersion
-  #define MyAppVersion "1.1.0"
+  #define MyAppVersion "1.3.5"
 #endif
 
 [Setup]

@@ -1,6 +1,6 @@
-﻿using System.Linq;
+using System.Linq;
 using Wpf.Ui.Controls;
-using Wpf.Ui.Controls.Interfaces;
+using CompatNavigationItem = LenovoLegionToolkit.WPF.Compat.NavigationItem;
 
 namespace LenovoLegionToolkit.WPF.Extensions;
 
@@ -8,8 +8,8 @@ public static class NavigationStoreExtensions
 {
     public static void NavigateToNext(this NavigationStore navigationStore)
     {
-        var navigationItems = navigationStore.Items.OfType<INavigationItem>().ToList();
-        var current = navigationStore.Current ?? navigationItems.FirstOrDefault();
+        var navigationItems = navigationStore.Items.OfType<CompatNavigationItem>().ToList();
+        var current = navigationStore.Current as CompatNavigationItem ?? navigationItems.FirstOrDefault();
 
         if (current is null)
             return;
@@ -17,13 +17,14 @@ public static class NavigationStoreExtensions
         var index = (navigationItems.IndexOf(current) + 1) % navigationItems.Count;
         var next = navigationItems[index];
 
-        navigationStore.Navigate(next.PageTag);
+        if (next.PageTag is not null)
+            navigationStore.Navigate(next.PageTag);
     }
 
     public static void NavigateToPrevious(this NavigationStore navigationStore)
     {
-        var navigationItems = navigationStore.Items.OfType<INavigationItem>().ToList();
-        var current = navigationStore.Current ?? navigationItems.FirstOrDefault();
+        var navigationItems = navigationStore.Items.OfType<CompatNavigationItem>().ToList();
+        var current = navigationStore.Current as CompatNavigationItem ?? navigationItems.FirstOrDefault();
 
         if (current is null)
             return;
@@ -33,6 +34,7 @@ public static class NavigationStoreExtensions
             index = navigationItems.Count - 1;
         var next = navigationItems[index];
 
-        navigationStore.Navigate(next.PageTag);
+        if (next.PageTag is not null)
+            navigationStore.Navigate(next.PageTag);
     }
 }

@@ -1,4 +1,4 @@
-﻿using LenovoLegionToolkit.Lib;
+using LenovoLegionToolkit.Lib;
 
 namespace LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.Spectrum.Device;
 

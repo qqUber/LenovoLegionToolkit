@@ -1,4 +1,4 @@
-﻿using Autofac;
+using Autofac;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.WPF.CLI;
 using LenovoLegionToolkit.WPF.Settings;

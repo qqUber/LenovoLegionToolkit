@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Listeners;
@@ -86,16 +86,12 @@ public class ThemeManager
 
     private void SetTheme()
     {
-        var theme = IsDarkMode() ? Wpf.Ui.Appearance.ThemeType.Dark : Wpf.Ui.Appearance.ThemeType.Light;
-        Wpf.Ui.Appearance.Theme.Apply(theme, Wpf.Ui.Appearance.BackgroundType.Mica, false);
+        var theme = IsDarkMode() ? Wpf.Ui.Appearance.ApplicationTheme.Dark : Wpf.Ui.Appearance.ApplicationTheme.Light;
+        Wpf.Ui.Appearance.ApplicationThemeManager.Apply(theme);
     }
 
     private void SetColor()
     {
-        var accentColor = GetAccentColor().ToColor();
-        Wpf.Ui.Appearance.Accent.Apply(systemAccent: accentColor,
-            primaryAccent: accentColor,
-            secondaryAccent: accentColor,
-            tertiaryAccent: accentColor);
+        // Accent API removed in WPF-UI 3.1 - color is handled by ApplicationThemeManager
     }
 }

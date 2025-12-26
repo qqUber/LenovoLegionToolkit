@@ -17,7 +17,7 @@
         <StackPanel Orientation="Horizontal">
             <wpfui:Button
                 Click="Edit_Click"
-                Icon="Edit24"
+                Icon="Star24"
                 ToolTip="{x:Static resources:Resource.Edit}" />
             <wpfui:Button
                 Margin="8,0,0,0"

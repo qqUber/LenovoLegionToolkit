@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -62,10 +62,10 @@ public class NotifyIcon : NativeWindow, IDisposable
         }
     }
 
-    private UiWindow? _currentToolTipWindow;
+    private Window? _currentToolTipWindow;
 
-    private Func<Task<UiWindow>>? _toolTipWindow;
-    public Func<Task<UiWindow>>? ToolTipWindow
+    private Func<Task<Window?>>? _toolTipWindow;
+    public Func<Task<Window?>>? ToolTipWindow
     {
         set
         {
@@ -91,8 +91,13 @@ public class NotifyIcon : NativeWindow, IDisposable
                 switch ((uint)m.LParam & 0xFFFF)
                 {
                     case PInvoke.NIN_POPUPOPEN:
+                        System.Diagnostics.Debug.WriteLine("[TrayIcon] NIN_POPUPOPEN received");
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"NIN_POPUPOPEN");
+                        ShowToolTipAsync();
+                        break;
+                    case PInvoke.WM_MOUSEMOVE:
+                        // Fallback for Windows 11 which may not send NIN_POPUPOPEN
                         ShowToolTipAsync();
                         break;
                     case PInvoke.NIN_POPUPCLOSE:
@@ -132,10 +137,18 @@ public class NotifyIcon : NativeWindow, IDisposable
         }
     }
 
+    private bool _isShowingTooltip;
+    
     private async void ShowToolTipAsync()
     {
+        // If already showing or waiting to show, don't restart the process
+        if (_isShowingTooltip || _currentToolTipWindow != null)
+            return;
+        
         if (_toolTipWindow is null)
             return;
+
+        _isShowingTooltip = true;
 
         if (_showToolTipCancellationTokenSource is not null)
             await _showToolTipCancellationTokenSource.CancelAsync();
@@ -145,10 +158,13 @@ public class NotifyIcon : NativeWindow, IDisposable
 
         try
         {
-            await Task.Delay(TimeSpan.FromMilliseconds(500), token);
+            await Task.Delay(TimeSpan.FromMilliseconds(400), token);
 
             if (ContextMenu is not null && ContextMenu.IsOpen)
+            {
+                _isShowingTooltip = false;
                 return;
+            }
 
             _currentToolTipWindow?.Close();
             _currentToolTipWindow = await _toolTipWindow();
@@ -169,6 +185,10 @@ public class NotifyIcon : NativeWindow, IDisposable
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to show tooltip.", ex);
+        }
+        finally
+        {
+            _isShowingTooltip = false;
         }
     }
 
@@ -229,7 +249,8 @@ public class NotifyIcon : NativeWindow, IDisposable
                 data.hIcon = new HICON(_icon.Handle);
             }
 
-            if (_text is not null && _toolTipWindow is null)
+            // Always set tooltip text if available - Windows needs this for NIN_POPUPOPEN
+            if (_text is not null)
             {
                 data.uFlags |= NOTIFY_ICON_DATA_FLAGS.NIF_SHOWTIP;
                 data.szTip = _text;

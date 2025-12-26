@@ -1,4 +1,4 @@
-﻿namespace LenovoLegionToolkit.WPF.Windows.Utils;
+namespace LenovoLegionToolkit.WPF.Windows.Utils;
 
 public interface INotificationWindow
 {

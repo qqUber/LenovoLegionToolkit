@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,6 +8,7 @@ using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using Wpf.Ui.Controls;
+using TextBlock = System.Windows.Controls.TextBlock;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils;
 
@@ -47,7 +48,6 @@ public partial class DeviceInformationWindow
             _warrantyEndLabel.Text = warrantyInfo.Value.End is not null ? warrantyInfo.Value.End?.ToString(LocalizationHelper.ShortDateFormat) : "-";
             _warrantyLinkCardAction.Tag = warrantyInfo.Value.Link;
             _warrantyLinkCardAction.IsEnabled = true;
-            _warrantyInfo.Visibility = Visibility.Visible;
         }
         catch (Exception ex)
         {
@@ -84,4 +84,6 @@ public partial class DeviceInformationWindow
         var link = _warrantyLinkCardAction.Tag as Uri;
         link?.Open();
     }
+
+    private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
 }

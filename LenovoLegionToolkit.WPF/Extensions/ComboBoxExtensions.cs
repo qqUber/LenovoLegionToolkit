@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
@@ -19,7 +19,7 @@ public static class ComboBoxExtensions
 
         comboBox.Items.Clear();
         comboBox.Items.AddRange(boxedItems);
-        comboBox.SelectedValue = selectedBoxedItem;
+        comboBox.SelectedItem = selectedBoxedItem;
     }
 
     public static void SelectItem<T>(this ComboBox comboBox, T item) where T : struct

@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
+using LenovoLegionToolkit.WPF.Compat;
 using LenovoLegionToolkit.WPF.Windows;
-using Wpf.Ui.Common;
+
 using Wpf.Ui.Controls;
+using TextBlock = System.Windows.Controls.TextBlock;
 
 namespace LenovoLegionToolkit.WPF.Utils;
 
@@ -20,7 +21,6 @@ public static class SnackbarHelper
 
         SetupSnackbarAppearance(snackBar, title, message, type);
         SetTitleAndMessage(snackBar, title, message);
-        await snackBar.HideAsync();
         await snackBar.ShowAsync();
     }
 
@@ -37,7 +37,7 @@ public static class SnackbarHelper
         snackBar.Show();
     }
 
-    private static void SetupSnackbarAppearance(Snackbar snackBar, string title, string? message, SnackbarType type)
+    private static void SetupSnackbarAppearance(Wpf.Ui.Controls.Snackbar snackBar, string title, string? message, SnackbarType type)
     {
         snackBar.Appearance = type switch
         {
@@ -47,20 +47,15 @@ public static class SnackbarHelper
         };
         snackBar.Icon = type switch
         {
-            SnackbarType.Warning => SymbolRegular.Warning24,
-            SnackbarType.Error => SymbolRegular.ErrorCircle24,
-            SnackbarType.Info => SymbolRegular.Info24,
-            _ => SymbolRegular.Checkmark24
+            SnackbarType.Warning => SymbolRegular.Warning24.ToIconElement(),
+            SnackbarType.Error => SymbolRegular.ErrorCircle24.ToIconElement(),
+            SnackbarType.Info => SymbolRegular.Info24.ToIconElement(),
+            _ => SymbolRegular.Checkmark24.ToIconElement()
         };
         snackBar.Timeout = type switch
         {
-            SnackbarType.Success => 2000,
-            _ => Math.Clamp(GetTextLengthInMilliseconds(title, message), 5000, 10000)
-        };
-        snackBar.CloseButtonEnabled = type switch
-        {
-            SnackbarType.Success => false,
-            _ => true
+            SnackbarType.Success => TimeSpan.FromMilliseconds(2000),
+            _ => TimeSpan.FromMilliseconds(Math.Clamp(GetTextLengthInMilliseconds(title, message), 5000, 10000))
         };
     }
 

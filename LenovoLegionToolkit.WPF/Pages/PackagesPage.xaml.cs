@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -20,10 +20,12 @@ using LenovoLegionToolkit.WPF.Controls.Packages;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
-using Wpf.Ui.Common;
+
 using Wpf.Ui.Controls;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
-using MenuItem = Wpf.Ui.Controls.MenuItem;
+using MenuItem = LenovoLegionToolkit.WPF.Compat.MenuItem;
+using TextBlock = System.Windows.Controls.TextBlock;
+using HyperlinkButton = Wpf.Ui.Controls.HyperlinkButton;
 
 namespace LenovoLegionToolkit.WPF.Pages;
 
@@ -382,9 +384,9 @@ public partial class PackagesPage : IProgress<float>
 
         if (_packageDownloaderSettings.Store.HiddenPackages.Count != 0)
         {
-            var clearHidden = new Hyperlink
+            var clearHidden = new HyperlinkButton
             {
-                Icon = SymbolRegular.Eye24,
+                Icon = new SymbolIcon { Symbol = SymbolRegular.Eye24 },
                 Content = "Show hidden downloads",
                 HorizontalAlignment = HorizontalAlignment.Right,
             };

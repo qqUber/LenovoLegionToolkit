@@ -5,6 +5,7 @@
     xmlns:local="clr-namespace:LenovoLegionToolkit.WPF.Windows"
     xmlns:resources="clr-namespace:LenovoLegionToolkit.WPF.Resources"
     xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
+    xmlns:compat="clr-namespace:LenovoLegionToolkit.WPF.Compat"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.BalanceModeSettingsWindow_Title}"
     MinWidth="400"
@@ -22,7 +23,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <wpfui:TitleBar
+        <compat:TitleBar
             Grid.Row="0"
             CanMaximize="false"
             ShowMaximize="false"

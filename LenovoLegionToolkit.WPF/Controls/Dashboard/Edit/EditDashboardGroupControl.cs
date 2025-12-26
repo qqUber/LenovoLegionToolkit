@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +8,8 @@ using System.Windows.Controls;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows.Dashboard;
-using Wpf.Ui.Common;
+using LenovoLegionToolkit.WPF.Compat;
+
 using Button = Wpf.Ui.Controls.Button;
 using CardExpander = LenovoLegionToolkit.WPF.Controls.Custom.CardExpander;
 
@@ -35,7 +36,7 @@ public class EditDashboardGroupControl : UserControl
 
     private readonly Button _editButton = new()
     {
-        Icon = SymbolRegular.Edit24,
+        Icon = SymbolRegular.Settings24.ToIconElement(),
         ToolTip = Resource.Edit,
         MinWidth = 34,
         Height = 34,
@@ -44,7 +45,7 @@ public class EditDashboardGroupControl : UserControl
 
     private readonly Button _moveUpButton = new()
     {
-        Icon = SymbolRegular.ArrowUp24,
+        Icon = SymbolRegular.ArrowUp24.ToIconElement(),
         ToolTip = Resource.MoveUp,
         MinWidth = 34,
         Height = 34,
@@ -53,7 +54,7 @@ public class EditDashboardGroupControl : UserControl
 
     private readonly Button _moveDownButton = new()
     {
-        Icon = SymbolRegular.ArrowDown24,
+        Icon = SymbolRegular.ArrowDown24.ToIconElement(),
         ToolTip = Resource.MoveDown,
         MinWidth = 34,
         Height = 34,
@@ -62,7 +63,7 @@ public class EditDashboardGroupControl : UserControl
 
     private readonly Button _deleteButton = new()
     {
-        Icon = SymbolRegular.Dismiss24,
+        Icon = SymbolRegular.Dismiss24.ToIconElement(),
         ToolTip = Resource.Delete,
         MinWidth = 34,
         Height = 34,
@@ -73,7 +74,7 @@ public class EditDashboardGroupControl : UserControl
     {
         MinWidth = 120,
         HorizontalAlignment = HorizontalAlignment.Right,
-        Appearance = ControlAppearance.Primary,
+        Appearance = Wpf.Ui.Controls.ControlAppearance.Primary,
         Content = Resource.Add,
         Margin = new(0, 8, 0, 0),
     };

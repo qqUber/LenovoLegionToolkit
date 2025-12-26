@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,7 +12,7 @@ using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Windows;
 using LenovoLegionToolkit.WPF.Windows.Utils;
-using Wpf.Ui.Common;
+
 using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Utils;
@@ -139,7 +139,7 @@ public class NotificationsManager
                 NotificationType.SpectrumBacklightPresetChanged => SymbolRegular.Lightbulb24,
                 NotificationType.TouchpadOn => SymbolRegular.Tablet24,
                 NotificationType.TouchpadOff => SymbolRegular.Tablet24,
-                NotificationType.UpdateAvailable => SymbolRegular.ArrowSync24,
+                NotificationType.UpdateAvailable => SymbolRegular.ArrowRepeatAll24,
                 NotificationType.WhiteKeyboardBacklightOff => SymbolRegular.Lightbulb24,
                 NotificationType.WhiteKeyboardBacklightChanged => SymbolRegular.Lightbulb24,
                 _ => throw new ArgumentException(nameof(notification.Type))
@@ -167,7 +167,7 @@ public class NotificationsManager
                 NotificationType.ACAdapterConnected => Resource.Notification_ACAdapterConnected,
                 NotificationType.ACAdapterConnectedLowWattage => Resource.Notification_ACAdapterConnectedLowWattage,
                 NotificationType.ACAdapterDisconnected => Resource.Notification_ACAdapterDisconnected,
-                NotificationType.AutomationNotification => string.Format("{0}", notification.Args),
+                NotificationType.AutomationNotification => notification.Args?.ToString() ?? string.Empty,
                 NotificationType.CapsLockOn => Resource.Notification_CapsLockOn,
                 NotificationType.CapsLockOff => Resource.Notification_CapsLockOff,
                 NotificationType.CameraOn => Resource.Notification_CameraOn,
@@ -182,16 +182,16 @@ public class NotificationsManager
                 NotificationType.PanelLogoLightingOff => Resource.Notification_PanelLogoLightingOff,
                 NotificationType.PortLightingOn => Resource.Notification_PortLightingOn,
                 NotificationType.PortLightingOff => Resource.Notification_PortLightingOff,
-                NotificationType.PowerModeQuiet => string.Format("{0}", notification.Args),
-                NotificationType.PowerModeBalance => string.Format("{0}", notification.Args),
-                NotificationType.PowerModePerformance => string.Format("{0}", notification.Args),
-                NotificationType.PowerModeExtreme => string.Format("{0}", notification.Args),
-                NotificationType.PowerModeGodMode => string.Format("{0}", notification.Args),
-                NotificationType.RefreshRate => string.Format("{0}", notification.Args),
-                NotificationType.RGBKeyboardBacklightOff => string.Format("{0}", notification.Args),
-                NotificationType.RGBKeyboardBacklightChanged => string.Format("{0}", notification.Args),
-                NotificationType.SmartKeyDoublePress => string.Format("{0}", notification.Args),
-                NotificationType.SmartKeySinglePress => string.Format("{0}", notification.Args),
+                NotificationType.PowerModeQuiet => notification.Args?.ToString() ?? string.Empty,
+                NotificationType.PowerModeBalance => notification.Args?.ToString() ?? string.Empty,
+                NotificationType.PowerModePerformance => notification.Args?.ToString() ?? string.Empty,
+                NotificationType.PowerModeExtreme => notification.Args?.ToString() ?? string.Empty,
+                NotificationType.PowerModeGodMode => notification.Args?.ToString() ?? string.Empty,
+                NotificationType.RefreshRate => notification.Args?.ToString() ?? string.Empty,
+                NotificationType.RGBKeyboardBacklightOff => notification.Args?.ToString() ?? string.Empty,
+                NotificationType.RGBKeyboardBacklightChanged => notification.Args?.ToString() ?? string.Empty,
+                NotificationType.SmartKeyDoublePress => notification.Args?.ToString() ?? string.Empty,
+                NotificationType.SmartKeySinglePress => notification.Args?.ToString() ?? string.Empty,
                 NotificationType.SpectrumBacklightChanged => string.Format(Resource.Notification_SpectrumKeyboardBacklight_Brightness, notification.Args),
                 NotificationType.SpectrumBacklightOff => string.Format(Resource.Notification_SpectrumKeyboardBacklight_Backlight, notification.Args),
                 NotificationType.SpectrumBacklightPresetChanged => string.Format(Resource.Notification_SpectrumKeyboardBacklight_Profile, notification.Args),

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -280,11 +280,14 @@ public partial class SpectrumKeyboardBacklightControl
         var vantageStatusTask = _vantageDisabler.GetStatusAsync();
         
         await Task.WhenAll(isSupportedTask, vantageStatusTask);
-        
-        if (!isSupportedTask.Result)
+
+        var isSupported = await isSupportedTask;
+        var vantageStatus = await vantageStatusTask;
+
+        if (!isSupported)
             throw new InvalidOperationException("Spectrum Keyboard does not seem to be supported");
 
-        if (vantageStatusTask.Result == SoftwareStatus.Enabled)
+        if (vantageStatus == SoftwareStatus.Enabled)
         {
             _vantageWarningInfoBar.IsOpen = true;
 

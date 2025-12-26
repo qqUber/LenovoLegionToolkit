@@ -1,11 +1,33 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
+using LenovoLegionToolkit.WPF.Compat;
+using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Controls.Custom;
 
 public class CardExpander : Wpf.Ui.Controls.CardExpander
 {
+    public static new readonly DependencyProperty IconProperty = DependencyProperty.Register(
+        nameof(Icon),
+        typeof(SymbolRegular),
+        typeof(CardExpander),
+        new PropertyMetadata(SymbolRegular.Empty, OnIconChanged));
+
+    private static void OnIconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is CardExpander control && e.NewValue is SymbolRegular symbol)
+        {
+            ((Wpf.Ui.Controls.CardExpander)control).Icon = symbol.ToIconElement();
+        }
+    }
+
+    public new SymbolRegular Icon
+    {
+        get => (SymbolRegular)GetValue(IconProperty);
+        set => SetValue(IconProperty, value);
+    }
+
     protected override AutomationPeer OnCreateAutomationPeer() => new CardExpanderAutomationPeer(this);
 
     private class CardExpanderAutomationPeer(CardExpander owner) : FrameworkElementAutomationPeer(owner)

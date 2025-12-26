@@ -7,6 +7,7 @@
     xmlns:local="clr-namespace:LenovoLegionToolkit.WPF.Windows"
     xmlns:resources="clr-namespace:LenovoLegionToolkit.WPF.Resources"
     xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
+    xmlns:compat="clr-namespace:LenovoLegionToolkit.WPF.Compat"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.NotificationsSettingsWindow_Title}"
     Height="600"
@@ -24,7 +25,8 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <wpfui:TitleBar
+        <compat:TitleBar
+            Title="{x:Static resources:Resource.NotificationsSettingsWindow_Title}"
             Grid.Row="0"
             CanMaximize="false"
             ShowMaximize="false"
@@ -50,7 +52,6 @@
 
         <wpfui:DynamicScrollViewer Grid.Row="1" Margin="12,0,0,0">
             <StackPanel Margin="0,0,16,0">
-
                 <custom:CardControl Margin="0,0,0,8">
                     <custom:CardControl.Header>
                         <controls:CardHeaderControl Title="{x:Static resources:Resource.NotificationsSettingsWindow_DontShowNotifications_Title}" Subtitle="{x:Static resources:Resource.NotificationsSettingsWindow_DontShowNotifications_Message}" />

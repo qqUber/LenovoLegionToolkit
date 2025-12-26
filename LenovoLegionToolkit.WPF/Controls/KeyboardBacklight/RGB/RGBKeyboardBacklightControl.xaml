@@ -7,6 +7,7 @@
     xmlns:lib="clr-namespace:LenovoLegionToolkit.Lib;assembly=LenovoLegionToolkit.Lib"
     xmlns:resources="clr-namespace:LenovoLegionToolkit.WPF.Resources"
     xmlns:rgb="clr-namespace:LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.RGB"
+    xmlns:compat="clr-namespace:LenovoLegionToolkit.WPF.Compat"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml">
 
     <Grid>
@@ -137,7 +138,7 @@
             <custom:CardControl.ContextMenu>
                 <ContextMenu>
                     <!--  ReSharper disable once Xaml.RedundantResource  -->
-                    <wpfui:MenuItem
+                    <compat:MenuItem
                         Click="SynchroniseZonesMenuItem_Click"
                         Header="Synchronise zones"
                         SymbolIcon="ArrowsBidirectional24" />
@@ -159,7 +160,7 @@
             <custom:CardControl.ContextMenu>
                 <ContextMenu>
                     <!--  ReSharper disable once Xaml.RedundantResource  -->
-                    <wpfui:MenuItem
+                    <compat:MenuItem
                         Click="SynchroniseZonesMenuItem_Click"
                         Header="Synchronise zones"
                         SymbolIcon="ArrowsBidirectional24" />
@@ -181,7 +182,7 @@
             <custom:CardControl.ContextMenu>
                 <ContextMenu>
                     <!--  ReSharper disable once Xaml.RedundantResource  -->
-                    <wpfui:MenuItem
+                    <compat:MenuItem
                         Click="SynchroniseZonesMenuItem_Click"
                         Header="Synchronise zones"
                         SymbolIcon="ArrowsBidirectional24" />
@@ -203,7 +204,7 @@
             <custom:CardControl.ContextMenu>
                 <ContextMenu>
                     <!--  ReSharper disable once Xaml.RedundantResource  -->
-                    <wpfui:MenuItem
+                    <compat:MenuItem
                         Click="SynchroniseZonesMenuItem_Click"
                         Header="Synchronise zones"
                         SymbolIcon="ArrowsBidirectional24" />

@@ -8,6 +8,7 @@
     xmlns:local="clr-namespace:LenovoLegionToolkit.WPF.Windows"
     xmlns:resources="clr-namespace:LenovoLegionToolkit.WPF.Resources"
     xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
+    xmlns:compat="clr-namespace:LenovoLegionToolkit.WPF.Compat"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.GodModeSettingsWindow_Title}"
     Width="850"
@@ -25,7 +26,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <wpfui:TitleBar
+        <compat:TitleBar
             Grid.Row="0"
             CanMaximize="false"
             ShowMaximize="false"
@@ -111,7 +112,7 @@
                                     Padding="10"
                                     VerticalAlignment="Stretch"
                                     Click="EditPresetsButton_Click"
-                                    Icon="Edit24"
+                                    Content="✎"
                                     ToolTip="{x:Static resources:Resource.Edit}" />
                                 <wpfui:Button
                                     x:Name="_deletePresetsButton"
@@ -120,7 +121,7 @@
                                     Padding="10"
                                     VerticalAlignment="Stretch"
                                     Click="DeletePresetsButton_Click"
-                                    Icon="Dismiss24"
+                                    Content="✕"
                                     ToolTip="{x:Static resources:Resource.Delete}" />
                                 <wpfui:Button
                                     x:Name="_addPresetsButton"
@@ -130,8 +131,7 @@
                                     VerticalAlignment="Stretch"
                                     Appearance="Primary"
                                     Click="AddPresetsButton_Click"
-                                    Content="{x:Static resources:Resource.Add}"
-                                    Icon="Add24" />
+                                    Content="{x:Static resources:Resource.Add}" />
                             </Grid>
                         </StackPanel>
                     </Border>
@@ -283,8 +283,7 @@
                                     MinWidth="120"
                                     HorizontalAlignment="Right"
                                     Click="DefaultFanCurve_Click"
-                                    Content="{x:Static resources:Resource.Default}"
-                                    Icon="ArrowClockwise24" />
+                                    Content="{x:Static resources:Resource.Default}" />
                             </StackPanel>
                         </custom:CardControl.Header>
                     </custom:CardControl>
@@ -380,8 +379,7 @@
                     MinWidth="120"
                     Padding="16,10"
                     Click="LoadButton_Click"
-                    Content="{x:Static resources:Resource.Load}"
-                    Icon="ChevronDown24" />
+                    Content="{x:Static resources:Resource.Load}" />
 
                 <wpfui:Button
                     Grid.Column="2"
@@ -400,12 +398,12 @@
             </Grid>
         </Border>
 
-        <wpfui:Snackbar
+        <compat:Snackbar
             x:Name="_snackBar"
             Grid.Row="1"
             HorizontalAlignment="Center"
             CloseButtonEnabled="True"
-            Icon="ErrorCircle24"
+            Icon="{x:Static wpfui:SymbolRegular.ErrorCircle24}"
             Timeout="5000" />
 
     </Grid>

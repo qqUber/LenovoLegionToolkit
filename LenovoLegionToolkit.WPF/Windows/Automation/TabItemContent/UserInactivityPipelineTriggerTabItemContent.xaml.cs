@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Humanizer;
 using LenovoLegionToolkit.Lib.Automation.Pipeline.Triggers;
 using LenovoLegionToolkit.WPF.Extensions;

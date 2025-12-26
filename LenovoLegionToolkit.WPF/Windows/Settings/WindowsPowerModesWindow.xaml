@@ -8,6 +8,7 @@
     xmlns:resources="clr-namespace:LenovoLegionToolkit.WPF.Resources"
     xmlns:resourcesLib="clr-namespace:LenovoLegionToolkit.Lib.Resources;assembly=LenovoLegionToolkit.Lib"
     xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
+    xmlns:compat="clr-namespace:LenovoLegionToolkit.WPF.Compat"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.WindowsPowerModesWindow_Title}"
     Width="600"
@@ -25,7 +26,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <wpfui:TitleBar
+        <compat:TitleBar
             Grid.Row="0"
             CanMaximize="false"
             ShowMaximize="false"

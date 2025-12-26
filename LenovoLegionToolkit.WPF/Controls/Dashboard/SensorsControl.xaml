@@ -44,25 +44,25 @@
                         </StackPanel>
 
                         <Label Grid.Row="2" Grid.Column="0" VerticalContentAlignment="Center" Content="{x:Static resources:Resource.SensorsControl_Utilization_Title}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="13" />
-                        <ProgressBar x:Name="_cpuUtilizationBar" Grid.Row="2" Grid.Column="1" Margin="16,0,16,0" Height="8" Maximum="100" Minimum="0" Value="0">
+                        <ProgressBar x:Name="_cpuUtilizationBar" Grid.Row="2" Grid.Column="1" Margin="16,0,16,0" Height="8" Maximum="100" Minimum="0" Value="0" Style="{StaticResource GamingProgressBarStyle}">
                             <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                         </ProgressBar>
                         <Label x:Name="_cpuUtilizationLabel" Grid.Row="2" Grid.Column="2" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Content="-" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
 
                         <Label Grid.Row="3" Grid.Column="0" VerticalContentAlignment="Center" Content="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="13" />
-                        <ProgressBar x:Name="_cpuCoreClockBar" Grid.Row="3" Grid.Column="1" Margin="16,0,16,0" Height="8" Maximum="100" Minimum="0" Value="0">
+                        <ProgressBar x:Name="_cpuCoreClockBar" Grid.Row="3" Grid.Column="1" Margin="16,0,16,0" Height="8" Maximum="100" Minimum="0" Value="0" Style="{StaticResource GamingProgressBarStyle}">
                             <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                         </ProgressBar>
                         <Label x:Name="_cpuCoreClockLabel" Grid.Row="3" Grid.Column="2" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Content="-" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
 
                         <Label Grid.Row="4" Grid.Column="0" VerticalContentAlignment="Center" Content="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="13" />
-                        <ProgressBar x:Name="_cpuTemperatureBar" Grid.Row="4" Grid.Column="1" Margin="16,0,16,0" Height="8" Maximum="100" Minimum="0" Value="0">
+                        <ProgressBar x:Name="_cpuTemperatureBar" Grid.Row="4" Grid.Column="1" Margin="16,0,16,0" Height="8" Maximum="100" Minimum="0" Value="0" Style="{StaticResource GamingProgressBarStyle}">
                             <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                         </ProgressBar>
                         <Label x:Name="_cpuTemperatureLabel" Grid.Row="4" Grid.Column="2" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Content="-" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
 
                         <Label Grid.Row="5" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Fan_Title}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="13" />
-                        <ProgressBar x:Name="_cpuFanSpeedBar" Grid.Row="5" Grid.Column="1" Margin="16,0,16,0" Height="8" Maximum="100" Minimum="0" Value="0">
+                        <ProgressBar x:Name="_cpuFanSpeedBar" Grid.Row="5" Grid.Column="1" Margin="16,0,16,0" Height="8" Maximum="100" Minimum="0" Value="0" Style="{StaticResource GamingProgressBarStyle}">
                             <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                         </ProgressBar>
                         <Label x:Name="_cpuFanSpeedLabel" Grid.Row="5" Grid.Column="2" HorizontalContentAlignment="Right" Content="-" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
@@ -95,31 +95,31 @@
                         </StackPanel>
 
                         <Label Grid.Row="2" Grid.Column="0" VerticalContentAlignment="Center" Content="{x:Static resources:Resource.SensorsControl_Utilization_Title}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="13" />
-                        <ProgressBar x:Name="_gpuUtilizationBar" Grid.Row="2" Grid.Column="1" Margin="16,0,16,0" Height="8" Maximum="100" Minimum="0" Value="0">
+                        <ProgressBar x:Name="_gpuUtilizationBar" Grid.Row="2" Grid.Column="1" Margin="16,0,16,0" Height="8" Maximum="100" Minimum="0" Value="0" Style="{StaticResource GamingProgressBarStyle}">
                             <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                         </ProgressBar>
                         <Label x:Name="_gpuUtilizationLabel" Grid.Row="2" Grid.Column="2" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Content="-" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
 
                         <Label Grid.Row="3" Grid.Column="0" VerticalContentAlignment="Center" Content="{x:Static resources:Resource.SensorsControl_CoreClock_Title}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="13" />
-                        <ProgressBar x:Name="_gpuCoreClockBar" Grid.Row="3" Grid.Column="1" Margin="16,0,16,0" Height="8" Maximum="100" Minimum="0" Value="0">
+                        <ProgressBar x:Name="_gpuCoreClockBar" Grid.Row="3" Grid.Column="1" Margin="16,0,16,0" Height="8" Maximum="100" Minimum="0" Value="0" Style="{StaticResource GamingProgressBarStyle}">
                             <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                         </ProgressBar>
                         <Label x:Name="_gpuCoreClockLabel" Grid.Row="3" Grid.Column="2" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Content="-" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
 
                         <Label Grid.Row="4" Grid.Column="0" VerticalContentAlignment="Center" Content="{x:Static resources:Resource.SensorsControl_MemoryClock_Title}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="13" />
-                        <ProgressBar x:Name="_gpuMemoryClockBar" Grid.Row="4" Grid.Column="1" Margin="16,0,16,0" Height="8" Maximum="100" Minimum="0" Value="0">
+                        <ProgressBar x:Name="_gpuMemoryClockBar" Grid.Row="4" Grid.Column="1" Margin="16,0,16,0" Height="8" Maximum="100" Minimum="0" Value="0" Style="{StaticResource GamingProgressBarStyle}">
                             <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                         </ProgressBar>
                         <Label x:Name="_gpuMemoryClockLabel" Grid.Row="4" Grid.Column="2" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Content="-" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
 
                         <Label Grid.Row="5" Grid.Column="0" VerticalContentAlignment="Center" Content="{x:Static resources:Resource.SensorsControl_Temperature_Title}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="13" />
-                        <ProgressBar x:Name="_gpuTemperatureBar" Grid.Row="5" Grid.Column="1" Margin="16,0,16,0" Height="8" Maximum="100" Minimum="0" Value="0">
+                        <ProgressBar x:Name="_gpuTemperatureBar" Grid.Row="5" Grid.Column="1" Margin="16,0,16,0" Height="8" Maximum="100" Minimum="0" Value="0" Style="{StaticResource GamingProgressBarStyle}">
                             <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                         </ProgressBar>
                         <Label x:Name="_gpuTemperatureLabel" Grid.Row="5" Grid.Column="2" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Content="-" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
 
                         <Label Grid.Row="6" Grid.Column="0" Content="{x:Static resources:Resource.SensorsControl_Fan_Title}" Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="13" />
-                        <ProgressBar x:Name="_gpuFanSpeedBar" Grid.Row="6" Grid.Column="1" Margin="16,0,16,0" Height="8" Maximum="100" Minimum="0" Value="0">
+                        <ProgressBar x:Name="_gpuFanSpeedBar" Grid.Row="6" Grid.Column="1" Margin="16,0,16,0" Height="8" Maximum="100" Minimum="0" Value="0" Style="{StaticResource GamingProgressBarStyle}">
                             <i:Interaction.Behaviors><behaviors:ProgressBarAnimateBehavior /></i:Interaction.Behaviors>
                         </ProgressBar>
                         <Label x:Name="_gpuFanSpeedLabel" Grid.Row="6" Grid.Column="2" HorizontalContentAlignment="Right" Content="-" FontWeight="Medium" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />

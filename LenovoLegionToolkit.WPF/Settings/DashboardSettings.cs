@@ -1,4 +1,4 @@
-﻿using LenovoLegionToolkit.Lib.Settings;
+using LenovoLegionToolkit.Lib.Settings;
 
 namespace LenovoLegionToolkit.WPF.Settings;
 

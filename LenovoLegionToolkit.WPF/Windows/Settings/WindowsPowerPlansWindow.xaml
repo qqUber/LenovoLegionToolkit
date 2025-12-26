@@ -8,6 +8,7 @@
     xmlns:resources="clr-namespace:LenovoLegionToolkit.WPF.Resources"
     xmlns:resourcesLib="clr-namespace:LenovoLegionToolkit.Lib.Resources;assembly=LenovoLegionToolkit.Lib"
     xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
+    xmlns:compat="clr-namespace:LenovoLegionToolkit.WPF.Compat"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.WindowsPowerPlansWindow_Title}"
     Width="600"
@@ -25,7 +26,8 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <wpfui:TitleBar
+        <compat:TitleBar
+            Title="{x:Static resources:Resource.WindowsPowerPlansWindow_Title}"
             Grid.Row="0"
             CanMaximize="false"
             ShowMaximize="false"
@@ -37,7 +39,6 @@
             Height="24"
             Margin="12,8,12,8">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
@@ -62,7 +63,7 @@
                     <custom:CardControl
                         x:Name="_aoAcWarningCard"
                         Margin="0,0,0,24"
-                        Icon="Warning24"
+                        Icon="{x:Static wpfui:SymbolRegular.Warning24}"
                         Visibility="Collapsed">
                         <custom:CardControl.Header>
                             <controls:CardHeaderControl Title="{x:Static resources:Resource.PowerPlansWindow_AoAcWarning_Title}" Subtitle="{x:Static resources:Resource.PowerPlansWindow_AoAcWarning_Message}" />

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using LenovoLegionToolkit.Lib.Automation.Pipeline.Triggers;
 
 namespace LenovoLegionToolkit.WPF.Windows.Automation.TabItemContent;

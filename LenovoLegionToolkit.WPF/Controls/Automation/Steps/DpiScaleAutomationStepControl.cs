@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Automation.Steps;
 using LenovoLegionToolkit.Lib.Listeners;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
-using Wpf.Ui.Common;
+
 
 namespace LenovoLegionToolkit.WPF.Controls.Automation.Steps;
 
@@ -14,7 +14,7 @@ public class DpiScaleAutomationStepControl : AbstractComboBoxAutomationStepCardC
 
     public DpiScaleAutomationStepControl(IAutomationStep<DpiScale> step) : base(step)
     {
-        Icon = SymbolRegular.TextFontSize24;
+        Icon = SymbolRegular.ScaleFill24;
         Title = Resource.DpiScaleAutomationStepControl_Title;
         Subtitle = Resource.DpiScaleAutomationStepControl_Message;
 

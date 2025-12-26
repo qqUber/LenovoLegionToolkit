@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.WPF.Controls;
 using LenovoLegionToolkit.WPF.Controls.Dashboard;
 using LenovoLegionToolkit.WPF.Resources;
-using Wpf.Ui.Common;
+
 
 namespace LenovoLegionToolkit.WPF.Extensions;
 
@@ -20,7 +20,7 @@ public static class DashboardItemExtensions
         DashboardItem.OverclockDiscreteGpu => SymbolRegular.DeveloperBoardLightning20,
         DashboardItem.Resolution => SymbolRegular.ScaleFill24,
         DashboardItem.RefreshRate => SymbolRegular.DesktopPulse24,
-        DashboardItem.DpiScale => SymbolRegular.TextFontSize24,
+        DashboardItem.DpiScale => SymbolRegular.ScaleFill24,
         DashboardItem.Hdr => SymbolRegular.Hdr24,
         DashboardItem.OverDrive => SymbolRegular.TopSpeed24,
         DashboardItem.PanelLogoBacklight => SymbolRegular.LightbulbCircle24,

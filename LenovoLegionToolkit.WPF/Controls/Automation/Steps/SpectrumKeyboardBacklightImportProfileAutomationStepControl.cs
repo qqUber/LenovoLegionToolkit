@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib.Automation.Steps;
 using LenovoLegionToolkit.WPF.Resources;
+using LenovoLegionToolkit.WPF.Compat;
 using Microsoft.Win32;
-using Wpf.Ui.Common;
+
 using Button = Wpf.Ui.Controls.Button;
 using TextBox = Wpf.Ui.Controls.TextBox;
 
@@ -20,7 +21,7 @@ public class SpectrumKeyboardBacklightImportProfileAutomationStepControl : Abstr
 
     private readonly Button _openButton = new()
     {
-        Icon = SymbolRegular.MoreHorizontal24,
+        Icon = SymbolRegular.MoreHorizontal24.ToIconElement(),
         MinWidth = 34,
         Height = 34,
         Margin = new(8, 0, 0, 0)

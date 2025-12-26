@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
@@ -12,7 +12,8 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows.Dashboard;
-using Wpf.Ui.Common;
+using LenovoLegionToolkit.WPF.Compat;
+
 using Button = Wpf.Ui.Controls.Button;
 
 namespace LenovoLegionToolkit.WPF.Controls.Dashboard;
@@ -26,7 +27,7 @@ public class PowerModeControl : AbstractComboBoxFeatureCardControl<PowerModeStat
 
     private readonly Button _configButton = new()
     {
-        Icon = SymbolRegular.Settings24,
+        Icon = SymbolRegular.Settings24.ToIconElement(),
         FontSize = 20,
         Margin = new(8, 0, 0, 0),
         Visibility = Visibility.Collapsed,

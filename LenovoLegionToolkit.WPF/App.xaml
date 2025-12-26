@@ -20,6 +20,8 @@
                 <ResourceDictionary Source="pack://application:,,,/Styles/DynamicScrollBar.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/InfoBar.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Styles/NavigationStore.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/ProgressBar.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/UIPolish.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

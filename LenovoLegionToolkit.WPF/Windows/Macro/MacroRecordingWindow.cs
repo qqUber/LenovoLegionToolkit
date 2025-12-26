@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
-using Wpf.Ui.Common;
+
 using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Windows.Macro;

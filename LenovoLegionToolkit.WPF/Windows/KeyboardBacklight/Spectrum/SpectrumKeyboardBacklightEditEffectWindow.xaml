@@ -11,6 +11,7 @@
     Title="{x:Static resources:Resource.SpectrumKeyboardBacklightEditEffectWindow_Title_Edit}"
     Width="500"
     Height="500"
+        xmlns:compat="clr-namespace:LenovoLegionToolkit.WPF.Compat"
     MinWidth="500"
     MinHeight="500"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
@@ -24,8 +25,9 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <wpfui:TitleBar
+        <compat:TitleBar
             x:Name="_titleBar"
+            Title="{x:Static resources:Resource.SpectrumKeyboardBacklightEditEffectWindow_Title_Add}"
             Grid.Row="0"
             CanMaximize="false"
             ShowMaximize="false"

@@ -1,15 +1,24 @@
-﻿using System.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 using LenovoLegionToolkit.WPF.Extensions;
 
 namespace LenovoLegionToolkit.WPF.Controls.Dashboard;
 
 public class DashboardGroupControl : UserControl
 {
+    private static readonly Thickness HeaderMargin = new(0, 16, 0, 16);
+    private const double HeaderFontSize = 22;
+    private const double AccentWidth = 4;
+    private const double AccentHeight = 24;
+    private const double ControlBottomMargin = 8;
+
     private readonly TaskCompletionSource _initializedTaskCompletionSource = new();
 
     private readonly DashboardGroup _dashboardGroup;
@@ -23,22 +32,48 @@ public class DashboardGroupControl : UserControl
         Initialized += DashboardGroupControl_Initialized;
     }
 
-    private async void DashboardGroupControl_Initialized(object? sender, System.EventArgs e)
+    private void DashboardGroupControl_Initialized(object? sender, EventArgs e)
     {
-        var stackPanel = new StackPanel { Margin = new(0, 0, 16, 0) };
+        Initialized -= DashboardGroupControl_Initialized;
+        _ = InitializeAsync();
+    }
 
-        // Create header with icon and title
-        var headerPanel = new StackPanel 
-        { 
+    private async Task InitializeAsync()
+    {
+        try
+        {
+            var mainPanel = new StackPanel { Margin = new(0, 0, 16, 0) };
+
+            mainPanel.Children.Add(CreateHeader());
+
+            var controls = await LoadControlsAsync().ConfigureAwait(true);
+
+            var itemsControl = CreateItemsControl(controls);
+            mainPanel.Children.Add(itemsControl);
+
+            Content = mainPanel;
+
+            _initializedTaskCompletionSource.TrySetResult();
+        }
+        catch (Exception ex)
+        {
+            _initializedTaskCompletionSource.TrySetException(ex);
+        }
+    }
+
+    private UIElement CreateHeader()
+    {
+        // Create header with accent bar and title
+        var headerPanel = new StackPanel
+        {
             Orientation = Orientation.Horizontal,
-            Margin = new(0, 16, 0, 16)
+            Margin = HeaderMargin
         };
 
-        // Add a decorative accent bar
         var accentBar = new Border
         {
-            Width = 4,
-            Height = 24,
+            Width = AccentWidth,
+            Height = AccentHeight,
             CornerRadius = new CornerRadius(2),
             Margin = new(0, 0, 12, 0),
             VerticalAlignment = VerticalAlignment.Center
@@ -50,7 +85,7 @@ public class DashboardGroupControl : UserControl
         {
             Text = _dashboardGroup.GetName(),
             Focusable = true,
-            FontSize = 22,
+            FontSize = HeaderFontSize,
             FontWeight = FontWeights.SemiBold,
             VerticalAlignment = VerticalAlignment.Center
         };
@@ -58,26 +93,45 @@ public class DashboardGroupControl : UserControl
         AutomationProperties.SetName(textBlock, textBlock.Text);
         headerPanel.Children.Add(textBlock);
 
-        stackPanel.Children.Add(headerPanel);
+        return headerPanel;
+    }
 
+    private async Task<IReadOnlyList<UIElement>> LoadControlsAsync()
+    {
         // Load controls in parallel for faster initialization
         var controlsTasks = _dashboardGroup.Items.Select(i => i.GetControlAsync());
         var controls = await Task.WhenAll(controlsTasks).ConfigureAwait(true);
 
-        var allControls = controls.SelectMany(c => c).ToList();
-        
-        // Batch add controls to reduce layout passes
-        foreach (var control in allControls)
+        var allControls = new List<UIElement>();
+
+        foreach (var control in controls.SelectMany(c => c))
         {
             if (control is FrameworkElement fe)
             {
-                fe.Margin = new Thickness(fe.Margin.Left, fe.Margin.Top, fe.Margin.Right, 8);
+                fe.Margin = new Thickness(fe.Margin.Left, fe.Margin.Top, fe.Margin.Right, ControlBottomMargin);
             }
-            stackPanel.Children.Add(control);
+
+            allControls.Add(control);
         }
 
-        Content = stackPanel;
+        return allControls;
+    }
 
-        _initializedTaskCompletionSource.TrySetResult();
+    private ItemsControl CreateItemsControl(IReadOnlyList<UIElement> controls)
+    {
+        var itemsControl = new ItemsControl
+        {
+            ItemsSource = controls
+        };
+
+        itemsControl.SetValue(VirtualizingPanel.IsVirtualizingProperty, true);
+        itemsControl.SetValue(VirtualizingPanel.VirtualizationModeProperty, VirtualizationMode.Recycling);
+        itemsControl.SetValue(ScrollViewer.CanContentScrollProperty, true);
+
+        var itemsPanelFactory = new FrameworkElementFactory(typeof(VirtualizingStackPanel));
+        itemsPanelFactory.SetValue(VirtualizingStackPanel.OrientationProperty, Orientation.Vertical);
+        itemsControl.ItemsPanel = new ItemsPanelTemplate(itemsPanelFactory);
+
+        return itemsControl;
     }
 }

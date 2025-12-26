@@ -9,9 +9,10 @@ using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.Messaging;
 using LenovoLegionToolkit.Lib.Messaging.Messages;
 using LenovoLegionToolkit.Lib.Utils;
-using LenovoLegionToolkit.WPF.Controls.Custom;
 using LenovoLegionToolkit.WPF.Extensions;
-using Wpf.Ui.Common;
+using CardControl = LenovoLegionToolkit.WPF.Controls.Custom.CardControl;
+using LenovoLegionToolkit.WPF.Controls.Custom;
+
 
 namespace LenovoLegionToolkit.WPF.Controls;
 

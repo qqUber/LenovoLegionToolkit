@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -9,9 +9,9 @@ namespace LenovoLegionToolkit.WPF.Controls;
 
 public abstract class AbstractRefreshingControl : UserControl
 {
-    private Task? _refreshTask;
     private CancellationTokenSource? _refreshCts;
     private volatile bool _isRefreshing;
+    private bool _hasInitiallyLoaded;
 
     protected bool IsRefreshing => _isRefreshing;
 
@@ -26,9 +26,13 @@ public abstract class AbstractRefreshingControl : UserControl
         Unloaded += RefreshingControl_Unloaded;
     }
 
-    private void RefreshingControl_Loaded(object sender, RoutedEventArgs e)
+    private async void RefreshingControl_Loaded(object sender, RoutedEventArgs e)
     {
         OnFinishedLoading();
+        
+        // Always refresh on load. The control is being shown, so it needs data.
+        await RefreshAsync();
+        _hasInitiallyLoaded = true;
     }
 
     private void RefreshingControl_Unloaded(object sender, RoutedEventArgs e)
@@ -36,12 +40,17 @@ public abstract class AbstractRefreshingControl : UserControl
         // Cancel any pending refresh when control is unloaded
         _refreshCts?.Cancel();
         _refreshCts = null;
+        // Don't reset _hasInitiallyLoaded here - it causes issues with Frame navigation
     }
 
     protected abstract void OnFinishedLoading();
 
     private async void RefreshingControl_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
+        // Skip if we haven't finished initial loading yet (Loaded event will handle it)
+        if (!_hasInitiallyLoaded)
+            return;
+            
         if (IsVisible)
             await RefreshAsync();
         else
@@ -73,8 +82,8 @@ public abstract class AbstractRefreshingControl : UserControl
             if (DisablesWhileRefreshing)
                 IsEnabled = false;
 
-            _refreshTask ??= OnRefreshAsync();
-            await _refreshTask.ConfigureAwait(true);
+            // Always create a fresh task - don't cache
+            await OnRefreshAsync().ConfigureAwait(true);
         }
         catch (OperationCanceledException)
         {
@@ -97,7 +106,6 @@ public abstract class AbstractRefreshingControl : UserControl
         }
         finally
         {
-            _refreshTask = null;
             _isRefreshing = false;
 
             if (!token.IsCancellationRequested)

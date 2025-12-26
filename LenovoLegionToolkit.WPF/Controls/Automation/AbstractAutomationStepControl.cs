@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using LenovoLegionToolkit.Lib.Automation.Steps;
 using LenovoLegionToolkit.WPF.Resources;
-using Wpf.Ui.Common;
+using LenovoLegionToolkit.WPF.Compat;
+
 using Button = Wpf.Ui.Controls.Button;
 using CardControl = LenovoLegionToolkit.WPF.Controls.Custom.CardControl;
 
@@ -34,7 +35,7 @@ public abstract class AbstractAutomationStepControl : UserControl
 
     private readonly Button _deleteButton = new()
     {
-        Icon = SymbolRegular.Dismiss24,
+        Icon = SymbolRegular.Dismiss24.ToIconElement(),
         ToolTip = Resource.AbstractAutomationStepControl_Delete,
         MinWidth = 34,
         Height = 34,

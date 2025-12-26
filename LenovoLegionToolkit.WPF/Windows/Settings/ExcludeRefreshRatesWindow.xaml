@@ -9,6 +9,7 @@
     xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="{x:Static resources:Resource.ExcludeRefreshRatesWindow_Title}"
+    xmlns:compat="clr-namespace:LenovoLegionToolkit.WPF.Compat"
     Width="400"
     Height="500"
     MinWidth="400"
@@ -25,7 +26,8 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <wpfui:TitleBar
+        <compat:TitleBar
+            Title="{x:Static resources:Resource.ExcludeRefreshRatesWindow_Title}"
             Grid.Row="0"
             CanMaximize="false"
             ShowMaximize="false"
@@ -65,7 +67,7 @@
                 <custom:CardControl
                     Grid.Row="0"
                     Margin="0,8,0,8"
-                    Icon="Info24">
+                    Icon="{x:Static wpfui:SymbolRegular.Info24}">
                     <custom:CardControl.Header>
                         <TextBlock Text="{x:Static resources:Resource.ExcludeRefreshRatesWindow_Description}" TextWrapping="Wrap" />
                     </custom:CardControl.Header>

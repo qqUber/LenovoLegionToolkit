@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Automation;
@@ -13,7 +13,8 @@ using LenovoLegionToolkit.Lib.Utils;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows.Dashboard;
-using Wpf.Ui.Common;
+using LenovoLegionToolkit.WPF.Compat;
+
 using Wpf.Ui.Controls;
 using Button = Wpf.Ui.Controls.Button;
 
@@ -35,7 +36,7 @@ public static class HybridModeControlFactory
 
         private readonly Button _infoButton = new()
         {
-            Icon = SymbolRegular.Info24,
+            Icon = SymbolRegular.Info24.ToIconElement(),
             FontSize = 20,
             Margin = new(8, 0, 0, 0),
         };

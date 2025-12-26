@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -14,7 +14,7 @@ using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
 using Wpf.Ui.Appearance;
-using Wpf.Ui.Common;
+
 using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Windows.Utils;
@@ -125,7 +125,7 @@ public class NotificationWindow : UiWindow, INotificationWindow
     {
         WindowStartupLocation = WindowStartupLocation.Manual;
         ResizeMode = ResizeMode.NoResize;
-        WindowBackdropType = BackgroundType.None;
+        WindowBackdropType = Wpf.Ui.Controls.WindowBackdropType.None;
 
         Focusable = false;
         Topmost = true;

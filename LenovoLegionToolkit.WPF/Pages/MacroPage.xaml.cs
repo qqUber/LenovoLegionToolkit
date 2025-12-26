@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows;
 using LenovoLegionToolkit.Lib;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Macro;
-using Wpf.Ui.Common;
+
 using Wpf.Ui.Controls;
 
 namespace LenovoLegionToolkit.WPF.Pages;
