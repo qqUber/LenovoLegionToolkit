@@ -26,6 +26,10 @@ public class UserInactivityAutoListener(IMainThreadDispatcher mainThreadDispatch
 
         private HHOOK _kbHook;
         private HHOOK _mouseHook;
+        
+        // Throttle hook callbacks to reduce CPU usage
+        private DateTime _lastCallbackTime = DateTime.MinValue;
+        private static readonly TimeSpan CallbackThrottleInterval = TimeSpan.FromMilliseconds(100);
 
         public UserInactivityWindow(Action callback)
         {
@@ -48,7 +52,13 @@ public class UserInactivityAutoListener(IMainThreadDispatcher mainThreadDispatch
 
         private LRESULT HookProc(int nCode, WPARAM wParam, LPARAM lParam)
         {
-            _callback();
+            // Throttle callback to avoid excessive CPU usage from constant mouse/keyboard events
+            var now = DateTime.UtcNow;
+            if (now - _lastCallbackTime >= CallbackThrottleInterval)
+            {
+                _lastCallbackTime = now;
+                _callback();
+            }
             return PInvoke.CallNextHookEx(HHOOK.Null, nCode, wParam, lParam);
         }
 
@@ -66,7 +76,7 @@ public class UserInactivityAutoListener(IMainThreadDispatcher mainThreadDispatch
         }
     }
 
-    private readonly TimeSpan _timerResolution = TimeSpan.FromSeconds(10);
+    private readonly TimeSpan _timerResolution = TimeSpan.FromSeconds(30);
     private readonly object _lock = new();
 
     private UserInactivityWindow? _window;

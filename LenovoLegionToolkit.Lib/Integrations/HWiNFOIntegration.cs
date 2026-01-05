@@ -20,7 +20,7 @@ public class HWiNFOIntegration(SensorsController sensorController, IntegrationsS
     private const string GPU_FAN_SENSOR_NAME = "GPU Fan";
     private const string BATTERY_TEMP_SENSOR_NAME = "Battery Temperature";
 
-    private readonly TimeSpan _refreshInterval = TimeSpan.FromSeconds(1);
+    private readonly TimeSpan _refreshInterval = TimeSpan.FromSeconds(2);
 
     private CancellationTokenSource? _cts;
     private Task? _refreshTask;

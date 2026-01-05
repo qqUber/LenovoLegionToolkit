@@ -551,7 +551,16 @@ public enum SpectrumKeyboardBacklightEffectType
     [Display(ResourceType = typeof(Resource), Name = "SpectrumKeyboardBacklightEffectType_AudioRipple")]
     AudioRipple,
     [Display(ResourceType = typeof(Resource), Name = "SpectrumKeyboardBacklightEffectType_AuroraSync")]
-    AuroraSync
+    AuroraSync,
+    // Software-driven effects (driven by app, not firmware)
+    [Display(ResourceType = typeof(Resource), Name = "SpectrumKeyboardBacklightEffectType_Temperature")]
+    Temperature,
+    [Display(ResourceType = typeof(Resource), Name = "SpectrumKeyboardBacklightEffectType_Disco")]
+    Disco,
+    [Display(ResourceType = typeof(Resource), Name = "SpectrumKeyboardBacklightEffectType_Lightning")]
+    Lightning,
+    [Display(ResourceType = typeof(Resource), Name = "SpectrumKeyboardBacklightEffectType_Christmas")]
+    Christmas
 }
 
 public enum SpectrumKeyboardBacklightSpeed

@@ -511,4 +511,16 @@
   <data name="UpdateCheckFrequency_PerWeek" xml:space="preserve">
     <value>Weekly</value>
   </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Temperature" xml:space="preserve">
+    <value>Temperature</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Disco" xml:space="preserve">
+    <value>Disco</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Lightning" xml:space="preserve">
+    <value>Lightning</value>
+  </data>
+  <data name="SpectrumKeyboardBacklightEffectType_Christmas" xml:space="preserve">
+    <value>Christmas</value>
+  </data>
 </root>

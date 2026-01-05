@@ -7,8 +7,8 @@
 	    <Copyright>© 2024 Bartosz Cichecki</Copyright>
         <AssemblyName>llt</AssemblyName>
         <Platforms>x64</Platforms>
-        <FileVersion>0.0.1</FileVersion>
-        <Version>0.0.1</Version>
+        <FileVersion>1.4.0</FileVersion>
+        <Version>1.4.0</Version>
         <NeutralLanguage>en</NeutralLanguage>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

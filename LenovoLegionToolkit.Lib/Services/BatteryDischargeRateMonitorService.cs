@@ -36,7 +36,7 @@ public class BatteryDischargeRateMonitorService
                 {
                     Battery.SetMinMaxDischargeRate();
 
-                    await Task.Delay(TimeSpan.FromSeconds(3), token).ConfigureAwait(false);
+                    await Task.Delay(TimeSpan.FromSeconds(10), token).ConfigureAwait(false);
                 }
                 catch (OperationCanceledException) { }
                 catch (Exception ex)

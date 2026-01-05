@@ -127,21 +127,26 @@
                     Grid.RowSpan="6"
                     Grid.Column="1"
                     HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
                     Orientation="Horizontal">
 
                     <wpfui:Button
                         x:Name="_readmeButton"
                         Margin="0,0,8,0"
+                        Padding="10,8"
+                        Appearance="Secondary"
                         Click="ReadmeButton_Click"
-                        FontSize="18"
-                        Icon="DocumentBulletList24"
-                        ToolTip="{x:Static resources:Resource.PackageControl_OpenReadme}" />
+                        ToolTip="{x:Static resources:Resource.PackageControl_OpenReadme}">
+                        <wpfui:SymbolIcon Symbol="DocumentBulletList24" />
+                    </wpfui:Button>
 
                     <wpfui:Button
+                        Padding="10,8"
+                        Appearance="Primary"
                         Click="DownloadButton_Click"
-                        FontSize="18"
-                        Icon="ArrowDownload24"
-                        ToolTip="{x:Static resources:Resource.PackageControl_Download}" />
+                        ToolTip="{x:Static resources:Resource.PackageControl_Download}">
+                        <wpfui:SymbolIcon Symbol="ArrowDownload24" />
+                    </wpfui:Button>
 
                 </StackPanel>
 
@@ -151,6 +156,7 @@
                     Grid.RowSpan="7"
                     Grid.Column="1"
                     HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
                     Orientation="Horizontal"
                     Visibility="Collapsed">
 
@@ -173,10 +179,12 @@
 
                     <wpfui:Button
                         Margin="8,0,0,0"
+                        Padding="10,8"
+                        Appearance="Secondary"
                         Click="CancelDownloadButton_Click"
-                        FontSize="18"
-                        Icon="Dismiss24"
-                        ToolTip="{x:Static resources:Resource.Cancel}" />
+                        ToolTip="{x:Static resources:Resource.Cancel}">
+                        <wpfui:SymbolIcon Symbol="Dismiss24" />
+                    </wpfui:Button>
 
                 </StackPanel>
 

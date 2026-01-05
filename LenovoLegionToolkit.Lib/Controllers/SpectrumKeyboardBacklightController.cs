@@ -38,7 +38,8 @@ public class SpectrumKeyboardBacklightController
     private static readonly AsyncLock GetDeviceHandleLock = new();
     private static readonly object IoLock = new();
 
-    private readonly TimeSpan _auroraRefreshInterval = TimeSpan.FromMilliseconds(60);
+    private readonly TimeSpan _softwareEffectRefreshInterval = TimeSpan.FromMilliseconds(50);
+    private static readonly Random _random = new();
 
     private readonly SpecialKeyListener _listener;
     private readonly VantageDisabler _vantageDisabler;
@@ -46,8 +47,9 @@ public class SpectrumKeyboardBacklightController
 
     private SafeFileHandle? _deviceHandle;
 
-    private CancellationTokenSource? _auroraRefreshCancellationTokenSource;
-    private Task? _auroraRefreshTask;
+    private CancellationTokenSource? _softwareEffectCancellationTokenSource;
+    private Task? _softwareEffectTask;
+    private SpectrumKeyboardBacklightEffectType _activeSoftwareEffectType;
 
     private readonly JsonSerializerSettings _jsonSerializerSettings = new()
     {
@@ -330,50 +332,57 @@ public class SpectrumKeyboardBacklightController
         await File.WriteAllTextAsync(jsonPath, json).ConfigureAwait(false);
     }
 
-    public async Task<bool> StartAuroraIfNeededAsync(int? profile = null)
+    public async Task<bool> StartAuroraIfNeededAsync(int? profile = null) => await StartSoftwareEffectIfNeededAsync(profile);
+
+    public async Task<bool> StartSoftwareEffectIfNeededAsync(int? profile = null)
     {
         await ThrowIfVantageEnabled().ConfigureAwait(false);
 
-        await StopAuroraIfNeededAsync().ConfigureAwait(false);
+        await StopSoftwareEffectIfNeededAsync().ConfigureAwait(false);
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Starting Aurora... [profile={profile}]");
+            Log.Instance.Trace($"Starting software effect check... [profile={profile}]");
 
         profile ??= await GetProfileAsync().ConfigureAwait(false);
         var (_, effects) = await GetProfileDescriptionAsync(profile.Value).ConfigureAwait(false);
 
-        if (!effects.Any(e => e.Type == SpectrumKeyboardBacklightEffectType.AuroraSync))
+        // Find the first software effect in the profile
+        if (!effects.Any(e => e.Type.IsSoftwareEffect()))
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Aurora not needed. [profile={profile}]");
+                Log.Instance.Trace($"No software effect found. [profile={profile}]");
 
             return false;
         }
 
-        _auroraRefreshCancellationTokenSource = new();
-        var token = _auroraRefreshCancellationTokenSource.Token;
-        _auroraRefreshTask = Task.Run(() => AuroraRefreshAsync(profile.Value, token), token);
+        var softwareEffect = effects.First(e => e.Type.IsSoftwareEffect());
+        _activeSoftwareEffectType = softwareEffect.Type;
+        _softwareEffectCancellationTokenSource = new();
+        var token = _softwareEffectCancellationTokenSource.Token;
+        _softwareEffectTask = Task.Run(() => SoftwareEffectRefreshAsync(profile.Value, softwareEffect.Type, token), token);
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Aurora started. [profile={profile}]");
+            Log.Instance.Trace($"Software effect started: {softwareEffect.Type}. [profile={profile}]");
 
         return true;
     }
 
-    public async Task StopAuroraIfNeededAsync()
+    public async Task StopAuroraIfNeededAsync() => await StopSoftwareEffectIfNeededAsync();
+
+    public async Task StopSoftwareEffectIfNeededAsync()
     {
         await ThrowIfVantageEnabled().ConfigureAwait(false);
 
         if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Stopping Aurora...");
+            Log.Instance.Trace($"Stopping software effect...");
 
-        if (_auroraRefreshCancellationTokenSource is not null)
-            await _auroraRefreshCancellationTokenSource.CancelAsync().ConfigureAwait(false);
+        if (_softwareEffectCancellationTokenSource is not null)
+            await _softwareEffectCancellationTokenSource.CancelAsync().ConfigureAwait(false);
 
-        if (_auroraRefreshTask is not null)
-            await _auroraRefreshTask.ConfigureAwait(false);
+        if (_softwareEffectTask is not null)
+            await _softwareEffectTask.ConfigureAwait(false);
 
-        _auroraRefreshTask = null;
+        _softwareEffectTask = null;
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Aurora stopped.");
@@ -467,7 +476,7 @@ public class SpectrumKeyboardBacklightController
         }
     }
 
-    private async Task AuroraRefreshAsync(int profile, CancellationToken token)
+    private async Task SoftwareEffectRefreshAsync(int profile, SpectrumKeyboardBacklightEffectType effectType, CancellationToken token)
     {
         try
         {
@@ -478,27 +487,53 @@ public class SpectrumKeyboardBacklightController
                 throw new InvalidOperationException(nameof(handle));
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Aurora refresh starting...");
+                Log.Instance.Trace($"Software effect refresh starting... [type={effectType}]");
 
             var keyMap = await GetKeyMapAsync().ConfigureAwait(false);
             var width = keyMap.Width;
             var height = keyMap.Height;
             var colorBuffer = new RGBColor[width, height];
+            
+            // State for effects
+            var frameCount = 0;
+            var lightningFlashKeys = new HashSet<ushort>();
+            var lastLightningTime = DateTime.MinValue;
 
             SetFeature(handle, new LENOVO_SPECTRUM_AURORA_START_STOP_REQUEST(true, (byte)profile));
 
             while (!token.IsCancellationRequested)
             {
-                var delay = Task.Delay(_auroraRefreshInterval, token);
+                var delay = Task.Delay(_softwareEffectRefreshInterval, token);
 
                 try
                 {
-                    _screenCapture.CaptureScreen(ref colorBuffer, width, height, token);
+                    switch (effectType)
+                    {
+                        case SpectrumKeyboardBacklightEffectType.AuroraSync:
+                            _screenCapture.CaptureScreen(ref colorBuffer, width, height, token);
+                            break;
+
+                        case SpectrumKeyboardBacklightEffectType.Temperature:
+                            GenerateTemperatureColors(ref colorBuffer, width, height);
+                            break;
+
+                        case SpectrumKeyboardBacklightEffectType.Disco:
+                            GenerateDiscoColors(ref colorBuffer, width, height, frameCount);
+                            break;
+
+                        case SpectrumKeyboardBacklightEffectType.Lightning:
+                            GenerateLightningColors(ref colorBuffer, width, height, ref lightningFlashKeys, ref lastLightningTime);
+                            break;
+
+                        case SpectrumKeyboardBacklightEffectType.Christmas:
+                            GenerateChristmasColors(ref colorBuffer, width, height, frameCount);
+                            break;
+                    }
                 }
                 catch (Exception ex)
                 {
                     if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Screen capture failed. Delaying before next refresh...", ex);
+                        Log.Instance.Trace($"Effect generation failed. Delaying before next refresh...", ex);
 
                     await Task.Delay(TimeSpan.FromSeconds(1), token).ConfigureAwait(false);
                 }
@@ -527,9 +562,12 @@ public class SpectrumKeyboardBacklightController
                     }
                 }
 
-                avgR /= items.Count;
-                avgG /= items.Count;
-                avgB /= items.Count;
+                if (items.Count > 0)
+                {
+                    avgR /= items.Count;
+                    avgG /= items.Count;
+                    avgB /= items.Count;
+                }
 
                 for (var x = 0; x < width; x++)
                 {
@@ -544,6 +582,7 @@ public class SpectrumKeyboardBacklightController
 
                 SetFeature(handle, new LENOVO_SPECTRUM_AURORA_SEND_BITMAP_REQUEST([.. items]).ToBytes());
 
+                frameCount++;
                 await delay.ConfigureAwait(false);
             }
         }
@@ -551,7 +590,7 @@ public class SpectrumKeyboardBacklightController
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Unexpected exception while refreshing Aurora.", ex);
+                Log.Instance.Trace($"Unexpected exception while refreshing software effect.", ex);
         }
         finally
         {
@@ -563,9 +602,147 @@ public class SpectrumKeyboardBacklightController
             }
 
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Aurora refresh stopped.");
+                Log.Instance.Trace($"Software effect refresh stopped.");
         }
     }
+
+    #region Software Effect Generators
+
+    /// <summary>
+    /// Temperature effect: Blue (cool) to Red (hot) based on CPU temperature
+    /// </summary>
+    private static void GenerateTemperatureColors(ref RGBColor[,] buffer, int width, int height)
+    {
+        // Get CPU temperature (simplified - uses a gradient based on typical temp range 30-90°C)
+        // In real implementation, this would read from LibreHardwareMonitor
+        var cpuTemp = GetCpuTemperature();
+        var normalizedTemp = Math.Clamp((cpuTemp - 30) / 60.0, 0.0, 1.0); // 30-90°C range
+
+        // Interpolate from Blue (cool) -> Green (warm) -> Red (hot)
+        byte r, g, b;
+        if (normalizedTemp < 0.5)
+        {
+            // Blue to Green
+            var t = normalizedTemp * 2;
+            r = 0;
+            g = (byte)(255 * t);
+            b = (byte)(255 * (1 - t));
+        }
+        else
+        {
+            // Green to Red
+            var t = (normalizedTemp - 0.5) * 2;
+            r = (byte)(255 * t);
+            g = (byte)(255 * (1 - t));
+            b = 0;
+        }
+
+        for (var x = 0; x < width; x++)
+            for (var y = 0; y < height; y++)
+                buffer[x, y] = new RGBColor(r, g, b);
+    }
+
+    /// <summary>
+    /// Disco effect: Random colors changing rapidly
+    /// </summary>
+    private static void GenerateDiscoColors(ref RGBColor[,] buffer, int width, int height, int frame)
+    {
+        // Change colors every few frames for each key randomly
+        for (var x = 0; x < width; x++)
+        {
+            for (var y = 0; y < height; y++)
+            {
+                // Use position + frame for pseudo-random but consistent per-key variation
+                var seed = (x * 100 + y * 10 + frame / 3) % 6;
+                buffer[x, y] = seed switch
+                {
+                    0 => new RGBColor(255, 0, 0),     // Red
+                    1 => new RGBColor(0, 255, 0),     // Green
+                    2 => new RGBColor(0, 0, 255),     // Blue
+                    3 => new RGBColor(255, 255, 0),   // Yellow
+                    4 => new RGBColor(255, 0, 255),   // Magenta
+                    _ => new RGBColor(0, 255, 255),   // Cyan
+                };
+            }
+        }
+    }
+
+    /// <summary>
+    /// Lightning effect: Random bright flashes on dark background
+    /// </summary>
+    private static void GenerateLightningColors(ref RGBColor[,] buffer, int width, int height, 
+        ref HashSet<ushort> flashKeys, ref DateTime lastFlashTime)
+    {
+        // Dark blue background
+        var bgColor = new RGBColor(10, 10, 30);
+        var flashColor = new RGBColor(255, 255, 255);
+        
+        // Random chance to trigger new flash
+        if ((DateTime.Now - lastFlashTime).TotalMilliseconds > 150 && _random.Next(100) < 15)
+        {
+            flashKeys.Clear();
+            // Random flash pattern - 3-8 random keys
+            var flashCount = _random.Next(3, 9);
+            for (var i = 0; i < flashCount; i++)
+            {
+                var fx = _random.Next(width);
+                var fy = _random.Next(height);
+                flashKeys.Add((ushort)(fx * 100 + fy));
+            }
+            lastFlashTime = DateTime.Now;
+        }
+
+        // Fade flash after 100ms
+        var isFlashing = (DateTime.Now - lastFlashTime).TotalMilliseconds < 100;
+
+        for (var x = 0; x < width; x++)
+        {
+            for (var y = 0; y < height; y++)
+            {
+                var key = (ushort)(x * 100 + y);
+                buffer[x, y] = isFlashing && flashKeys.Contains(key) ? flashColor : bgColor;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Christmas effect: Alternating red and green with wave animation
+    /// </summary>
+    private static void GenerateChristmasColors(ref RGBColor[,] buffer, int width, int height, int frame)
+    {
+        var red = new RGBColor(255, 0, 0);
+        var green = new RGBColor(0, 255, 0);
+        var gold = new RGBColor(255, 215, 0);
+
+        for (var x = 0; x < width; x++)
+        {
+            for (var y = 0; y < height; y++)
+            {
+                // Wave pattern that shifts over time
+                var pattern = (x + y + frame / 5) % 4;
+                buffer[x, y] = pattern switch
+                {
+                    0 => red,
+                    1 => green,
+                    2 => red,
+                    _ => gold, // Add some sparkle
+                };
+            }
+        }
+    }
+
+    /// <summary>
+    /// Gets the current CPU temperature (simplified estimation)
+    /// In production, this should integrate with LibreHardwareMonitor
+    /// </summary>
+    private static double GetCpuTemperature()
+    {
+        // TODO: Integrate with actual CPU temp sensor
+        // For now, return a simulated value between 40-70°C
+        return 50 + _random.Next(-10, 20);
+    }
+
+    #endregion
 
     private async Task<SafeFileHandle?> GetDeviceHandleAsync()
     {

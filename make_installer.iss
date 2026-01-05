@@ -4,10 +4,10 @@
 #define MyAppNameCompact "LOQToolkit"
 #define MyAppPublisher "Varun"
 #define MyAppURL "https://github.com/varun875/Varun-LLT"
-#define MyAppExeName "LOQ Toolkit.exe"
+#define MyAppExeName "LOQToolkit_v1.4.0.exe"
 
 #ifndef MyAppVersion
-  #define MyAppVersion "1.3.5"
+  #define MyAppVersion "1.4.0"
 #endif
 
 [Setup]
@@ -23,7 +23,7 @@ DefaultDirName={userpf}\{#MyAppNameCompact}
 DisableProgramGroupPage=yes
 LicenseFile=LICENSE
 PrivilegesRequired=admin
-OutputBaseFilename=LOQToolkitSetup
+OutputBaseFilename=LOQToolkitSetup_v1.4.0
 SetupIconFile=LenovoLegionToolkit.WPF\Assets\icon.ico
 Compression=lzma2/ultra64  
 SolidCompression=yes

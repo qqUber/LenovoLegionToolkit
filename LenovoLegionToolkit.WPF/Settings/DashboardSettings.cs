@@ -7,7 +7,7 @@ public class DashboardSettings() : AbstractSettings<DashboardSettings.DashboardS
     public class DashboardSettingsStore
     {
         public bool ShowSensors { get; set; } = true;
-        public int SensorsRefreshIntervalSeconds { get; set; } = 1;
+        public int SensorsRefreshIntervalSeconds { get; set; } = 2;
         public SensorsLayout SensorsLayout { get; set; } = SensorsLayout.Cards;
         public DashboardGroup[]? Groups { get; set; }
     }

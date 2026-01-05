@@ -26,7 +26,7 @@ public sealed class HardwareMonitorService : IDisposable
     private Task? _updateTask;
     private volatile bool _isUpdating;
     private volatile bool _isPaused;
-    private volatile int _updateIntervalMs = 1500; // Default 1.5 seconds
+    private volatile int _updateIntervalMs = 2000; // Default 2 seconds
     private DateTime _lastFullUpdate = DateTime.MinValue;
 
     // Update modes for power efficiency
@@ -187,7 +187,7 @@ public sealed class HardwareMonitorService : IDisposable
         {
             case UpdateMode.Normal:
                 _isPaused = false;
-                _updateIntervalMs = 1500;
+                _updateIntervalMs = 2000;
                 break;
             case UpdateMode.Reduced:
                 _isPaused = false;

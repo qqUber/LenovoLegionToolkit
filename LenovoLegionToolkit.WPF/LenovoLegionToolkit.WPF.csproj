@@ -4,10 +4,10 @@
 		<Platforms>x64</Platforms>
 		<OutputType>WinExe</OutputType>
 		<ApplicationIcon>Assets/icon.ico</ApplicationIcon>
-		<AssemblyName>LOQ Toolkit</AssemblyName>
+		<AssemblyName>LOQToolkit_v1.4.0</AssemblyName>
 		<Copyright>© 2025 Bartosz Cichecki</Copyright>
-		<FileVersion>1.3.0</FileVersion>
-		<Version>1.3.0</Version>
+		<FileVersion>1.4.0</FileVersion>
+		<Version>1.4.0</Version>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
@@ -27,11 +27,23 @@
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<SourceRevisionId>build$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-		<!-- Disabled for faster builds - re-enable for final release -->
+		<!-- R2R: Use dotnet publish /p:PublishReadyToRun=true for final release -->
 		<PublishReadyToRun>false</PublishReadyToRun>
+		<!-- Composite R2R: Single native image, faster to generate -->
+		<PublishReadyToRunComposite>true</PublishReadyToRunComposite>
 		<PublishUrl>publish\</PublishUrl>
 		<DebuggerSupport>false</DebuggerSupport>
 	</PropertyGroup>
+	
+	<!-- Exclude data-only assemblies from R2R (speeds up compilation) -->
+	<ItemGroup Condition="'$(PublishReadyToRun)' == 'true'">
+		<PublishReadyToRunExclude Include="Newtonsoft.Json.dll" />
+		<PublishReadyToRunExclude Include="Humanizer.dll" />
+		<PublishReadyToRunExclude Include="CoordinateSharp.dll" />
+		<PublishReadyToRunExclude Include="Octokit.dll" />
+		<PublishReadyToRunExclude Include="Markdig.dll" />
+		<PublishReadyToRunExclude Include="PubSub.dll" />
+	</ItemGroup>
 	<PropertyGroup>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -51,7 +63,7 @@
 		<PackageReference Include="Markdig" Version="0.44.0" />
 		<PackageReference Include="Markdig.Wpf" Version="0.5.0.1" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-		<PackageReference Include="PixiEditor.ColorPicker" Version="3.4.2" />
+		<PackageReference Include="PixiEditor.ColorPicker" Version="3.4.2.1" />
 		<PackageReference Include="WPF-UI" Version="4.1.0" />
 	</ItemGroup>
 	<ItemGroup>

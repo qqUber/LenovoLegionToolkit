@@ -120,16 +120,18 @@
                                 Margin="4,0,0,0"
                                 VerticalAlignment="Stretch"
                                 Click="DownloadToButton_Click"
-                                Icon="MoreHorizontal24"
-                                ToolTip="{x:Static resources:Resource.PackagesPage_DownloadTo}" />
+                                ToolTip="{x:Static resources:Resource.PackagesPage_DownloadTo}">
+                                <wpfui:SymbolIcon Symbol="MoreHorizontal24" />
+                            </wpfui:Button>
 
                             <wpfui:Button
                                 Grid.Column="2"
                                 Margin="4,0,0,-1"
                                 VerticalAlignment="Stretch"
                                 Click="OpenDownloadToButton_Click"
-                                Icon="Open24"
-                                ToolTip="{x:Static resources:Resource.PackagesPage_OpenDownloadTo}" />
+                                ToolTip="{x:Static resources:Resource.PackagesPage_OpenDownloadTo}">
+                                <wpfui:SymbolIcon Symbol="Open24" />
+                            </wpfui:Button>
 
                         </Grid>
 
