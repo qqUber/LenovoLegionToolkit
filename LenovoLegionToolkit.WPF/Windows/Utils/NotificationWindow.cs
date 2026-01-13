@@ -17,6 +17,8 @@ using Wpf.Ui.Appearance;
 
 using Wpf.Ui.Controls;
 
+using Compat = LenovoLegionToolkit.WPF.Compat;
+
 namespace LenovoLegionToolkit.WPF.Windows.Utils;
 
 public class NotificationWindow : UiWindow, INotificationWindow
@@ -29,8 +31,9 @@ public class NotificationWindow : UiWindow, INotificationWindow
         {
             new() { Width = GridLength.Auto, },
             new() { Width = new(1, GridUnitType.Star) },
+            new() { Width = GridLength.Auto },
         },
-        Margin = new(16, 16, 32, 16),
+        Margin = new(16, 16, 16, 16),
     };
 
     private readonly SymbolIcon _symbolIcon = new()
@@ -50,6 +53,14 @@ public class NotificationWindow : UiWindow, INotificationWindow
         FontSize = 16,
         FontWeight = FontWeights.Medium,
         VerticalContentAlignment = VerticalAlignment.Center,
+    };
+
+    private readonly Compat.Button _closeButton = new()
+    {
+        Icon = SymbolRegular.Dismiss24,
+        Appearance = ControlAppearance.Transparent,
+        VerticalAlignment = VerticalAlignment.Center,
+        Margin = new(4, 0, 0, 0)
     };
 
     private bool _gettingBitMap;
@@ -218,9 +229,13 @@ public class NotificationWindow : UiWindow, INotificationWindow
 
         Grid.SetColumn(_symbolIcon, 0);
         Grid.SetColumn(_textBlock, 1);
+        Grid.SetColumn(_closeButton, 2);
 
         _mainGrid.Children.Add(_symbolIcon);
         _mainGrid.Children.Add(_textBlock);
+        _mainGrid.Children.Add(_closeButton);
+        
+        _closeButton.Click += (_, _) => Close();
 
         if (overlaySymbol.HasValue)
         {

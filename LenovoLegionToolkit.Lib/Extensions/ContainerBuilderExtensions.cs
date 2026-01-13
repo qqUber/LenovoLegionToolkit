@@ -1,4 +1,4 @@
-﻿using Autofac;
+using Autofac;
 using Autofac.Builder;
 
 namespace LenovoLegionToolkit.Lib.Extensions;

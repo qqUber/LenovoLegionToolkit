@@ -1,4 +1,4 @@
-﻿using WindowsDisplayAPI;
+using WindowsDisplayAPI;
 
 namespace LenovoLegionToolkit.Lib.Extensions;
 

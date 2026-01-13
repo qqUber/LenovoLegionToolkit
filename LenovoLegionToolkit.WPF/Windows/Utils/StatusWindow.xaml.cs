@@ -131,6 +131,8 @@ public partial class StatusWindow
 
     private void StatusWindow_Loaded(object sender, RoutedEventArgs e) => MoveBottomRightEdgeOfWindowToMousePosition();
 
+    private void CloseButton_Click(object sender, RoutedEventArgs e) => Close();
+
     private void MoveBottomRightEdgeOfWindowToMousePosition()
     {
         var transform = PresentationSource.FromVisual(this)?.CompositionTarget?.TransformFromDevice;
@@ -162,7 +164,11 @@ public partial class StatusWindow
 
     private void RefreshPowerMode(PowerModeState? powerModeState, string? godModePresetName)
     {
-        _powerModeValueLabel.Content = powerModeState?.GetDisplayName() ?? "-";
+        var powerModeDisplay = powerModeState?.GetDisplayName();
+        if (string.IsNullOrWhiteSpace(powerModeDisplay) && powerModeState.HasValue)
+            powerModeDisplay = powerModeState.Value.ToString();
+
+        _powerModeValueLabel.Content = powerModeDisplay ?? "-";
         _powerModeValueIndicator.Background = powerModeState?.GetSolidColorBrush() ?? new(Colors.Transparent);
 
         if (powerModeState == PowerModeState.GodMode)

@@ -1,4 +1,4 @@
-﻿namespace LenovoLegionToolkit.Lib.Messaging.Messages;
+namespace LenovoLegionToolkit.Lib.Messaging.Messages;
 
 public readonly struct NotificationMessage(NotificationType type, params object[] args) : IMessage
 {

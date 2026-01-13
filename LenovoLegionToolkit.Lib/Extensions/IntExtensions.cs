@@ -1,4 +1,4 @@
-﻿namespace LenovoLegionToolkit.Lib.Extensions;
+namespace LenovoLegionToolkit.Lib.Extensions;
 
 public static class IntExtensions
 {

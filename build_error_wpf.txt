@@ -1,0 +1,9 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  LenovoLegionToolkit.CLI.Lib -> C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.CLI.Lib\bin\release\net9.0-windows\win-x64\LenovoLegionToolkit.CLI.Lib.dll
+  LenovoLegionToolkit.Lib -> C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.Lib\bin\release\net9.0-windows\win-x64\LenovoLegionToolkit.Lib.dll
+  LenovoLegionToolkit.Lib.Macro -> C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.Lib.Macro\bin\release\net9.0-windows\win-x64\LenovoLegionToolkit.Lib.Macro.dll
+  LenovoLegionToolkit.Lib.Automation -> C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.Lib.Automation\bin\release\net9.0-windows\win-x64\LenovoLegionToolkit.Lib.Automation.dll
+C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\Windows\MainWindow.xaml.cs(54,33): error CS0029: Cannot implicitly convert type 'LenovoLegionToolkit.WPF.Compat.Snackbar' to 'Wpf.Ui.Controls.Snackbar' [C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF_ihumvnr5_wpftmp.csproj]
+CSC : warning WFO0003: Remove high DPI settings from C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\app.manifest and configure via Application.SetHighDpiMode API or 'ApplicationHighDpiMode' project property [C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF_ihumvnr5_wpftmp.csproj]
+C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\Pages\AboutPage.xaml.cs(33,56): warning IL3000: 'System.Reflection.Assembly.Location.get' always returns an empty string for assemblies embedded in a single-file app. If the path to the app directory is needed, consider calling 'System.AppContext.BaseDirectory'. [C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF_ihumvnr5_wpftmp.csproj]

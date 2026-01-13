@@ -1,4 +1,4 @@
-﻿// #define MOCK_RGB
+// #define MOCK_RGB
 
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,6 @@ using LenovoLegionToolkit.Lib.System;
 using LenovoLegionToolkit.Lib.System.Management;
 using LenovoLegionToolkit.Lib.Utils;
 using Microsoft.Win32.SafeHandles;
-using NeoSmart.AsyncLock;
 using Windows.Win32;
 
 namespace LenovoLegionToolkit.Lib.Controllers

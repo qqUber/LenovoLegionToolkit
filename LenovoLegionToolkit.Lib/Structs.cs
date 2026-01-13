@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -9,6 +9,8 @@ using System.Text;
 using LenovoLegionToolkit.Lib.Extensions;
 using Newtonsoft.Json;
 using Octokit;
+
+using LenovoLegionToolkit.Lib.Settings;
 
 namespace LenovoLegionToolkit.Lib;
 
@@ -316,6 +318,7 @@ public readonly struct GodModeState
 {
     public Guid ActivePresetId { get; init; }
     public ReadOnlyDictionary<Guid, GodModePreset> Presets { get; init; }
+    public bool HasSeenFirstStartWarning { get; init; }
 }
 
 public readonly struct GodModePreset
@@ -337,6 +340,8 @@ public readonly struct GodModePreset
     public bool? FanFullSpeed { get; init; }
     public int? MinValueOffset { get; init; }
     public int? MaxValueOffset { get; init; }
+    public Guid? PowerPlan { get; init; }
+    public WindowsPowerMode? WindowsPowerMode { get; init; }
 
     public override string ToString() =>
         $"{nameof(Name)}: {Name}," +
@@ -355,7 +360,9 @@ public readonly struct GodModePreset
         $" {nameof(FanTableInfo)}: {FanTableInfo}," +
         $" {nameof(FanFullSpeed)}: {FanFullSpeed}," +
         $" {nameof(MinValueOffset)}: {MinValueOffset}," +
-        $" {nameof(MaxValueOffset)}: {MaxValueOffset}";
+        $" {nameof(MaxValueOffset)}: {MaxValueOffset}," +
+        $" {nameof(PowerPlan)}: {PowerPlan}," +
+        $" {nameof(WindowsPowerMode)}: {WindowsPowerMode}";
 }
 
 public readonly struct GPUStatus(GPUState state, string? performanceState, List<Process> processes)

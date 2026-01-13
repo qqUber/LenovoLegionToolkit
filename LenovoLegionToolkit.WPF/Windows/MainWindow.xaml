@@ -274,24 +274,40 @@
                 Grid.Column="1"
                 MinWidth="300"
                 HorizontalAlignment="Center"
+                Visibility="Collapsed"
                 Icon="{x:Static wpfui:SymbolRegular.Checkmark24}">
-                <StackPanel Margin="4,4,4,4" VerticalAlignment="Center">
-                    <!--  ReSharper disable once UnusedMember.Global  -->
-                    <TextBlock
-                        x:Name="_snackbarTitle"
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel Grid.Column="0" Margin="4,4,8,4" VerticalAlignment="Center">
+                        <!--  ReSharper disable once UnusedMember.Global  -->
+                        <TextBlock
+                            x:Name="_snackbarTitle"
+                            VerticalAlignment="Center"
+                            FontSize="16"
+                            FontWeight="Medium"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                            TextWrapping="WrapWithOverflow" />
+                        <!--  ReSharper disable once UnusedMember.Global  -->
+                        <TextBlock
+                            x:Name="_snackbarMessage"
+                            Margin="0,6,0,0"
+                            FontSize="14"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            TextWrapping="WrapWithOverflow" />
+                    </StackPanel>
+                    
+                    <compat:Button
+                        Grid.Column="1"
+                        Padding="6"
                         VerticalAlignment="Center"
-                        FontSize="16"
-                        FontWeight="Medium"
-                        Foreground="{DynamicResource TextFillColorPrimaryBrush}"
-                        TextWrapping="WrapWithOverflow" />
-                    <!--  ReSharper disable once UnusedMember.Global  -->
-                    <TextBlock
-                        x:Name="_snackbarMessage"
-                        Margin="0,6,0,0"
-                        FontSize="14"
-                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                        TextWrapping="WrapWithOverflow" />
-                </StackPanel>
+                        Appearance="Transparent"
+                        Icon="{x:Static wpfui:SymbolRegular.Dismiss24}"
+                        Click="CloseSnackbar_Click" />
+                </Grid>
             </compat:Snackbar>
 
         </Grid>
@@ -368,6 +384,12 @@
                     Text="{x:Static resources:Resource.MainWindow_UpdateAvailable}" />
             </StackPanel>
         </Border>
+
+        <!-- Modern Dialog Host for Windows 11 style dialogs -->
+        <ContentPresenter 
+            x:Name="RootContentDialogPresenter" 
+            Grid.RowSpan="6" 
+            Panel.ZIndex="2000" />
 
     </Grid>
 </local:BaseWindow>

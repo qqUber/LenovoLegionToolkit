@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Utils;

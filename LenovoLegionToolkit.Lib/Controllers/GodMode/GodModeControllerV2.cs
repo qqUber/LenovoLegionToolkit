@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,13 +7,15 @@ using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.System.Management;
 using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.Lib.Controllers;
 
 namespace LenovoLegionToolkit.Lib.Controllers.GodMode;
 
 public class GodModeControllerV2(
     GodModeSettings settings,
     VantageDisabler vantageDisabler,
-    LegionZoneDisabler legionZoneDisabler)
+    LegionZoneDisabler legionZoneDisabler,
+    WindowsPowerModeController windowsPowerModeController)
     : AbstractGodModeController(settings)
 {
     public override Task<bool> NeedsVantageDisabledAsync() => Task.FromResult(true);
@@ -183,6 +185,40 @@ public class GodModeControllerV2(
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Apply failed. [setting=fanTable]", ex);
+                throw;
+            }
+        }
+
+        if (preset.PowerPlan.HasValue)
+        {
+            try
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Applying Power Plan: {preset.PowerPlan.Value}");
+
+                WindowsPowerPlanController.SetActivePowerPlan(preset.PowerPlan.Value);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to set Power Plan", ex);
+                throw;
+            }
+        }
+
+        if (preset.WindowsPowerMode.HasValue)
+        {
+            try
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Applying Power Mode: {preset.WindowsPowerMode.Value}");
+
+                await windowsPowerModeController.SetManualPowerModeAsync(preset.WindowsPowerMode.Value).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to set Power Mode", ex);
                 throw;
             }
         }

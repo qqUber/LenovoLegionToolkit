@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Settings;
-using NeoSmart.AsyncLock;
+using LenovoLegionToolkit.Lib.Utils;
 using Octokit;
 using Octokit.Internal;
 
@@ -44,6 +44,23 @@ public class UpdateChecker
                 return null;
             }
 
+            // Check if user chose "Remind Me Later" and it's not time yet
+            if (!forceCheck && _updateCheckSettings.Store.RemindLaterDateTime.HasValue)
+            {
+                if (DateTime.UtcNow < _updateCheckSettings.Store.RemindLaterDateTime.Value)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Remind Later active until {_updateCheckSettings.Store.RemindLaterDateTime.Value}");
+                    return null;
+                }
+                else
+                {
+                    // Clear expired remind later
+                    _updateCheckSettings.Store.RemindLaterDateTime = null;
+                    _updateCheckSettings.SynchronizeStore();
+                }
+            }
+
             try
             {
                 var timeSpanSinceLastUpdate = DateTime.UtcNow - _lastUpdate;
@@ -59,7 +76,7 @@ public class UpdateChecker
                 var productInformation = new ProductHeaderValue("LenovoLegionToolkit-UpdateChecker");
                 var connection = new Connection(productInformation, adapter);
                 var githubClient = new GitHubClient(connection);
-                var releases = await githubClient.Repository.Release.GetAll("BartoszCichecki", "LenovoLegionToolkit", new ApiOptions { PageSize = 5 }).ConfigureAwait(false);
+                var releases = await githubClient.Repository.Release.GetAll("varun875", "Varun-LLT", new ApiOptions { PageSize = 5 }).ConfigureAwait(false);
 
                 var thisReleaseVersion = Assembly.GetEntryAssembly()?.GetName().Version;
                 var thisBuildDate = Assembly.GetEntryAssembly()?.GetBuildDateTime() ?? new DateTime(2000, 1, 1);
@@ -78,6 +95,22 @@ public class UpdateChecker
 
                 _updates = updates;
                 Status = UpdateCheckStatus.Success;
+
+                // Check if user skipped this specific version
+                if (_updates.Length != 0 && !forceCheck)
+                {
+                    var latestVersion = _updates.First().Version;
+                    var skippedVersion = _updateCheckSettings.Store.SkippedVersion;
+                    
+                    if (!string.IsNullOrEmpty(skippedVersion) && 
+                        Version.TryParse(skippedVersion, out var skipped) &&
+                        latestVersion <= skipped)
+                    {
+                        if (Log.Instance.IsTraceEnabled)
+                            Log.Instance.Trace($"Version {latestVersion} was skipped by user");
+                        return null;
+                    }
+                }
 
                 return _updates.Length != 0 ? _updates.First().Version : null;
             }

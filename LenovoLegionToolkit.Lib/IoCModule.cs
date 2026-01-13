@@ -1,4 +1,4 @@
-﻿using Autofac;
+using Autofac;
 using LenovoLegionToolkit.Lib.AutoListeners;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Controllers.GodMode;
@@ -30,6 +30,7 @@ public class IoCModule : Module
 
         builder.Register<FnKeysDisabler>();
         builder.Register<LegionZoneDisabler>();
+        builder.Register<LegionSpaceDisabler>();
         builder.Register<VantageDisabler>();
 
         builder.Register<ApplicationSettings>();
@@ -84,20 +85,21 @@ public class IoCModule : Module
         builder.Register<DGPUCapabilityNotify>(true);
         builder.Register<DGPUFeatureFlagsNotify>(true);
         builder.Register<DGPUGamezoneNotify>(true);
-
-        builder.Register<DisplayBrightnessListener>().AutoActivateListener();
-        builder.Register<DisplayConfigurationListener>().AutoActivateListener();
-        builder.Register<DriverKeyListener>().AutoActivateListener();
-        builder.Register<LightingChangeListener>().AutoActivateListener();
-        builder.Register<NativeWindowsMessageListener>().AutoActivateListener();
-        builder.Register<PowerModeListener>().AutoActivateListener();
-        builder.Register<PowerStateListener>().AutoActivateListener();
-        builder.Register<RGBKeyboardBacklightListener>().AutoActivateListener();
-        builder.Register<SessionLockUnlockListener>().AutoActivateListener();
-        builder.Register<SpecialKeyListener>().AutoActivateListener();
-        builder.Register<SystemThemeListener>().AutoActivateListener();
-        builder.Register<ThermalModeListener>().AutoActivateListener();
-        builder.Register<WinKeyListener>().AutoActivateListener();
+        // Listeners are registered WITHOUT auto-activation to prevent WMI blocking during startup
+        // They will be started manually in App.xaml.cs after the window is shown
+        builder.Register<DisplayBrightnessListener>();
+        builder.Register<DisplayConfigurationListener>();
+        builder.Register<DriverKeyListener>();
+        builder.Register<LightingChangeListener>();
+        builder.Register<NativeWindowsMessageListener>();
+        builder.Register<PowerModeListener>();
+        builder.Register<PowerStateListener>();
+        builder.Register<RGBKeyboardBacklightListener>();
+        builder.Register<SessionLockUnlockListener>();
+        builder.Register<SpecialKeyListener>();
+        builder.Register<SystemThemeListener>();
+        builder.Register<ThermalModeListener>();
+        builder.Register<WinKeyListener>();
 
         builder.Register<GameAutoListener>();
         builder.Register<InstanceStartedEventAutoAutoListener>();
@@ -137,5 +139,6 @@ public class IoCModule : Module
         builder.Register<SunriseSunset>();
 
         builder.Register<BatteryDischargeRateMonitorService>();
+        builder.Register<KeyboardBacklightTimeoutService>();
     }
 }

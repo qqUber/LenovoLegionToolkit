@@ -1,4 +1,4 @@
-﻿namespace LenovoLegionToolkit.Lib.Features.WhiteKeyboardBacklight;
+namespace LenovoLegionToolkit.Lib.Features.WhiteKeyboardBacklight;
 
 public class WhiteKeyboardLenovoLightingBacklightFeature()
     : AbstractLenovoLightingFeature<WhiteKeyboardBacklightState>(0, 0, 1)

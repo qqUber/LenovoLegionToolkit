@@ -231,7 +231,7 @@ public class TrayHelper : IDisposable
     private void PowerModeListener_Changed(object? sender, PowerModeListener.ChangedEventArgs e)
     {
         _currentPowerMode = e.State;
-        Application.Current.Dispatcher.Invoke(UpdateTooltip);
+        Application.Current.Dispatcher.BeginInvoke(UpdateTooltip);
     }
 
     private void StartTooltipUpdates()

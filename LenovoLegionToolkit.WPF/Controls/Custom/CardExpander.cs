@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
@@ -18,7 +19,15 @@ public class CardExpander : Wpf.Ui.Controls.CardExpander
     {
         if (d is CardExpander control && e.NewValue is SymbolRegular symbol)
         {
-            ((Wpf.Ui.Controls.CardExpander)control).Icon = symbol.ToIconElement();
+            try
+            {
+                ((Wpf.Ui.Controls.CardExpander)control).Icon = symbol.ToIconElement();
+            }
+            catch (Exception ex)
+            {
+                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Failed to set CardExpander Icon.", ex);
+            }
         }
     }
 

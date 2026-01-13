@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -80,8 +80,5 @@ public class Log
     private static string Serialize(Exception ex) => new StringBuilder()
         .AppendLine("=== Exception ===")
         .AppendLine(ex.ToString())
-        .AppendLine()
-        .AppendLine("=== Exception demystified ===")
-        .AppendLine(ex.ToStringDemystified())
         .ToString();
 }

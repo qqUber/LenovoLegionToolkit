@@ -1,4 +1,4 @@
-﻿using LenovoLegionToolkit.Lib.System.Management;
+using LenovoLegionToolkit.Lib.System.Management;
 
 namespace LenovoLegionToolkit.Lib.Features;
 

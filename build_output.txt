@@ -1,0 +1,11 @@
+  Determining projects to restore...
+  Restored C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.CLI.Lib\LenovoLegionToolkit.CLI.Lib.csproj (in 1.73 sec).
+  Restored C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.Lib.Macro\LenovoLegionToolkit.Lib.Macro.csproj (in 1.74 sec).
+  Restored C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.Lib.Automation\LenovoLegionToolkit.Lib.Automation.csproj (in 1.74 sec).
+  Restored C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj (in 1.74 sec).
+  Restored C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj (in 1.8 sec).
+  LenovoLegionToolkit.Lib -> C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.Lib\bin\release\net9.0-windows\win-x64\LenovoLegionToolkit.Lib.dll
+  LenovoLegionToolkit.CLI.Lib -> C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.CLI.Lib\bin\release\net9.0-windows\win-x64\LenovoLegionToolkit.CLI.Lib.dll
+  LenovoLegionToolkit.Lib.Macro -> C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.Lib.Macro\bin\release\net9.0-windows\win-x64\LenovoLegionToolkit.Lib.Macro.dll
+  LenovoLegionToolkit.Lib.Automation -> C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.Lib.Automation\bin\release\net9.0-windows\win-x64\LenovoLegionToolkit.Lib.Automation.dll
+C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\Pages\AboutPage.xaml.cs(35,32): error CS0103: The name 'Environment' does not exist in the current context [C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF_kzejbjsg_wpftmp.csproj]

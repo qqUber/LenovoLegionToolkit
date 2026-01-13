@@ -4,35 +4,51 @@
 		<Platforms>x64</Platforms>
 		<OutputType>WinExe</OutputType>
 		<ApplicationIcon>Assets/icon.ico</ApplicationIcon>
-		<AssemblyName>LOQToolkit_v1.4.0</AssemblyName>
-		<Copyright>© 2025 Bartosz Cichecki</Copyright>
-		<FileVersion>1.4.0</FileVersion>
-		<Version>1.4.0</Version>
+		<AssemblyName>LOQToolkit</AssemblyName>
+		<Copyright>© 2026 LOQ Toolkit</Copyright>
+		<FileVersion>1.5.0</FileVersion>
+		<Version>1.5.0</Version>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
 		<SelfContained>true</SelfContained>
 		<PublishSingleFile>true</PublishSingleFile>
-		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
 		<EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
 		<RollForward>Major</RollForward>
+		
+		<!-- Performance Optimizations -->
 		<TieredCompilation>true</TieredCompilation>
 		<TieredCompilationQuickJit>true</TieredCompilationQuickJit>
-		<!-- Runtime Performance Optimizations -->
+		<TieredCompilationQuickJitForLoops>true</TieredCompilationQuickJitForLoops>
+		
+		<!-- Memory Optimization (workstation GC uses less RAM than server GC) -->
 		<ServerGarbageCollection>false</ServerGarbageCollection>
 		<ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
+		<GarbageCollectionAdaptationMode>1</GarbageCollectionAdaptationMode>
+		<RetainVMGarbageCollection>false</RetainVMGarbageCollection>
 		<InvariantGlobalization>false</InvariantGlobalization>
 		<OptimizationPreference>Speed</OptimizationPreference>
+		
+		<!-- Startup Performance -->
+		<EnablePreloadingInSingleFile>true</EnablePreloadingInSingleFile>
 	</PropertyGroup>
+	
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<SourceRevisionId>build$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-		<!-- R2R: Use dotnet publish /p:PublishReadyToRun=true for final release -->
-		<PublishReadyToRun>false</PublishReadyToRun>
-		<!-- Composite R2R: Single native image, faster to generate -->
-		<PublishReadyToRunComposite>true</PublishReadyToRunComposite>
+		
+		<!-- R2R: ENABLED for production builds -->
+		<PublishReadyToRun>true</PublishReadyToRun>
+		
 		<PublishUrl>publish\</PublishUrl>
 		<DebuggerSupport>false</DebuggerSupport>
+		
+		<!-- Production Optimizations -->
+		<Optimize>true</Optimize>
+		<DebugSymbols>false</DebugSymbols>
+		
+		<!-- Strip debug info for smaller size -->
+		<StripSymbols>true</StripSymbols>
 	</PropertyGroup>
 	
 	<!-- Exclude data-only assemblies from R2R (speeds up compilation) -->
@@ -44,27 +60,30 @@
 		<PublishReadyToRunExclude Include="Markdig.dll" />
 		<PublishReadyToRunExclude Include="PubSub.dll" />
 	</ItemGroup>
+	
 	<PropertyGroup>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<NeutralLanguage>en</NeutralLanguage>
 		<SatelliteResourceLanguages>ar;bg;cs;de;en;el;es;fr;hu;it;ja;lv;nl;nl-nl;pl;pt;pt-br;ro;ru;sk;uk;tr;vi;zh;zh-hans;zh-hant</SatelliteResourceLanguages>
 	</PropertyGroup>
+	
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 	  <DebugType>portable</DebugType>
 	</PropertyGroup>
+	
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 	  <DebugType>embedded</DebugType>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Autofac" Version="9.0.0" />
 		<PackageReference Include="Humanizer" Version="3.0.1" />
-		<PackageReference Include="LibreHardwareMonitorLib" Version="0.9.4" />
+		<PackageReference Include="LibreHardwareMonitorLib" Version="0.9.5" />
 		<PackageReference Include="Markdig" Version="0.44.0" />
-		<PackageReference Include="Markdig.Wpf" Version="0.5.0.1" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-		<PackageReference Include="PixiEditor.ColorPicker" Version="3.4.2.1" />
-		<PackageReference Include="WPF-UI" Version="4.1.0" />
+		<PackageReference Include="PixiEditor.ColorPicker" Version="3.4.2.2" />
+		<PackageReference Include="WPF-UI" Version="4.2.0" />
+		<PackageReference Include="WPF-UI.Markdown" Version="4.0.2" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\LenovoLegionToolkit.Lib\LenovoLegionToolkit.Lib.csproj" />

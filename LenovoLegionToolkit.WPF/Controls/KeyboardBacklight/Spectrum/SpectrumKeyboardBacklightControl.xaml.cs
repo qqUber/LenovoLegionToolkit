@@ -19,7 +19,6 @@ using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
 using LenovoLegionToolkit.WPF.Windows.KeyboardBacklight.Spectrum;
 using Microsoft.Win32;
-using NeoSmart.AsyncLock;
 
 namespace LenovoLegionToolkit.WPF.Controls.KeyboardBacklight.Spectrum;
 
@@ -90,7 +89,7 @@ public partial class SpectrumKeyboardBacklightControl
         scaleTransform.ScaleY = scale;
     }
 
-    private void Listener_Changed(object? sender, SpecialKeyListener.ChangedEventArgs e) => Dispatcher.Invoke(async () =>
+    private void Listener_Changed(object? sender, SpecialKeyListener.ChangedEventArgs e) => Dispatcher.BeginInvoke(async () =>
     {
         if (!IsLoaded || !IsVisible)
             return;

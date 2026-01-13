@@ -18,7 +18,7 @@ public class WhiteKeyboardBacklightControl : AbstractComboBoxFeatureCardControl<
         _listener.Changed += ListenerChanged;
     }
 
-    private void ListenerChanged(object? sender, DriverKeyListener.ChangedEventArgs e) => Dispatcher.Invoke(async () =>
+    private void ListenerChanged(object? sender, DriverKeyListener.ChangedEventArgs e) => Dispatcher.BeginInvoke(async () =>
     {
         if (!IsLoaded || !IsVisible)
             return;

@@ -21,7 +21,7 @@ public class MicrophoneControl : AbstractToggleFeatureCardControl<MicrophoneStat
         _listener.Changed += Listener_Changed;
     }
 
-    private void Listener_Changed(object? sender, DriverKeyListener.ChangedEventArgs e) => Dispatcher.Invoke(async () =>
+    private void Listener_Changed(object? sender, DriverKeyListener.ChangedEventArgs e) => Dispatcher.BeginInvoke(async () =>
     {
         if (!IsLoaded || !IsVisible)
             return;

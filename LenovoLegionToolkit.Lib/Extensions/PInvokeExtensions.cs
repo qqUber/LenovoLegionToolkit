@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using Microsoft.Win32.SafeHandles;
 using Windows.Win32;
@@ -71,9 +71,9 @@ public static class PInvokeExtensions
 
     public static void ThrowIfWin32Error(int errorCode, string description)
     {
-        if (errorCode != 0)
-            throw Marshal.GetExceptionForHR(errorCode) ?? throw new Exception($"Unknown Win32 error code {errorCode} in {description}");
+        if (errorCode == 0)
+            return;
 
-        throw new Exception($"{description} failed but Win32 didn't catch an error");
+        throw new global::System.ComponentModel.Win32Exception(errorCode, $"{description} failed (Code {errorCode})");
     }
 }

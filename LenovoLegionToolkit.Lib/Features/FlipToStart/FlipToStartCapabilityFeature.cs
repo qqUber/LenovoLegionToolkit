@@ -1,4 +1,4 @@
-﻿namespace LenovoLegionToolkit.Lib.Features.FlipToStart;
+namespace LenovoLegionToolkit.Lib.Features.FlipToStart;
 
 public class FlipToStartCapabilityFeature() : AbstractCapabilityFeature<FlipToStartState>(CapabilityID.FlipToStart);
 

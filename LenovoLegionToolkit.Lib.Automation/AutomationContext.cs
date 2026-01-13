@@ -1,4 +1,4 @@
-﻿namespace LenovoLegionToolkit.Lib.Automation;
+namespace LenovoLegionToolkit.Lib.Automation;
 
 public class AutomationContext
 {

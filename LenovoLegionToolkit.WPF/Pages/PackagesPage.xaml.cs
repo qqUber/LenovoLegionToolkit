@@ -67,7 +67,7 @@ public partial class PackagesPage : IProgress<float>
         _sourceSecondaryRadio.Tag = PackageDownloaderFactory.Type.PCSupport;
     }
 
-    public void Report(float value) => Dispatcher.Invoke(() =>
+    public void Report(float value) => Dispatcher.BeginInvoke(() =>
     {
         _loader.IsIndeterminate = value < 0;
         _loader.Progress = value;

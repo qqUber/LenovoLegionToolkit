@@ -1,0 +1,12 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  LenovoLegionToolkit.CLI.Lib -> C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.CLI.Lib\bin\release\net9.0-windows\win-x64\LenovoLegionToolkit.CLI.Lib.dll
+  LenovoLegionToolkit.Lib -> C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.Lib\bin\release\net9.0-windows\win-x64\LenovoLegionToolkit.Lib.dll
+  LenovoLegionToolkit.Lib.Macro -> C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.Lib.Macro\bin\release\net9.0-windows\win-x64\LenovoLegionToolkit.Lib.Macro.dll
+  LenovoLegionToolkit.Lib.Automation -> C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.Lib.Automation\bin\release\net9.0-windows\win-x64\LenovoLegionToolkit.Lib.Automation.dll
+C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\Compat\WpfUiCompat.cs(184,55): warning CS0109: The member 'Snackbar.IconProperty' does not hide an accessible member. The new keyword is not required. [C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj]
+C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\Compat\WpfUiCompat.cs(191,33): warning CS0109: The member 'Snackbar.Icon' does not hide an accessible member. The new keyword is not required. [C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj]
+CSC : warning WFO0003: Remove high DPI settings from C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\app.manifest and configure via Application.SetHighDpiMode API or 'ApplicationHighDpiMode' project property [C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj]
+C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\Pages\AboutPage.xaml.cs(33,56): warning IL3000: 'System.Reflection.Assembly.Location.get' always returns an empty string for assemblies embedded in a single-file app. If the path to the app directory is needed, consider calling 'System.AppContext.BaseDirectory'. [C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF.csproj]
+  LenovoLegionToolkit.WPF -> C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\bin\release\net9.0-windows\win-x64\LOQToolkit.dll
+  LenovoLegionToolkit.WPF -> C:\Users\Varun\Documents\GitHub\Varun-LLT\build\

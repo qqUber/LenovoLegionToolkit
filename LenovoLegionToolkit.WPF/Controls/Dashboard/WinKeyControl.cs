@@ -25,7 +25,7 @@ public class WinKeyControl : AbstractToggleFeatureCardControl<WinKeyState>
         _listener.Changed += Listener_Changed;
     }
 
-    private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.Invoke(async () =>
+    private void Listener_Changed(object? sender, EventArgs e) => Dispatcher.BeginInvoke(async () =>
     {
         if (!IsLoaded || !IsVisible)
             return;

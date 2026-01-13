@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -85,11 +85,14 @@ public abstract class AbstractGodModeController(GodModeSettings settings)
                 FanFullSpeed = preset.FanFullSpeed,
                 MinValueOffset = preset.MinValueOffset,
                 MaxValueOffset = preset.MaxValueOffset,
+                PowerPlan = preset.PowerPlan,
+                WindowsPowerMode = preset.WindowsPowerMode,
             });
         }
 
         settings.Store.ActivePresetId = activePresetId;
         settings.Store.Presets = presets;
+        settings.Store.HasSeenFirstStartWarning = state.HasSeenFirstStartWarning;
         settings.SynchronizeStore();
 
         if (Log.Instance.IsTraceEnabled)
@@ -172,14 +175,17 @@ public abstract class AbstractGodModeController(GodModeSettings settings)
                 FanTableInfo = await GetFanTableInfoAsync(preset, defaultState.FanTableInfo?.Data).ConfigureAwait(false),
                 FanFullSpeed = preset.FanFullSpeed,
                 MinValueOffset = preset.MinValueOffset ?? defaultState.MinValueOffset,
-                MaxValueOffset = preset.MaxValueOffset ?? defaultState.MaxValueOffset
+                MaxValueOffset = preset.MaxValueOffset ?? defaultState.MaxValueOffset,
+                PowerPlan = preset.PowerPlan ?? defaultState.PowerPlan,
+                WindowsPowerMode = preset.WindowsPowerMode ?? defaultState.WindowsPowerMode
             });
         }
 
         return new GodModeState
         {
             ActivePresetId = store.ActivePresetId,
-            Presets = states.AsReadOnlyDictionary()
+            Presets = states.AsReadOnlyDictionary(),
+            HasSeenFirstStartWarning = store.HasSeenFirstStartWarning
         };
     }
 

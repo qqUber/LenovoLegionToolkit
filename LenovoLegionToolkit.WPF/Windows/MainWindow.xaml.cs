@@ -51,7 +51,7 @@ public partial class MainWindow
     public bool DisableConflictingSoftwareWarning { get; set; }
     public bool SuppressClosingEventHandler { get; set; }
 
-    public Snackbar Snackbar => Snackbar;
+    public Compat.Snackbar Snackbar => _snackbar;
 
     public MainWindow()
     {
@@ -85,12 +85,12 @@ public partial class MainWindow
     {
         _contentGrid.Visibility = Visibility.Visible;
 
-        SmartKeyHelper.Instance.BringToForeground = () => Dispatcher.Invoke(BringToForeground);
+        SmartKeyHelper.Instance.BringToForeground = () => Dispatcher.BeginInvoke(BringToForeground);
 
         _specialKeyListener.Changed += (_, args) =>
         {
             if (args.SpecialKey == SpecialKey.FnN)
-                Dispatcher.Invoke(BringToForeground);
+                Dispatcher.BeginInvoke(BringToForeground);
         };
 
             // Defer heavier startup work to let the UI render quickly
@@ -296,17 +296,17 @@ public partial class MainWindow
         if (DisableConflictingSoftwareWarning)
             return;
 
-        _vantageDisabler.OnRefreshed += (_, e) => Dispatcher.Invoke(() =>
+        _vantageDisabler.OnRefreshed += (_, e) => Dispatcher.BeginInvoke(() =>
         {
             _vantageIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
         });
 
-        _legionZoneDisabler.OnRefreshed += (_, e) => Dispatcher.Invoke(() =>
+        _legionZoneDisabler.OnRefreshed += (_, e) => Dispatcher.BeginInvoke(() =>
         {
             _legionZoneIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
         });
 
-        _fnKeysDisabler.OnRefreshed += (_, e) => Dispatcher.Invoke(() =>
+        _fnKeysDisabler.OnRefreshed += (_, e) => Dispatcher.BeginInvoke(() =>
         {
             _fnKeysIndicator.Visibility = e.Status == SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
         });
@@ -435,6 +435,47 @@ public partial class MainWindow
         SetEfficiencyMode(true);
         Hide();
         ShowInTaskbar = false;
+        
+        // Trigger memory cleanup when going to tray
+        TrimMemory();
+    }
+    
+    private static void TrimMemory()
+    {
+        // Schedule memory trim for after UI is hidden
+        Task.Delay(500).ContinueWith(_ =>
+        {
+            try
+            {
+                // Force garbage collection
+                GC.Collect(2, GCCollectionMode.Aggressive, true, true);
+                GC.WaitForPendingFinalizers();
+                GC.Collect(2, GCCollectionMode.Aggressive, true, true);
+                
+                // Trim working set to reduce memory footprint
+                TrimWorkingSet();
+            }
+            catch
+            {
+                // Ignore errors during memory trimming
+            }
+        }, TaskScheduler.Default);
+    }
+    
+    [DllImport("kernel32.dll")]
+    private static extern bool SetProcessWorkingSetSize(IntPtr process, IntPtr minimumWorkingSetSize, IntPtr maximumWorkingSetSize);
+    
+    private static void TrimWorkingSet()
+    {
+        try
+        {
+            // -1, -1 tells Windows to trim the working set
+            SetProcessWorkingSetSize(System.Diagnostics.Process.GetCurrentProcess().Handle, (IntPtr)(-1), (IntPtr)(-1));
+        }
+        catch
+        {
+            // Ignore if not supported
+        }
     }
 
     private static unsafe void SetEfficiencyMode(bool enabled)
@@ -534,7 +575,7 @@ public partial class MainWindow
         bitmap.BeginInit();
         bitmap.UriSource = new Uri(path, UriKind.Absolute);
         bitmap.CacheOption = BitmapCacheOption.OnLoad;
-        bitmap.DecodePixelWidth = 1920; // Limit decoded size to reduce memory
+        bitmap.DecodePixelWidth = 1280; // Lower resolution saves ~2x memory, still looks good with blur
         bitmap.EndInit();
         bitmap.Freeze();
 
@@ -603,7 +644,7 @@ public partial class MainWindow
         bitmap.BeginInit();
         bitmap.UriSource = new Uri(path, UriKind.Absolute);
         bitmap.CacheOption = BitmapCacheOption.OnLoad;
-        bitmap.DecodePixelWidth = 1920; // Limit decoded size to reduce memory
+        bitmap.DecodePixelWidth = 1280; // Lower resolution saves memory, still looks good with blur
         bitmap.EndInit();
         bitmap.Freeze();
 
@@ -677,4 +718,6 @@ public partial class MainWindow
             _backgroundTint.Visibility = Visibility.Collapsed;
         }
     }
+
+    private void CloseSnackbar_Click(object sender, RoutedEventArgs e) => _snackbar.Hide();
 }

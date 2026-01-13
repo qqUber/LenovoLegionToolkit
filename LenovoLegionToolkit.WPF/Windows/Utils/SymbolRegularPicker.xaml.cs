@@ -30,7 +30,7 @@ public partial class SymbolRegularPicker
 
     private async void FilterTextBox_TextChanged(object sender, TextChangedEventArgs e) => await _throttleDispatcher.DispatchAsync(() =>
     {
-        Dispatcher.Invoke(Refresh);
+        Dispatcher.BeginInvoke(Refresh);
         return Task.CompletedTask;
     });
 

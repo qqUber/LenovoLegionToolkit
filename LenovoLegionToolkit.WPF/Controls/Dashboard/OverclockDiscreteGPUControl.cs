@@ -100,7 +100,7 @@ public class OverclockDiscreteGPUControl : AbstractRefreshingControl
         await RefreshAsync();
     }
 
-    private void Controller_Changed(object? sender, EventArgs e) => Dispatcher.Invoke(async () =>
+    private void Controller_Changed(object? sender, EventArgs e) => Dispatcher.BeginInvoke(async () =>
     {
         Visibility = Visibility.Visible;
         await RefreshAsync();

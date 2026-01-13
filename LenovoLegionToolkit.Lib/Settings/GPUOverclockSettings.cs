@@ -1,4 +1,4 @@
-﻿using static LenovoLegionToolkit.Lib.Settings.GPUOverclockSettings;
+using static LenovoLegionToolkit.Lib.Settings.GPUOverclockSettings;
 
 namespace LenovoLegionToolkit.Lib.Settings;
 

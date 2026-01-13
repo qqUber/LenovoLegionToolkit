@@ -93,7 +93,10 @@ public partial class App
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Failed to check device compatibility", ex);
 
-                MessageBox.Show(Resource.CompatibilityCheckError_Message, Resource.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+                LenovoLegionToolkit.WPF.Windows.Utils.ErrorWindow.ShowError(
+                    "Compatibility Check Failed",
+                    Resource.CompatibilityCheckError_Message,
+                    ex.Message);
                 Shutdown(200);
                 return;
             }
@@ -113,7 +116,13 @@ public partial class App
             new IoCModule()
         );
 
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"IoCContainer initialized successfully");
+
         IoCContainer.Resolve<HttpClientFactory>().SetProxy(flags.ProxyUrl, flags.ProxyUsername, flags.ProxyPassword, flags.ProxyAllowAllCerts);
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Setting up features...");
 
         IoCContainer.Resolve<PowerModeFeature>().AllowAllPowerModesOnBattery = flags.AllowAllPowerModesOnBattery;
         IoCContainer.Resolve<RGBKeyboardBacklightController>().ForceDisable = flags.ForceDisableRgbKeyboardSupport;
@@ -125,6 +134,9 @@ public partial class App
         IoCContainer.Resolve<DGPUNotify>().ExperimentalGPUWorkingMode = flags.ExperimentalGPUWorkingMode;
         IoCContainer.Resolve<UpdateChecker>().Disable = flags.DisableUpdateChecker;
 
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Features configured, creating MainWindow...");
+
         AutomationPage.EnableHybridModeAutomation = flags.EnableHybridModeAutomation;
 
         // Create and show window IMMEDIATELY for fast perceived startup
@@ -134,9 +146,21 @@ public partial class App
             TrayTooltipEnabled = !flags.DisableTrayTooltip,
             DisableConflictingSoftwareWarning = flags.DisableConflictingSoftwareWarning
         };
+
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"MainWindow created, assigning to Application.MainWindow...");
+
         MainWindow = mainWindow;
 
-        IoCContainer.Resolve<ThemeManager>().Apply();
+        // try
+        // {
+        //     IoCContainer.Resolve<ThemeManager>().Apply();
+        // }
+        // catch (Exception ex)
+        // {
+        //     if (Log.Instance.IsTraceEnabled)
+        //         Log.Instance.Trace($"Failed to apply theme.", ex);
+        // }
 
         if (flags.Minimized)
         {
@@ -153,6 +177,7 @@ public partial class App
                 Log.Instance.Trace($"Showing MainWindow...");
 
             mainWindow.Show();
+            mainWindow.Activate();
         }
 
         if (Log.Instance.IsTraceEnabled)
@@ -209,6 +234,30 @@ public partial class App
             
             await Task.WhenAll(initTasks).ConfigureAwait(false);
             
+            // Start all WMI listeners in background (moved from IoCContainer auto-activation)
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Starting WMI listeners...");
+            
+            await Task.Run(async () =>
+            {
+                await IoCContainer.Resolve<DisplayBrightnessListener>().StartAsync();
+                await IoCContainer.Resolve<DisplayConfigurationListener>().StartAsync();
+                await IoCContainer.Resolve<DriverKeyListener>().StartAsync();
+                await IoCContainer.Resolve<LightingChangeListener>().StartAsync();
+                await IoCContainer.Resolve<NativeWindowsMessageListener>().StartAsync();
+                await IoCContainer.Resolve<PowerModeListener>().StartAsync();
+                await IoCContainer.Resolve<PowerStateListener>().StartAsync();
+                await IoCContainer.Resolve<RGBKeyboardBacklightListener>().StartAsync();
+                await IoCContainer.Resolve<SessionLockUnlockListener>().StartAsync();
+                await IoCContainer.Resolve<SpecialKeyListener>().StartAsync();
+                await IoCContainer.Resolve<SystemThemeListener>().StartAsync();
+                await IoCContainer.Resolve<ThermalModeListener>().StartAsync();
+                await IoCContainer.Resolve<WinKeyListener>().StartAsync();
+            }).ConfigureAwait(false);
+            
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"WMI listeners started");
+            
             // These must run after parallel init
             await InitHybridModeAsync().ConfigureAwait(false);
             await InitAutomationProcessorAsync().ConfigureAwait(false);
@@ -221,6 +270,9 @@ public partial class App
                 IoCContainer.Resolve<IpcServer>().StartStopIfNeededAsync(),
                 IoCContainer.Resolve<BatteryDischargeRateMonitorService>().StartStopIfNeededAsync()
             );
+
+            // Start keyboard backlight timeout service
+            IoCContainer.Resolve<LenovoLegionToolkit.Lib.Services.KeyboardBacklightTimeoutService>().Start();
 
 #if !DEBUG
             Autorun.Validate();
@@ -320,10 +372,21 @@ public partial class App
         Log.Instance.ErrorReport("AppDomain_UnhandledException", exception ?? new Exception($"Unknown exception caught: {e.ExceptionObject}"));
         Log.Instance.Trace($"Unhandled exception occurred.", exception);
 
-        MessageBox.Show(string.Format(Resource.UnexpectedException, exception?.ToStringDemystified() ?? "Unknown exception."),
-            "Application Domain Error",
-            MessageBoxButton.OK,
-            MessageBoxImage.Error);
+        try
+        {
+            LenovoLegionToolkit.WPF.Windows.Utils.ErrorWindow.ShowError(
+                "Application Domain Error",
+                "An unexpected error occurred.",
+                exception?.ToString() ?? "Unknown exception.");
+        }
+        catch
+        {
+            // Fallback if ErrorWindow fails
+            MessageBox.Show(string.Format(Resource.UnexpectedException, exception?.ToString() ?? "Unknown exception."),
+                "Application Domain Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
         Shutdown(100);
     }
 
@@ -343,10 +406,21 @@ public partial class App
         Log.Instance.ErrorReport("Application_DispatcherUnhandledException", e.Exception);
         Log.Instance.Trace($"Unhandled exception occurred.", e.Exception);
 
-        MessageBox.Show(string.Format(Resource.UnexpectedException, e.Exception.ToStringDemystified()),
-            "Application Error",
-            MessageBoxButton.OK,
-            MessageBoxImage.Error);
+        try
+        {
+            LenovoLegionToolkit.WPF.Windows.Utils.ErrorWindow.ShowError(
+                "Application Error",
+                "An unexpected error occurred.",
+                e.Exception.ToString());
+        }
+        catch
+        {
+            // Fallback if ErrorWindow fails
+            MessageBox.Show(string.Format(Resource.UnexpectedException, e.Exception.ToString()),
+                "Application Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
         Shutdown(101);
     }
 
@@ -356,7 +430,9 @@ public partial class App
         if (isCompatible)
             return true;
 
-        MessageBox.Show(Resource.IncompatibleDevice_Message, Resource.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+        LenovoLegionToolkit.WPF.Windows.Utils.ErrorWindow.ShowError(
+            "Incompatible Device",
+            Resource.IncompatibleDevice_Message);
 
         Shutdown(201);
         return false;

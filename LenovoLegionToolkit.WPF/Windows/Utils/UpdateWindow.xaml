@@ -3,16 +3,17 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:LenovoLegionToolkit.WPF.Windows"
-    xmlns:markdig="clr-namespace:Markdig.Wpf;assembly=Markdig.Wpf"
+    xmlns:md="http://schemas.lepo.co/wpfui/2022/xaml/markdown"
     xmlns:resources="clr-namespace:LenovoLegionToolkit.WPF.Resources"
     xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
     xmlns:compat="clr-namespace:LenovoLegionToolkit.WPF.Compat"
     xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:ui="clr-namespace:Wpf.Ui.Controls;assembly=Wpf.Ui"
     Title="{x:Static resources:Resource.UpdateWindow_Title}"
-    MinWidth="800"
-    MinHeight="600"
-    MaxWidth="800"
-    MaxHeight="600"
+    MinWidth="850"
+    MinHeight="650"
+    MaxWidth="850"
+    MaxHeight="650"
     Closing="UpdateWindow_Closing"
     ExtendsContentIntoTitleBar="True"
     FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
@@ -57,57 +58,141 @@
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBlock
-                    Grid.Row="0"
-                    Margin="0,0,0,24"
-                    Focusable="True"
-                    FontSize="24"
-                    FontWeight="Medium"
-                    Text="{x:Static resources:Resource.UpdateWindow_WhatsNew}" />
+                <!-- Header with Version Badge -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,16">
+                    <TextBlock
+                        Focusable="True"
+                        FontSize="24"
+                        FontWeight="Medium"
+                        VerticalAlignment="Center"
+                        Text="{x:Static resources:Resource.UpdateWindow_WhatsNew}" />
+                    
+                    <!-- Version Badge -->
+                    <Border
+                        x:Name="_versionBadge"
+                        Margin="16,0,0,0"
+                        Padding="12,6"
+                        VerticalAlignment="Center"
+                        CornerRadius="16"
+                        Background="#200078D4"
+                        BorderBrush="#0078D4"
+                        BorderThickness="1">
+                        <TextBlock
+                            x:Name="_versionText"
+                            FontSize="12"
+                            FontWeight="SemiBold"
+                            Foreground="#0078D4"
+                            Text="v0.0.0" />
+                    </Border>
+                </StackPanel>
 
-                <markdig:MarkdownViewer
-                    x:Name="_markdownViewer"
+                <!-- Update Info Bar -->
+                <Border
+                    x:Name="_updateInfoBar"
                     Grid.Row="1"
+                    Margin="0,0,0,16"
+                    Padding="12,10"
+                    Background="#1A4CAF50"
+                    BorderBrush="#4CAF50"
+                    BorderThickness="1"
+                    CornerRadius="8">
+                    <StackPanel Orientation="Horizontal">
+                        <wpfui:SymbolIcon Symbol="ArrowDownload24" Foreground="#4CAF50" Margin="0,0,8,0" />
+                        <TextBlock
+                            x:Name="_updateInfoText"
+                            VerticalAlignment="Center"
+                            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+                            Text="A new version is available!" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Changelog -->
+                <md:MarkdownViewer
+                    x:Name="_markdownViewer"
+                    Grid.Row="2"
                     Focusable="True" />
 
-                <ProgressBar
-                    x:Name="_downloadProgressBar"
-                    Grid.Row="2"
-                    Margin="0,16,0,16"
-                    IsIndeterminate="True"
-                    Maximum="1"
-                    Minimum="0"
-                    Visibility="Hidden" />
+                <!-- Progress Section -->
+                <StackPanel Grid.Row="3" x:Name="_progressSection" Visibility="Collapsed">
+                    <TextBlock
+                        x:Name="_downloadStatusText"
+                        Margin="0,8,0,4"
+                        FontSize="12"
+                        Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                        Text="Downloading update..." />
+                    <ProgressBar
+                        x:Name="_downloadProgressBar"
+                        Height="8"
+                        Margin="0,0,0,8"
+                        IsIndeterminate="True"
+                        Maximum="1"
+                        Minimum="0" />
+                </StackPanel>
 
-                <wpfui:Button
-                    x:Name="_downloadButton"
-                    Grid.Row="3"
-                    Width="150"
-                    Height="32"
-                    Margin="0,0,0,16"
+                <!-- Primary Actions -->
+                <StackPanel 
+                    Grid.Row="4" 
+                    Orientation="Horizontal" 
                     HorizontalAlignment="Center"
-                    Appearance="Primary"
-                    Click="DownloadButton_Click"
-                    Content="{x:Static resources:Resource.Update}"
-                    IsEnabled="False" />
+                    Margin="0,16,0,8">
+                    
+                    <wpfui:Button
+                        x:Name="_downloadButton"
+                        Width="180"
+                        Height="40"
+                        Margin="0,0,8,0"
+                        Appearance="Primary"
+                        Click="DownloadButton_Click"
+                        Content="Update Now"
+                        Icon="{x:Static ui:SymbolRegular.ArrowDownload24}"
+                        IsEnabled="False"
+                        ToolTip="Download and install the update" />
 
-                <wpfui:Button
-                    x:Name="_cancelDownloadButton"
-                    Grid.Row="4"
-                    Width="150"
-                    Height="32"
-                    Margin="0,0,0,16"
+                    <wpfui:Button
+                        x:Name="_cancelDownloadButton"
+                        Width="150"
+                        Height="40"
+                        Click="CancelDownloadButton_Click"
+                        Content="{x:Static resources:Resource.Cancel}"
+                        Icon="{x:Static ui:SymbolRegular.Dismiss24}"
+                        IsEnabled="False"
+                        Visibility="Collapsed" />
+                </StackPanel>
+
+                <!-- Secondary Actions -->
+                <StackPanel 
+                    Grid.Row="5" 
+                    x:Name="_secondaryActions"
+                    Orientation="Horizontal" 
                     HorizontalAlignment="Center"
-                    Click="CancelDownloadButton_Click"
-                    Content="{x:Static resources:Resource.Cancel}"
-                    IsEnabled="False"
-                    Visibility="Collapsed" />
+                    Margin="0,0,0,8">
+                    
+                    <wpfui:Button
+                        x:Name="_remindLaterButton"
+                        Width="150"
+                        Height="32"
+                        Margin="0,0,8,0"
+                        Click="RemindLaterButton_Click"
+                        Content="Remind Me Later"
+                        Icon="{x:Static ui:SymbolRegular.Clock24}"
+                        ToolTip="Close and remind on next app launch" />
+
+                    <wpfui:Button
+                        x:Name="_skipVersionButton"
+                        Width="150"
+                        Height="32"
+                        Click="SkipVersionButton_Click"
+                        Content="Skip This Version"
+                        Icon="{x:Static ui:SymbolRegular.Dismiss24}"
+                        ToolTip="Don't show this update again" />
+                </StackPanel>
             </Grid>
         </Grid>
     </Grid>

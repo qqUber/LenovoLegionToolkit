@@ -83,7 +83,7 @@
             <StackPanel Grid.Column="1" Margin="0,0,32,0">
                 <compat:Hyperlink Content="ManagedNativeWifi" NavigateUri="https://github.com/emoacht/ManagedNativeWifi" />
                 <compat:Hyperlink Content="Markdig" NavigateUri="https://github.com/xoofx/markdig" />
-                <compat:Hyperlink Content="Markdig.Wpf" NavigateUri="https://github.com/Kryptos-FR/markdig.wpf" />
+                <compat:Hyperlink Content="WPF-UI.Markdown" NavigateUri="https://github.com/lepoco/wpfui" />
                 <compat:Hyperlink Content="NAudio.Wasapi" NavigateUri="https://github.com/naudio/NAudio" />
                 <compat:Hyperlink Content="Newtonsoft.Json" NavigateUri="https://github.com/JamesNK/Newtonsoft.Json" />
                 <compat:Hyperlink Content="NvAPIWrapper" NavigateUri="https://github.com/falahati/NvAPIWrapper" />

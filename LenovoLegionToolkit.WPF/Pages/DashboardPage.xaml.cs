@@ -42,7 +42,8 @@ public partial class DashboardPage
         _lastWidth = 0;
 
         // Reduce minimum loading time for snappier feel
-        var loadingTask = Task.Delay(TimeSpan.FromMilliseconds(300));
+        // Reduce minimum loading time for snappier feel
+        var loadingTask = Task.Delay(TimeSpan.FromMilliseconds(50));
 
         _sensors.Visibility = _dashboardSettings.Store.ShowSensors ? Visibility.Visible : Visibility.Collapsed;
 

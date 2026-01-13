@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using LenovoLegionToolkit.Lib.Utils;
 using Microsoft.Win32;

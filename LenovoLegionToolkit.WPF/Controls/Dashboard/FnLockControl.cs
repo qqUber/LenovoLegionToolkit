@@ -22,7 +22,7 @@ public class FnLockControl : AbstractToggleFeatureCardControl<FnLockState>
         _listener.Changed += Listener_Changed;
     }
 
-    private void Listener_Changed(object? sender, SpecialKeyListener.ChangedEventArgs e) => Dispatcher.Invoke(async () =>
+    private void Listener_Changed(object? sender, SpecialKeyListener.ChangedEventArgs e) => Dispatcher.BeginInvoke(async () =>
     {
         if (!IsLoaded || !IsVisible)
             return;

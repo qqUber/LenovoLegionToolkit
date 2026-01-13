@@ -216,4 +216,244 @@
         </Style.Triggers>
     </Style>
 
+    <!-- Smooth Fade-In Animation for Cards -->
+    <Style x:Key="FadeInCardStyle" TargetType="{x:Type Border}">
+        <Setter Property="Opacity" Value="0" />
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <TranslateTransform Y="8" />
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <EventTrigger RoutedEvent="Loaded">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation 
+                            Storyboard.TargetProperty="Opacity" 
+                            From="0" To="1" 
+                            Duration="0:0:0.3">
+                            <DoubleAnimation.EasingFunction>
+                                <QuadraticEase EasingMode="EaseOut" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <DoubleAnimation 
+                            Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)" 
+                            From="8" To="0" 
+                            Duration="0:0:0.3">
+                            <DoubleAnimation.EasingFunction>
+                                <QuadraticEase EasingMode="EaseOut" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Subtle Glow Effect for Active/Important Elements -->
+    <Style x:Key="ActiveGlowBorderStyle" TargetType="{x:Type Border}">
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource AccentBlueBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect 
+                    BlurRadius="12" 
+                    ShadowDepth="0" 
+                    Color="{StaticResource AccentBlueColor}" 
+                    Opacity="0.2" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Hover Lift Effect for Cards -->
+    <Style x:Key="HoverLiftCardStyle" TargetType="{x:Type Border}">
+        <Setter Property="Background" Value="{DynamicResource ControlFillColorDefaultBrush}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <TranslateTransform Y="0" />
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect 
+                            BlurRadius="16" 
+                            ShadowDepth="4" 
+                            Direction="270" 
+                            Color="Black" 
+                            Opacity="0.3" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Modern Chip/Tag Style -->
+    <Style x:Key="ChipStyle" TargetType="{x:Type Border}">
+        <Setter Property="Background" Value="#30FFFFFF" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="12,6" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#40FFFFFF" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Accent Chip Style -->
+    <Style x:Key="AccentChipStyle" TargetType="{x:Type Border}">
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#200078D4" Offset="0" />
+                    <GradientStop Color="#300078D4" Offset="1" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderBrush" Value="{StaticResource AccentBlueBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="12,6" />
+    </Style>
+
+    <!-- Animated Pulse Indicator -->
+    <Style x:Key="PulseIndicatorStyle" TargetType="{x:Type Ellipse}">
+        <Setter Property="Width" Value="8" />
+        <Setter Property="Height" Value="8" />
+        <Setter Property="Fill" Value="#4CAF50" />
+        <Style.Triggers>
+            <EventTrigger RoutedEvent="Loaded">
+                <BeginStoryboard>
+                    <Storyboard RepeatBehavior="Forever">
+                        <DoubleAnimation 
+                            Storyboard.TargetProperty="Opacity" 
+                            From="1" To="0.4" 
+                            Duration="0:0:1" 
+                            AutoReverse="True" />
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Smooth Scale on Hover -->
+    <Style x:Key="ScaleOnHoverStyle" TargetType="{x:Type Border}">
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <ScaleTransform ScaleX="1" ScaleY="1" />
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="1.02" ScaleY="1.02" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Status Badge - Info -->
+    <Style x:Key="InfoBadgeStyle" TargetType="{x:Type Border}">
+        <Setter Property="Background" Value="#1A3D50" />
+        <Setter Property="BorderBrush" Value="#0078D4" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Padding" Value="8,4" />
+    </Style>
+
+    <!-- Glass/Frosted Effect Container -->
+    <Style x:Key="GlassContainerStyle" TargetType="{x:Type Border}">
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="#1F1F1F" Opacity="0.7" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#40FFFFFF" Offset="0" />
+                    <GradientStop Color="#10FFFFFF" Offset="1" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="12" />
+        <Setter Property="Padding" Value="16" />
+    </Style>
+
+    <!-- Disabled Button Overlay Style -->
+    <Style x:Key="DisabledButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource CleanButtonStyle}">
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.5" />
+                <Setter Property="Cursor" Value="Arrow" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Compact Button Style -->
+    <Style x:Key="CompactButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource CleanButtonStyle}">
+        <Setter Property="Padding" Value="10,6" />
+        <Setter Property="FontSize" Value="12" />
+    </Style>
+
+    <!-- Gradient Accent Border -->
+    <Style x:Key="GradientAccentBorderStyle" TargetType="{x:Type Border}">
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#0078D4" Offset="0" />
+                    <GradientStop Color="#00B4FF" Offset="1" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Smooth Opacity Hover -->
+    <Style x:Key="OpacityHoverStyle" TargetType="{x:Type UIElement}">
+        <Setter Property="Opacity" Value="0.7" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Opacity" Value="1" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Card Title Style -->
+    <Style x:Key="CardTitleStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorPrimaryBrush}" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+    </Style>
+
+    <!-- Card Description Style -->
+    <Style x:Key="CardDescriptionStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{DynamicResource TextFillColorSecondaryBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="LineHeight" Value="18" />
+    </Style>
+
+    <!-- Monospace/Code Style -->
+    <Style x:Key="CodeStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="FontFamily" Value="Cascadia Code, Consolas, Courier New" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="#E6E6E6" />
+        <Setter Property="Background" Value="#2D2D2D" />
+        <Setter Property="Padding" Value="6,3" />
+    </Style>
+
 </ResourceDictionary>

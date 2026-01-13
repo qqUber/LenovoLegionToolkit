@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using LenovoLegionToolkit.Lib.Extensions;
 using Windows.Win32;

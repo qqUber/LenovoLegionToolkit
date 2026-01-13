@@ -347,6 +347,18 @@
                 Visibility="Hidden" />
         </custom:CardControl>
 
+        <custom:CardControl x:Name="_legionSpaceCard" Margin="0,0,0,8" Visibility="Collapsed">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl Title="Disable Legion Space" Subtitle="Prevents Legion Space from running in the background." />
+            </custom:CardControl.Header>
+            <wpfui:ToggleSwitch
+                x:Name="_legionSpaceToggle"
+                Margin="0,0,0,8"
+                AutomationProperties.Name="Disable Legion Space"
+                Click="LegionSpaceToggle_Click"
+                 />
+        </custom:CardControl>
+
         <custom:CardControl x:Name="_fnKeysCard" Margin="0,0,0,24">
             <custom:CardControl.Header>
                 <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_DisableLenovoHotkeys_Title}" Subtitle="{x:Static resources:Resource.SettingsPage_DisableLenovoHotkeys_Message}" />
@@ -420,6 +432,40 @@
                 Visibility="Hidden" />
         </custom:CardControl>
 
+        <!-- Keyboard Backlight Timeout Section -->
+        <TextBlock
+            Margin="0,16,0,12"
+            FontSize="16"
+            FontWeight="SemiBold"
+            Text="Keyboard Backlight" />
+
+        <custom:CardControl Margin="0,0,0,8" Icon="{x:Static ui:SymbolRegular.Keyboard24}">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl Title="Backlight Timeout" Subtitle="Automatically turn off keyboard backlight after a period of inactivity" />
+            </custom:CardControl.Header>
+            <wpfui:ToggleSwitch
+                x:Name="_keyboardBacklightTimeoutToggle"
+                Margin="0,0,0,8"
+                AutomationProperties.Name="Keyboard Backlight Timeout"
+                Click="KeyboardBacklightTimeoutToggle_Click" />
+        </custom:CardControl>
+
+        <custom:CardControl x:Name="_keyboardBacklightTimeoutDurationCard" Margin="0,0,0,24" Icon="{x:Static ui:SymbolRegular.Timer24}">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl Title="Timeout Duration" Subtitle="Turn off backlight after this many seconds of inactivity" />
+            </custom:CardControl.Header>
+            <StackPanel Orientation="Horizontal">
+                <ComboBox
+                    x:Name="_keyboardBacklightTimeoutComboBox"
+                    MinWidth="120"
+                    SelectionChanged="KeyboardBacklightTimeoutComboBox_SelectionChanged" />
+                <TextBlock
+                    VerticalAlignment="Center"
+                    Margin="8,0,0,0"
+                    Text="seconds" />
+            </StackPanel>
+        </custom:CardControl>
+
         <custom:CardAction
             x:Name="_bootLogoCard"
             Margin="0,0,0,8"
@@ -442,7 +488,7 @@
             <custom:CardControl.Header>
                 <controls:CardHeaderControl Title="{x:Static resources:Resource.SettingsPage_CheckUpdates_Title}" />
             </custom:CardControl.Header>
-            <wpfui:Button
+            <compat:Button
                 x:Name="_checkUpdatesButton"
                 MinWidth="160"
                 Margin="0,0,0,8"
@@ -585,6 +631,52 @@
                 AutomationProperties.Name="{x:Static resources:Resource.SettingsPage_CLIAddToPath_Title}"
                 Click="CLIPathToggle_Click"
                 Visibility="Hidden" />
+        </custom:CardControl>
+
+        <!-- Backup & Restore Section -->
+        <TextBlock
+            Margin="0,24,0,12"
+            FontSize="16"
+            FontWeight="SemiBold"
+            Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+            Text="Backup &amp; Restore" />
+
+        <custom:CardControl Margin="0,0,0,8" Icon="{x:Static ui:SymbolRegular.ArrowExportUp24}">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl Title="Export All Settings" Subtitle="Create a backup of all your settings, automations, and profiles" />
+            </custom:CardControl.Header>
+            <compat:Button
+                x:Name="_exportSettingsButton"
+                Appearance="Primary"
+                Content="Export"
+                Icon="{x:Static ui:SymbolRegular.Save24}"
+                Click="ExportSettingsButton_Click" />
+        </custom:CardControl>
+
+        <custom:CardControl Margin="0,0,0,24" Icon="{x:Static ui:SymbolRegular.ArrowImport24}">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl Title="Import Settings" Subtitle="Restore settings from a backup file (app will restart)" />
+            </custom:CardControl.Header>
+            <compat:Button
+                x:Name="_importSettingsButton"
+                Content="Import"
+                Icon="{x:Static ui:SymbolRegular.FolderOpen24}"
+                Click="ImportSettingsButton_Click" />
+        </custom:CardControl>
+
+        <custom:CardControl Margin="0,0,0,24" Icon="{x:Static ui:SymbolRegular.ArrowReset24}">
+            <custom:CardControl.Header>
+                <controls:CardHeaderControl 
+                    Title="Reset All Settings" 
+                    Subtitle="Reset everything to factory defaults (app will restart)" />
+            </custom:CardControl.Header>
+            <compat:Button
+                x:Name="_resetSettingsButton"
+                Appearance="Danger"
+                Content="Reset"
+                Icon="{x:Static ui:SymbolRegular.Delete24}"
+                ToolTip="⚠️ This will delete all your settings and restart the app"
+                Click="ResetSettingsButton_Click" />
         </custom:CardControl>
     </StackPanel>
     </ScrollViewer>

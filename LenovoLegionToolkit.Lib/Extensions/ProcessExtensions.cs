@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using Windows.Win32;
 
 namespace LenovoLegionToolkit.Lib.Extensions;

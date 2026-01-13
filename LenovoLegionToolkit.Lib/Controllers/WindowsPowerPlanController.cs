@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -150,8 +150,9 @@ public class WindowsPowerPlanController(ApplicationSettings settings, VantageDis
 
         try
         {
-            if (PInvoke.PowerReadFriendlyName(null, powerPlanGuid, null, null, (byte*)namePtr.ToPointer(), ref nameSize) != WIN32_ERROR.ERROR_SUCCESS)
-                PInvokeExtensions.ThrowIfWin32Error("PowerReadFriendlyName");
+            var res = PInvoke.PowerReadFriendlyName(null, powerPlanGuid, null, null, (byte*)namePtr.ToPointer(), ref nameSize);
+            if (res != WIN32_ERROR.ERROR_SUCCESS)
+                PInvokeExtensions.ThrowIfWin32Error((int)res, "PowerReadFriendlyName");
 
             return Marshal.PtrToStringUni(namePtr) ?? string.Empty;
         }
@@ -167,15 +168,17 @@ public class WindowsPowerPlanController(ApplicationSettings settings, VantageDis
 
     private static unsafe Guid GetActivePowerPlanGuid()
     {
-        if (PInvoke.PowerGetActiveScheme(null, out var guid) != WIN32_ERROR.ERROR_SUCCESS)
-            PInvokeExtensions.ThrowIfWin32Error("PowerGetActiveScheme");
+        var res = PInvoke.PowerGetActiveScheme(null, out var guid);
+        if (res != WIN32_ERROR.ERROR_SUCCESS)
+            PInvokeExtensions.ThrowIfWin32Error((int)res, "PowerGetActiveScheme");
 
         return *guid;
     }
 
-    private static void SetActivePowerPlan(Guid powerPlanGuid)
+    public static void SetActivePowerPlan(Guid powerPlanGuid)
     {
-        if (PInvoke.PowerSetActiveScheme(null, powerPlanGuid) != WIN32_ERROR.ERROR_SUCCESS)
-            PInvokeExtensions.ThrowIfWin32Error("PowerSetActiveScheme");
+        var res = PInvoke.PowerSetActiveScheme(null, powerPlanGuid);
+        if (res != WIN32_ERROR.ERROR_SUCCESS)
+            PInvokeExtensions.ThrowIfWin32Error((int)res, "PowerSetActiveScheme");
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace LenovoLegionToolkit.Lib.System.Management;
 

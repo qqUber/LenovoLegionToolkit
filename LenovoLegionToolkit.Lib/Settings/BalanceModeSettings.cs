@@ -1,4 +1,4 @@
-﻿using static LenovoLegionToolkit.Lib.Settings.BalanceModeSettings;
+using static LenovoLegionToolkit.Lib.Settings.BalanceModeSettings;
 
 namespace LenovoLegionToolkit.Lib.Settings;
 

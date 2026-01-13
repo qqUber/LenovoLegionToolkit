@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Win32.SafeHandles;
 using Windows.Win32;
 using Windows.Win32.Storage.FileSystem;

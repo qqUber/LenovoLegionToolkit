@@ -1,13 +1,22 @@
-#include "InnoDependencies\install_dotnet.iss"
+#ifndef MyAppVersion
+  #define MyAppVersion "1.5.0"
+#endif
+
 
 #define MyAppName "LOQ Toolkit"
 #define MyAppNameCompact "LOQToolkit"
 #define MyAppPublisher "Varun"
 #define MyAppURL "https://github.com/varun875/Varun-LLT"
-#define MyAppExeName "LOQToolkit_v1.4.0.exe"
 
-#ifndef MyAppVersion
-  #define MyAppVersion "1.4.0"
+
+#define MyAppExeName "LOQToolkit.exe"
+
+; Auto-build logic: If the build folder is empty or the main EXE is missing, trigger a publish.
+#if !FileExists(SourcePath + "\build\" + MyAppExeName)
+  #pragma message "Building release binaries as they are missing from the build folder..."
+  #expr Exec("dotnet", "publish LenovoLegionToolkit.WPF -c release -o build /p:DebugType=None /p:FileVersion=" + MyAppVersion + " /p:Version=" + MyAppVersion, SourcePath, SW_SHOW, True)
+  #expr Exec("dotnet", "publish LenovoLegionToolkit.SpectrumTester -c release -o build /p:DebugType=None /p:FileVersion=" + MyAppVersion + " /p:Version=" + MyAppVersion, SourcePath, SW_SHOW, True)
+  #expr Exec("dotnet", "publish LenovoLegionToolkit.CLI -c release -o build /p:DebugType=None /p:FileVersion=" + MyAppVersion + " /p:Version=" + MyAppVersion, SourcePath, SW_SHOW, True)
 #endif
 
 [Setup]
@@ -23,7 +32,7 @@ DefaultDirName={userpf}\{#MyAppNameCompact}
 DisableProgramGroupPage=yes
 LicenseFile=LICENSE
 PrivilegesRequired=admin
-OutputBaseFilename=LOQToolkitSetup_v1.4.0
+OutputBaseFilename=LOQToolkitSetup_v{#MyAppVersion}
 SetupIconFile=LenovoLegionToolkit.WPF\Assets\icon.ico
 Compression=lzma2/ultra64  
 SolidCompression=yes
@@ -33,12 +42,6 @@ UninstallDisplayIcon={app}\{#MyAppExeName}
 OutputDir=build_installer
 ArchitecturesInstallIn64BitMode=x64compatible
 
-[Code]
-function InitializeSetup: Boolean;
-begin
-  InstallDotNet6DesktopRuntime;
-  Result := True;
-end;
 
 [Languages]
 Name: "en";      MessagesFile: "compiler:Default.isl"
@@ -88,3 +91,11 @@ Type: filesandordirs; Name: "{localappdata}\{#MyAppNameCompact}"
 
 [UninstallRun]
 RunOnceId: "DelAutorun"; Filename: "schtasks"; Parameters: "/Delete /TN ""LOQToolkit_Autorun_6efcc882-924c-4cbc-8fec-f45c25696f98"" /F"; Flags: runhidden 
+[Code]
+#include "InnoDependencies\install_dotnet.iss"
+
+function InitializeSetup: Boolean;
+begin
+  InstallDotNet6DesktopRuntime;
+  Result := True;
+end;

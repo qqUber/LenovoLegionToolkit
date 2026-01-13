@@ -5,7 +5,7 @@
 #define DotNetExeName "dotnet8.exe"
 #define DotNetExeArgs "/install /repair /passive /norestart"
 
-[Code]
+
 var
   NeedsInstall: Boolean;
   Dependency_DownloadPage: TDownloadWizardPage;
@@ -147,7 +147,7 @@ var
   resultCode: Integer;
 begin
   if NeedsInstall then begin
-    prettyName := '{#DotNetPrettyName} {#DotNetVersion}'
+    prettyName := '{#DotNetPrettyName} {#DotNetVersion}';
 
     Dependency_DownloadPage.Show;
     Dependency_DownloadPage.Clear;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -76,7 +76,47 @@ public partial class WindowsPowerModeController(ApplicationSettings settings, IM
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Power mode {powerMode} activated... [powerModeState={powerModeState}, powerModeGuid={powerModeGuid}]");
     }
+    
+    public async Task SetManualPowerModeAsync(WindowsPowerMode mode)
+    {
+        var powerModeGuid = GuidForWindowsPowerMode(mode);
 
+        if (Power.IsBatterySaverEnabled())
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Battery saver is on - will not set overlay scheme.");
+
+            return;
+        }
+
+        await _dispatcher.DispatchAsync(() =>
+        {
+            ActivateDefaultPowerPlanIfNeeded();
+
+            mainThreadDispatcher.Dispatch(() =>
+            {
+                var result = PowerSetActiveOverlayScheme(powerModeGuid);
+                if (result != 0)
+                    PInvokeExtensions.ThrowIfWin32Error((int)result, "PowerSetActiveOverlayScheme");
+
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Overlay scheme set. [result={result}]");
+            });
+
+            try
+            {
+                UpdateRegistry(powerModeGuid);
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Failed to update registry.", ex);
+            }
+
+            return Task.CompletedTask;
+        }).ConfigureAwait(false);
+    }
+    
     private static void UpdateRegistry(Guid guid)
     {
         Registry.SetValue(POWER_SCHEMES_HIVE, POWER_SCHEMES_SUBKEY, ACTIVE_OVERLAY_AC_POWER_SCHEME_KEY, guid, true);
@@ -92,14 +132,16 @@ public partial class WindowsPowerModeController(ApplicationSettings settings, IM
 
     private static unsafe void ActivateDefaultPowerPlanIfNeeded()
     {
-        if (PInvoke.PowerGetActiveScheme(null, out var guid) != WIN32_ERROR.ERROR_SUCCESS)
-            PInvokeExtensions.ThrowIfWin32Error("PowerGetActiveScheme");
+        var res = PInvoke.PowerGetActiveScheme(null, out var guid);
+        if (res != WIN32_ERROR.ERROR_SUCCESS)
+            PInvokeExtensions.ThrowIfWin32Error((int)res, "PowerGetActiveScheme");
 
         if (DefaultPowerPlan == *guid)
             return;
 
-        if (PInvoke.PowerSetActiveScheme(null, DefaultPowerPlan) != WIN32_ERROR.ERROR_SUCCESS)
-            PInvokeExtensions.ThrowIfWin32Error("PowerSetActiveScheme");
+        res = PInvoke.PowerSetActiveScheme(null, DefaultPowerPlan);
+        if (res != WIN32_ERROR.ERROR_SUCCESS)
+            PInvokeExtensions.ThrowIfWin32Error((int)res, "PowerSetActiveScheme");
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Activated default power plan.");

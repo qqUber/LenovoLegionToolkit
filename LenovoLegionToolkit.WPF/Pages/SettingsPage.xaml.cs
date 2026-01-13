@@ -33,6 +33,7 @@ public partial class SettingsPage
 
     private readonly VantageDisabler _vantageDisabler = IoCContainer.Resolve<VantageDisabler>();
     private readonly LegionZoneDisabler _legionZoneDisabler = IoCContainer.Resolve<LegionZoneDisabler>();
+    private readonly LegionSpaceDisabler _legionSpaceDisabler = IoCContainer.Resolve<LegionSpaceDisabler>();
     private readonly FnKeysDisabler _fnKeysDisabler = IoCContainer.Resolve<FnKeysDisabler>();
     private readonly PowerModeFeature _powerModeFeature = IoCContainer.Resolve<PowerModeFeature>();
     private readonly RGBKeyboardBacklightController _rgbKeyboardBacklightController = IoCContainer.Resolve<RGBKeyboardBacklightController>();
@@ -113,6 +114,10 @@ public partial class SettingsPage
         _legionZoneCard.Visibility = legionZoneStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
         _legionZoneToggle.IsChecked = legionZoneStatus == SoftwareStatus.Disabled;
 
+        var legionSpaceStatus = await _legionSpaceDisabler.GetStatusAsync();
+        _legionSpaceCard.Visibility = legionSpaceStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
+        _legionSpaceToggle.IsChecked = legionSpaceStatus == SoftwareStatus.Disabled;
+
         var fnKeysStatus = await _fnKeysDisabler.GetStatusAsync();
         _fnKeysCard.Visibility = fnKeysStatus != SoftwareStatus.NotFound ? Visibility.Visible : Visibility.Collapsed;
         _fnKeysToggle.IsChecked = fnKeysStatus == SoftwareStatus.Disabled;
@@ -128,6 +133,11 @@ public partial class SettingsPage
         _excludeRefreshRatesCard.Visibility = fnKeysStatus != SoftwareStatus.Enabled ? Visibility.Visible : Visibility.Collapsed;
         _synchronizeBrightnessToAllPowerPlansToggle.IsChecked = _settings.Store.SynchronizeBrightnessToAllPowerPlans;
         _onBatterySinceResetToggle.IsChecked = _settings.Store.ResetBatteryOnSinceTimerOnReboot;
+
+        // Keyboard backlight timeout
+        _keyboardBacklightTimeoutToggle.IsChecked = _settings.Store.KeyboardBacklightTimeoutEnabled;
+        InitializeKeyboardBacklightTimeoutComboBox();
+        _keyboardBacklightTimeoutDurationCard.Visibility = _settings.Store.KeyboardBacklightTimeoutEnabled ? Visibility.Visible : Visibility.Collapsed;
 
         _bootLogoCard.Visibility = await BootLogo.IsSupportedAsync() ? Visibility.Visible : Visibility.Collapsed;
 
@@ -189,6 +199,7 @@ public partial class SettingsPage
         _minimizeOnCloseToggle.Visibility = Visibility.Visible;
         _vantageToggle.Visibility = Visibility.Visible;
         _legionZoneToggle.Visibility = Visibility.Visible;
+        _legionSpaceToggle.Visibility = Visibility.Visible;
         _fnKeysToggle.Visibility = Visibility.Visible;
         _smartFnLockComboBox.Visibility = Visibility.Visible;
         _synchronizeBrightnessToAllPowerPlansToggle.Visibility = Visibility.Visible;
@@ -832,6 +843,44 @@ public partial class SettingsPage
         _legionZoneToggle.IsEnabled = true;
     }
 
+    private async void LegionSpaceToggle_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        _legionSpaceToggle.IsEnabled = false;
+
+        var state = _legionSpaceToggle.IsChecked;
+        if (state is null)
+            return;
+
+        if (state.Value)
+        {
+            try
+            {
+                await _legionSpaceDisabler.DisableAsync();
+            }
+            catch
+            {
+                await SnackbarHelper.ShowAsync("Error", "Could not disable Legion Space.", SnackbarType.Error);
+            }
+        }
+        else
+        {
+            try
+            {
+                await _legionSpaceDisabler.EnableAsync();
+            }
+            catch
+            {
+                await SnackbarHelper.ShowAsync("Error", "Could not enable Legion Space.", SnackbarType.Error);
+            }
+        }
+
+        await RefreshAsync();
+        _legionSpaceToggle.IsEnabled = true;
+    }
+
     private async void FnKeysToggle_Click(object sender, RoutedEventArgs e)
     {
         if (_isRefreshing)
@@ -1039,4 +1088,260 @@ public partial class SettingsPage
 
         SystemPath.SetCLI(_cliPathToggle.IsChecked ?? false);
     }
+
+    private async void ExportSettingsButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var sfd = new Microsoft.Win32.SaveFileDialog
+            {
+                Title = "Export All Settings",
+                FileName = $"LenovoLegionToolkit_Backup_{DateTime.Now:yyyyMMdd}",
+                DefaultExt = ".zip",
+                Filter = "Backup Files (*.zip)|*.zip"
+            };
+
+            if (sfd.ShowDialog() != true)
+                return;
+
+            _exportSettingsButton.IsEnabled = false;
+
+            var backupService = new SettingsBackupService();
+            var count = await backupService.ExportAllSettingsAsync(sfd.FileName);
+
+            await SnackbarHelper.ShowAsync(
+                "Export Complete",
+                $"Successfully exported {count} settings files.",
+                SnackbarType.Success);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to export settings", ex);
+
+            await SnackbarHelper.ShowAsync(
+                "Export Failed",
+                "Failed to export settings. Check logs for details.",
+                SnackbarType.Error);
+        }
+        finally
+        {
+            _exportSettingsButton.IsEnabled = true;
+        }
+    }
+
+    private async void ImportSettingsButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var ofd = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = "Import Settings Backup",
+                DefaultExt = ".zip",
+                Filter = "Backup Files (*.zip)|*.zip",
+                CheckFileExists = true
+            };
+
+            if (ofd.ShowDialog() != true)
+                return;
+
+            var shouldImport = await ErrorHelper.ConfirmAsync(
+                "Confirm Import",
+                "This will replace all your current settings with the backup.\n\nThe application will restart after import.",
+                "Import",
+                "Cancel");
+
+            if (!shouldImport)
+                return;
+
+            _importSettingsButton.IsEnabled = false;
+
+            var backupService = new SettingsBackupService();
+            var count = await backupService.ImportAllSettingsAsync(ofd.FileName);
+
+            await SnackbarHelper.ShowAsync(
+                "Import Complete",
+                $"Imported {count} settings files. Restarting...",
+                SnackbarType.Success);
+
+            // Wait a moment for user to see the message
+            await Task.Delay(1500);
+
+            // Restart the application
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = Environment.ProcessPath,
+                UseShellExecute = true
+            };
+            Process.Start(startInfo);
+            
+            await App.Current.ShutdownAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to import settings", ex);
+
+            await SnackbarHelper.ShowAsync(
+                "Import Failed",
+                "Failed to import settings. Check logs for details.",
+                SnackbarType.Error);
+
+            _importSettingsButton.IsEnabled = true;
+        }
+    }
+
+    private async void ResetSettingsButton_Click(object sender, RoutedEventArgs e)
+    {
+        try
+        {
+            var shouldReset = await ErrorHelper.ConfirmDestructiveAsync(
+                "Reset All Settings",
+                "⚠️ WARNING: This will delete ALL your settings!\n\n" +
+                "• All preferences will be reset to defaults\n" +
+                "• All automations will be deleted\n" +
+                "• All keyboard profiles will be removed\n\n" +
+                "A backup will be created before reset.",
+                "Reset Everything");
+
+            if (!shouldReset)
+                return;
+
+            // Second confirmation for destructive action
+            var confirmReset = await ErrorHelper.ConfirmAsync(
+                "Final Confirmation",
+                "This action cannot be undone (except by restoring from the backup).\n\nAre you absolutely sure?",
+                "Yes, Reset",
+                "Cancel");
+
+            if (!confirmReset)
+                return;
+
+            _resetSettingsButton.IsEnabled = false;
+
+            // Create backup first
+            var backupPath = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                $"LenovoLegionToolkit_PreReset_Backup_{DateTime.Now:yyyyMMdd_HHmmss}.zip");
+
+            try
+            {
+                var backupService = new SettingsBackupService();
+                await backupService.ExportAllSettingsAsync(backupPath);
+
+                await SnackbarHelper.ShowAsync(
+                    "Backup Created",
+                    $"Backup saved to Desktop before reset.",
+                    SnackbarType.Success);
+            }
+            catch
+            {
+                // Continue even if backup fails
+            }
+
+            // Delete all settings files
+            var appDataPath = Folders.AppData;
+            var jsonFiles = System.IO.Directory.GetFiles(appDataPath, "*.json");
+            
+            foreach (var file in jsonFiles)
+            {
+                try { System.IO.File.Delete(file); }
+                catch { /* Ignore individual errors */ }
+            }
+
+            await SnackbarHelper.ShowAsync(
+                "Reset Complete",
+                "All settings deleted. Restarting...",
+                SnackbarType.Success);
+
+            await Task.Delay(1500);
+
+            // Restart the application
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = Environment.ProcessPath,
+                UseShellExecute = true
+            };
+            Process.Start(startInfo);
+            
+            await App.Current.ShutdownAsync();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to reset settings", ex);
+
+            await SnackbarHelper.ShowAsync(
+                "Reset Failed",
+                "Failed to reset settings. Check logs for details.",
+                SnackbarType.Error);
+
+            _resetSettingsButton.IsEnabled = true;
+        }
+    }
+
+    #region Keyboard Backlight Timeout
+
+    private void InitializeKeyboardBacklightTimeoutComboBox()
+    {
+        var timeoutOptions = new[] { 10, 15, 30, 45, 60, 90, 120, 180, 300 };
+        _keyboardBacklightTimeoutComboBox.Items.Clear();
+        
+        foreach (var seconds in timeoutOptions)
+        {
+            var displayText = seconds < 60 
+                ? $"{seconds}" 
+                : $"{seconds / 60} min";
+            _keyboardBacklightTimeoutComboBox.Items.Add(new ComboBoxItem { Content = displayText, Tag = seconds });
+        }
+
+        var currentTimeout = _settings.Store.KeyboardBacklightTimeoutSeconds;
+        for (int i = 0; i < _keyboardBacklightTimeoutComboBox.Items.Count; i++)
+        {
+            if (_keyboardBacklightTimeoutComboBox.Items[i] is ComboBoxItem item && (int)item.Tag == currentTimeout)
+            {
+                _keyboardBacklightTimeoutComboBox.SelectedIndex = i;
+                break;
+            }
+        }
+
+        // Default to 30 seconds if no match
+        if (_keyboardBacklightTimeoutComboBox.SelectedIndex < 0)
+            _keyboardBacklightTimeoutComboBox.SelectedIndex = 2; // 30 seconds
+    }
+
+    private void KeyboardBacklightTimeoutToggle_Click(object sender, RoutedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        var isEnabled = _keyboardBacklightTimeoutToggle.IsChecked ?? false;
+        
+        _settings.Store.KeyboardBacklightTimeoutEnabled = isEnabled;
+        _settings.SynchronizeStore();
+
+        _keyboardBacklightTimeoutDurationCard.Visibility = isEnabled ? Visibility.Visible : Visibility.Collapsed;
+
+        // Restart the timeout service
+        var timeoutService = IoCContainer.Resolve<LenovoLegionToolkit.Lib.Services.KeyboardBacklightTimeoutService>();
+        timeoutService.Restart();
+    }
+
+    private void KeyboardBacklightTimeoutComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (_isRefreshing)
+            return;
+
+        if (_keyboardBacklightTimeoutComboBox.SelectedItem is ComboBoxItem item && item.Tag is int seconds)
+        {
+            _settings.Store.KeyboardBacklightTimeoutSeconds = seconds;
+            _settings.SynchronizeStore();
+
+            // Restart the timeout service with new settings
+            var timeoutService = IoCContainer.Resolve<LenovoLegionToolkit.Lib.Services.KeyboardBacklightTimeoutService>();
+            timeoutService.Restart();
+        }
+    }
+
+    #endregion
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using LenovoLegionToolkit.Lib.Messaging.Messages;
 using PubSub;
 

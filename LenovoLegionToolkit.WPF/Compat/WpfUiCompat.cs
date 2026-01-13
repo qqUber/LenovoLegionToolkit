@@ -15,14 +15,46 @@ using TitleBarBase = Wpf.Ui.Controls.TitleBar;
 using ButtonBase = Wpf.Ui.Controls.Button;
 using Wpf.Ui.Controls;
 
-[assembly: XmlnsDefinition("http://schemas.lepo.co/wpfui/2022/xaml", "LenovoLegionToolkit.WPF.Compat")]
-[assembly: XmlnsPrefix("http://schemas.lepo.co/wpfui/2022/xaml", "wpfui")]
+// Note: We do NOT register LenovoLegionToolkit.WPF.Compat to wpfui namespace
+// because it causes ambiguity with actual Wpf.Ui.Controls types.
+// Use xmlns:compat="clr-namespace:LenovoLegionToolkit.WPF.Compat" instead.
 
 namespace LenovoLegionToolkit.WPF.Compat
 {
     // Minimal compatibility shims to keep existing XAML working after upgrading to WPF UI 3.x.
     public class UiPage : Page
     {
+        public UiPage()
+        {
+            // Set up for smooth page transition animation
+            Opacity = 0;
+            RenderTransform = new System.Windows.Media.TranslateTransform(0, 12);
+            
+            Loaded += UiPage_Loaded;
+        }
+
+        private void UiPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Animate page entrance
+            var fadeIn = new System.Windows.Media.Animation.DoubleAnimation
+            {
+                From = 0,
+                To = 1,
+                Duration = TimeSpan.FromMilliseconds(200),
+                EasingFunction = new System.Windows.Media.Animation.QuadraticEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut }
+            };
+
+            var slideUp = new System.Windows.Media.Animation.DoubleAnimation
+            {
+                From = 12,
+                To = 0,
+                Duration = TimeSpan.FromMilliseconds(200),
+                EasingFunction = new System.Windows.Media.Animation.QuadraticEase { EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut }
+            };
+
+            BeginAnimation(OpacityProperty, fadeIn);
+            RenderTransform.BeginAnimation(System.Windows.Media.TranslateTransform.YProperty, slideUp);
+        }
     }
 
     public class UiWindow : FluentWindowBase
@@ -54,6 +86,41 @@ namespace LenovoLegionToolkit.WPF.Compat
         {
             get => (bool)GetValue(UseSnapLayoutProperty);
             set => SetValue(UseSnapLayoutProperty, value);
+        }
+    }
+
+    public class Button : ButtonBase
+    {
+        public static new readonly DependencyProperty IconProperty = DependencyProperty.Register(
+            nameof(Icon),
+            typeof(object),
+            typeof(Button),
+            new PropertyMetadata(null, OnIconChanged)
+        );
+
+        public new object? Icon
+        {
+            get => GetValue(IconProperty);
+            set => SetValue(IconProperty, value);
+        }
+
+        private static void OnIconChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is Button control)
+            {
+                try
+                {
+                    if (e.NewValue is SymbolRegular symbol)
+                    {
+                        ((ButtonBase)control).Icon = symbol.ToIconElement();
+                    }
+                    else if (e.NewValue is IconElement icon)
+                    {
+                        ((ButtonBase)control).Icon = icon;
+                    }
+                }
+                catch { }
+            }
         }
     }
 
@@ -130,19 +197,19 @@ namespace LenovoLegionToolkit.WPF.Compat
             new PropertyMetadata(true)
         );
 
-        public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
-            nameof(Icon),
-            typeof(SymbolRegular),
+
+        public static readonly DependencyProperty AppearanceProperty = DependencyProperty.Register(
+            nameof(Appearance),
+            typeof(ControlAppearance),
             typeof(Snackbar),
-            new PropertyMetadata(SymbolRegular.Empty)
+            new PropertyMetadata(ControlAppearance.Secondary)
         );
 
-        public static readonly DependencyProperty TimeoutProperty = DependencyProperty.Register(
-            nameof(Timeout),
-            typeof(int),
-            typeof(Snackbar),
-            new PropertyMetadata(2000)
-        );
+        public ControlAppearance Appearance
+        {
+            get => (ControlAppearance)GetValue(AppearanceProperty);
+            set => SetValue(AppearanceProperty, value);
+        }
 
         public bool CloseButtonEnabled
         {
@@ -150,22 +217,53 @@ namespace LenovoLegionToolkit.WPF.Compat
             set => SetValue(CloseButtonEnabledProperty, value);
         }
 
+        public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
+            nameof(Icon),
+            typeof(SymbolRegular),
+            typeof(Snackbar),
+            new PropertyMetadata(SymbolRegular.Empty)
+        );
+
         public SymbolRegular Icon
         {
             get => (SymbolRegular)GetValue(IconProperty);
             set => SetValue(IconProperty, value);
         }
 
-        public int Timeout
+        public static readonly DependencyProperty TimeoutProperty = DependencyProperty.Register(
+            nameof(Timeout),
+            typeof(TimeSpan),
+            typeof(Snackbar),
+            new PropertyMetadata(TimeSpan.FromMilliseconds(2000))
+        );
+
+        public TimeSpan Timeout
         {
-            get => (int)GetValue(TimeoutProperty);
+            get => (TimeSpan)GetValue(TimeoutProperty);
             set => SetValue(TimeoutProperty, value);
         }
 
         public Task ShowAsync(string title, string message)
         {
             Content = message;
+            Show();
             return Task.CompletedTask;
+        }
+
+        public Task ShowAsync()
+        {
+            Show();
+            return Task.CompletedTask;
+        }
+
+        public void Show() 
+        {
+            Visibility = Visibility.Visible;
+        }
+
+        public void Hide()
+        {
+            Visibility = Visibility.Collapsed;
         }
     }
 
@@ -579,6 +677,11 @@ namespace LenovoLegionToolkit.WPF.Compat
     }
 }
 
+
+
+
+
+
 namespace Wpf.Ui.Controls.Interfaces
 {
     public interface INavigation
@@ -620,4 +723,6 @@ namespace Wpf.Ui.Controls
     public class MenuItem : LenovoLegionToolkit.WPF.Compat.MenuItem
     {
     }
+
+
 }

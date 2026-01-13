@@ -7,7 +7,6 @@ namespace LenovoLegionToolkit.WPF.Windows;
 
 /// <summary>
 /// Base window using FluentWindow from WPF-UI 4.x for Mica backdrop and rounded corners.
-/// We use custom title bar with WindowChrome for full control over the title bar area.
 /// </summary>
 public class BaseWindow : FluentWindow
 {
@@ -18,13 +17,20 @@ public class BaseWindow : FluentWindow
         // Extend content into title bar area - we provide our own title bar
         ExtendsContentIntoTitleBar = true;
         
-        // Enable Mica backdrop for modern Windows 11 look
-        WindowBackdropType = WindowBackdropType.Mica;
+        // Try Mica backdrop, fall back if not supported
+        try
+        {
+            WindowBackdropType = WindowBackdropType.Mica;
+        }
+        catch
+        {
+            WindowBackdropType = WindowBackdropType.None;
+        }
         
         // Windows 11 rounded corners
         WindowCornerPreference = WindowCornerPreference.Round;
         
-        // Configure WindowChrome for custom title bar
+        // Use custom window chrome for unified look
         var chrome = new WindowChrome
         {
             CaptionHeight = 32,
@@ -36,7 +42,19 @@ public class BaseWindow : FluentWindow
         WindowChrome.SetWindowChrome(this, chrome);
         
         DpiChanged += BaseWindow_DpiChanged;
+        Loaded += BaseWindow_Loaded;
     }
 
     private void BaseWindow_DpiChanged(object sender, DpiChangedEventArgs e) => VisualTreeHelper.SetRootDpi(this, e.NewDpi);
+    
+    private void BaseWindow_Loaded(object sender, RoutedEventArgs e)
+    {
+        // Ensure window is visible and activated after load
+        if (WindowState == WindowState.Minimized)
+            WindowState = WindowState.Normal;
+            
+        Activate();
+        Focus();
+    }
 }
+

@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 using System.Windows.Automation;
 using System.Windows.Automation.Peers;
@@ -18,7 +19,15 @@ public class CardControl : Wpf.Ui.Controls.CardControl
     {
         if (d is CardControl control && e.NewValue is SymbolRegular symbol)
         {
-            ((Wpf.Ui.Controls.CardControl)control).Icon = symbol.ToIconElement();
+            try
+            {
+                ((Wpf.Ui.Controls.CardControl)control).Icon = symbol.ToIconElement();
+            }
+            catch (Exception ex)
+            {
+                if (LenovoLegionToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                    LenovoLegionToolkit.Lib.Utils.Log.Instance.Trace($"Failed to set CardControl Icon.", ex);
+            }
         }
     }
 

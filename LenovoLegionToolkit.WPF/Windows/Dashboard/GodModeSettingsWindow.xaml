@@ -136,6 +136,50 @@
                         </StackPanel>
                     </Border>
 
+                    <!-- Power Management Section -->
+                    <Border 
+                        x:Name="_powerSection"
+                        Margin="0,0,0,24" 
+                        Padding="20" 
+                        Background="{DynamicResource ControlFillColorDefaultBrush}" 
+                        CornerRadius="8">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                <wpfui:SymbolIcon Symbol="BatteryCharge24" FontSize="24" Foreground="{DynamicResource SystemAccentColorPrimaryBrush}" />
+                                <TextBlock
+                                    Margin="12,0,0,0"
+                                    VerticalAlignment="Center"
+                                    FontSize="18"
+                                    FontWeight="SemiBold"
+                                    Text="Power Management" />
+                            </StackPanel>
+
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="250" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                    <TextBlock Text="Windows Power Plan" FontWeight="SemiBold" />
+                                    <TextBlock Text="Select the Windows Power Plan to activate." Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" TextWrapping="Wrap" />
+                                </StackPanel>
+                                <ComboBox x:Name="_powerPlanComboBox" Grid.Column="1" DisplayMemberPath="Name" SelectedValuePath="Guid" />
+                            </Grid>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="250" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel VerticalAlignment="Center" Margin="0,0,16,0">
+                                    <TextBlock Text="Windows Power Mode" FontWeight="SemiBold" />
+                                    <TextBlock Text="Select the Windows Power Mode (Best Performance, etc.)." Foreground="{DynamicResource TextFillColorSecondaryBrush}" FontSize="12" TextWrapping="Wrap" />
+                                </StackPanel>
+                                <ComboBox x:Name="_windowsPowerModeComboBox" Grid.Column="1" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
                     <!-- CPU Section -->
                     <StackPanel x:Name="_cpuSectionTitle" Orientation="Horizontal" Margin="0,8,0,16">
                         <Border 

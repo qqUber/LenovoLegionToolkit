@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using LenovoLegionToolkit.Lib.Utils;
 using Newtonsoft.Json;

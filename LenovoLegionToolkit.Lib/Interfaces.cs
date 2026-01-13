@@ -1,4 +1,4 @@
-﻿namespace LenovoLegionToolkit.Lib;
+namespace LenovoLegionToolkit.Lib;
 
 public interface IDisplayName
 {

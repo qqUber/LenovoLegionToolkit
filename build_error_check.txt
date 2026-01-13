@@ -1,0 +1,8 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  LenovoLegionToolkit.Lib -> C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.Lib\bin\release\net9.0-windows\win-x64\LenovoLegionToolkit.Lib.dll
+  LenovoLegionToolkit.CLI.Lib -> C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.CLI.Lib\bin\release\net9.0-windows\win-x64\LenovoLegionToolkit.CLI.Lib.dll
+  LenovoLegionToolkit.Lib.Macro -> C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.Lib.Macro\bin\release\net9.0-windows\win-x64\LenovoLegionToolkit.Lib.Macro.dll
+  LenovoLegionToolkit.Lib.Automation -> C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.Lib.Automation\bin\release\net9.0-windows\win-x64\LenovoLegionToolkit.Lib.Automation.dll
+C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\Windows\BaseWindow.cs(33,26): error CS0246: The type or namespace name 'WindowChrome' could not be found (are you missing a using directive or an assembly reference?) [C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF_awjvpktd_wpftmp.csproj]
+C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\Windows\BaseWindow.cs(41,9): error CS0103: The name 'WindowChrome' does not exist in the current context [C:\Users\Varun\Documents\GitHub\Varun-LLT\LenovoLegionToolkit.WPF\LenovoLegionToolkit.WPF_awjvpktd_wpftmp.csproj]

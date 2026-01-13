@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -30,10 +31,17 @@ public partial class AboutPage
     {
         get
         {
-            var location = Assembly.GetEntryAssembly()?.Location;
-            if (location is null)
+            try
+            {
+                var location = Environment.ProcessPath;
+                if (string.IsNullOrEmpty(location))
+                    return string.Empty;
+                return FileVersionInfo.GetVersionInfo(location).LegalCopyright ?? string.Empty;
+            }
+            catch
+            {
                 return string.Empty;
-            return FileVersionInfo.GetVersionInfo(location).LegalCopyright ?? string.Empty;
+            }
         }
     }
 

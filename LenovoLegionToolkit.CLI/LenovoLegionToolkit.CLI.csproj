@@ -4,29 +4,48 @@
         <TargetFramework>net9.0-windows</TargetFramework>
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
         <Nullable>enable</Nullable>
-	    <Copyright>© 2024 Bartosz Cichecki</Copyright>
+        <Copyright>© 2026 LOQ Toolkit</Copyright>
         <AssemblyName>llt</AssemblyName>
         <Platforms>x64</Platforms>
-        <FileVersion>1.4.0</FileVersion>
-        <Version>1.4.0</Version>
+        <FileVersion>1.5.0</FileVersion>
+        <Version>1.5.0</Version>
         <NeutralLanguage>en</NeutralLanguage>
+        
+        <!-- Performance Optimizations -->
+        <TieredCompilation>true</TieredCompilation>
+        <TieredCompilationQuickJit>true</TieredCompilationQuickJit>
+        
+        <!-- Production single-file -->
+        <PublishSingleFile>true</PublishSingleFile>
+        <SelfContained>true</SelfContained>
+        <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
     </PropertyGroup>
+    
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
         <SourceRevisionId>build$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionId>
+        <PublishReadyToRun>true</PublishReadyToRun>
+        <Optimize>true</Optimize>
+        <DebugSymbols>false</DebugSymbols>
     </PropertyGroup>
+    
     <PropertyGroup>
         <NeutralLanguage>en</NeutralLanguage>
         <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
     </PropertyGroup>
+    
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <DebugType>portable</DebugType>
     </PropertyGroup>
+    
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
         <DebugType>embedded</DebugType>
     </PropertyGroup>
+    
     <ItemGroup>
       <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+      <PackageReference Include="Spectre.Console" Version="0.49.1" />
     </ItemGroup>
+    
     <ItemGroup>
         <ProjectReference Include="..\LenovoLegionToolkit.CLI.Lib\LenovoLegionToolkit.CLI.Lib.csproj" />
     </ItemGroup>

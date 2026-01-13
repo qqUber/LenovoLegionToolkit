@@ -7,7 +7,15 @@ public class SymbolButton : Button
 {
     public new SymbolRegular Icon
     {
-        get => base.Icon.ToSymbolRegular();
-        set => base.Icon = value.ToIconElement();
+        get
+        {
+            if (base.Icon is SymbolRegular symbol)
+            {
+                return symbol;
+            }
+
+            return (base.Icon as IconElement).ToSymbolRegular();
+        }
+        set => base.Icon = value;
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace LenovoLegionToolkit.Lib.Settings;
@@ -27,9 +27,13 @@ public class GodModeSettings() : AbstractSettings<GodModeSettings.GodModeSetting
             public bool? FanFullSpeed { get; init; }
             public int? MinValueOffset { get; init; }
             public int? MaxValueOffset { get; init; }
+            public WindowsPowerMode? WindowsPowerMode { get; init; }
+            public Guid? PowerPlan { get; init; }
         }
 
         public Guid ActivePresetId { get; set; }
+        
+        public bool HasSeenFirstStartWarning { get; set; }
 
         public Dictionary<Guid, Preset> Presets { get; set; } = [];
     }

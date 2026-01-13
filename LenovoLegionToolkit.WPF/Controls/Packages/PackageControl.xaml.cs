@@ -61,7 +61,7 @@ public partial class PackageControl : IProgress<float>
 
     private void PackageControl_Unloaded(object sender, RoutedEventArgs e) => _downloadPackageTokenSource?.Cancel();
 
-    public void Report(float value) => Dispatcher.Invoke(() =>
+    public void Report(float value) => Dispatcher.BeginInvoke(() =>
     {
         _downloadProgressRing.IsIndeterminate = !(value > 0);
         _downloadProgressRing.Progress = value * 100;

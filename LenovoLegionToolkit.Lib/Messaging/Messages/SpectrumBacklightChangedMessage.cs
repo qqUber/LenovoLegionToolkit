@@ -1,3 +1,3 @@
-﻿namespace LenovoLegionToolkit.Lib.Messaging.Messages;
+namespace LenovoLegionToolkit.Lib.Messaging.Messages;
 
 public class SpectrumBacklightChangedMessage : IMessage;

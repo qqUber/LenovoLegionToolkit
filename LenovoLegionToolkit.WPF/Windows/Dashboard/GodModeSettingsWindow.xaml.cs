@@ -11,6 +11,8 @@ using LenovoLegionToolkit.Lib.Extensions;
 using LenovoLegionToolkit.Lib.Features;
 using LenovoLegionToolkit.Lib.SoftwareDisabler;
 using LenovoLegionToolkit.Lib.Utils;
+using LenovoLegionToolkit.Lib.Controllers;
+using LenovoLegionToolkit.Lib.Settings;
 using LenovoLegionToolkit.WPF.Extensions;
 using LenovoLegionToolkit.WPF.Resources;
 using LenovoLegionToolkit.WPF.Utils;
@@ -24,6 +26,8 @@ public partial class GodModeSettingsWindow
 
     private readonly VantageDisabler _vantageDisabler = IoCContainer.Resolve<VantageDisabler>();
     private readonly LegionZoneDisabler _legionZoneDisabler = IoCContainer.Resolve<LegionZoneDisabler>();
+
+    private readonly WindowsPowerPlanController _powerPlanController = IoCContainer.Resolve<WindowsPowerPlanController>();
 
     private GodModeState? _state;
     private Dictionary<PowerModeState, GodModeDefaults>? _defaults;
@@ -65,6 +69,19 @@ public partial class GodModeSettingsWindow
             if (_defaults is null)
                 throw new InvalidOperationException($"{nameof(_defaults)} are null");
 
+            // Warning Check
+            if (!_state.Value.HasSeenFirstStartWarning)
+            {
+                 // Show warning
+                  await MessageBoxHelper.ShowAsync(this, "Custom Mode Warning", "Using Custom Mode (God Mode) can affect system stability. Use with caution.\n\nAlso make sure to disable Power Mode Sync in Legion Zone or Legion Space to prevent issues.", Resource.OK, null);
+                 
+                 var newState = _state.Value with { HasSeenFirstStartWarning = true };
+                 await _godModeController.SetStateAsync(newState);
+                 
+                 // Refresh state
+                 _state = await _godModeController.GetStateAsync();
+            }
+
             await SetStateAsync(_state.Value);
 
             await loadingTask;
@@ -98,6 +115,11 @@ public partial class GodModeSettingsWindow
             var activePresetId = _state.Value.ActivePresetId;
             var presets = _state.Value.Presets;
             var preset = presets[activePresetId];
+            
+            var powerPlan = (Guid?)_powerPlanComboBox.SelectedValue;
+            if (powerPlan == Guid.Empty) powerPlan = null;
+            
+            var powerMode = (WindowsPowerMode?)_windowsPowerModeComboBox.SelectedValue; // This needs correct binding setup
 
             var newPreset = new GodModePreset
             {
@@ -117,7 +139,9 @@ public partial class GodModeSettingsWindow
                 FanTableInfo = preset.FanTableInfo is not null ? _fanCurveControl.GetFanTableInfo() : null,
                 FanFullSpeed = preset.FanFullSpeed is not null ? _fanFullSpeedToggle.IsChecked : null,
                 MaxValueOffset = preset.MaxValueOffset is not null ? (int?)_maxValueOffsetNumberBox.Value : null,
-                MinValueOffset = preset.MinValueOffset is not null ? (int?)_minValueOffsetNumberBox.Value : null
+                MinValueOffset = preset.MinValueOffset is not null ? (int?)_minValueOffsetNumberBox.Value : null,
+                PowerPlan = powerPlan,
+                WindowsPowerMode = powerMode
             };
 
             var newPresets = new Dictionary<Guid, GodModePreset>(presets)
@@ -125,10 +149,12 @@ public partial class GodModeSettingsWindow
                 [activePresetId] = newPreset
             };
 
+            // ... (rest same) -> state update
             var newState = new GodModeState
             {
                 ActivePresetId = activePresetId,
                 Presets = newPresets.AsReadOnlyDictionary(),
+                HasSeenFirstStartWarning = _state.Value.HasSeenFirstStartWarning // preserve flag
             };
 
             if (await _powerModeFeature.GetStateAsync() != PowerModeState.GodMode)
@@ -141,11 +167,7 @@ public partial class GodModeSettingsWindow
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Couldn't apply settings", ex);
-
-            await _snackBar.ShowAsync(Resource.GodModeSettingsWindow_Error_Apply_Title, ex.Message);
-
+            await ErrorHelper.ShowErrorAsync(ex, Resource.GodModeSettingsWindow_Error_Apply_Title);
             return false;
         }
     }
@@ -157,6 +179,20 @@ public partial class GodModeSettingsWindow
 
         var activePresetId = state.ActivePresetId;
         var preset = state.Presets[activePresetId];
+
+        // Power Plan
+        var plans = _powerPlanController.GetPowerPlans().ToList();
+        plans.Insert(0, new WindowsPowerPlan(Guid.Empty, "None", false));
+        _powerPlanComboBox.ItemsSource = plans;
+        _powerPlanComboBox.SelectedValue = preset.PowerPlan ?? Guid.Empty;
+
+        // Power Mode
+        var modes = Enum.GetValues<WindowsPowerMode>().Select(m => new { Name = m.ToString(), Value = (WindowsPowerMode?)m }).ToList();
+        modes.Insert(0, new { Name = "None", Value = (WindowsPowerMode?)null });
+        _windowsPowerModeComboBox.ItemsSource = modes;
+        _windowsPowerModeComboBox.DisplayMemberPath = "Name";
+        _windowsPowerModeComboBox.SelectedValuePath = "Value";
+        _windowsPowerModeComboBox.SelectedValue = preset.WindowsPowerMode;
 
         _presetsComboBox.SetItems(state.Presets.OrderBy(kv => kv.Value.Name), new(activePresetId, preset), kv => kv.Value.Name);
 

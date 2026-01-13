@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -34,7 +35,7 @@ public class NotificationsManager
 
     private void OnNotificationReceived(NotificationMessage notification)
     {
-        Dispatcher.Invoke(() =>
+        Dispatcher.BeginInvoke(() =>
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Notification {notification} received");
@@ -167,7 +168,7 @@ public class NotificationsManager
                 NotificationType.ACAdapterConnected => Resource.Notification_ACAdapterConnected,
                 NotificationType.ACAdapterConnectedLowWattage => Resource.Notification_ACAdapterConnectedLowWattage,
                 NotificationType.ACAdapterDisconnected => Resource.Notification_ACAdapterDisconnected,
-                NotificationType.AutomationNotification => notification.Args?.ToString() ?? string.Empty,
+                NotificationType.AutomationNotification => notification.Args?.FirstOrDefault()?.ToString() ?? string.Empty,
                 NotificationType.CapsLockOn => Resource.Notification_CapsLockOn,
                 NotificationType.CapsLockOff => Resource.Notification_CapsLockOff,
                 NotificationType.CameraOn => Resource.Notification_CameraOn,
@@ -182,16 +183,16 @@ public class NotificationsManager
                 NotificationType.PanelLogoLightingOff => Resource.Notification_PanelLogoLightingOff,
                 NotificationType.PortLightingOn => Resource.Notification_PortLightingOn,
                 NotificationType.PortLightingOff => Resource.Notification_PortLightingOff,
-                NotificationType.PowerModeQuiet => notification.Args?.ToString() ?? string.Empty,
-                NotificationType.PowerModeBalance => notification.Args?.ToString() ?? string.Empty,
-                NotificationType.PowerModePerformance => notification.Args?.ToString() ?? string.Empty,
-                NotificationType.PowerModeExtreme => notification.Args?.ToString() ?? string.Empty,
-                NotificationType.PowerModeGodMode => notification.Args?.ToString() ?? string.Empty,
-                NotificationType.RefreshRate => notification.Args?.ToString() ?? string.Empty,
-                NotificationType.RGBKeyboardBacklightOff => notification.Args?.ToString() ?? string.Empty,
-                NotificationType.RGBKeyboardBacklightChanged => notification.Args?.ToString() ?? string.Empty,
-                NotificationType.SmartKeyDoublePress => notification.Args?.ToString() ?? string.Empty,
-                NotificationType.SmartKeySinglePress => notification.Args?.ToString() ?? string.Empty,
+                NotificationType.PowerModeQuiet => notification.Args?.FirstOrDefault()?.ToString() ?? string.Empty,
+                NotificationType.PowerModeBalance => notification.Args?.FirstOrDefault()?.ToString() ?? string.Empty,
+                NotificationType.PowerModePerformance => notification.Args?.FirstOrDefault()?.ToString() ?? string.Empty,
+                NotificationType.PowerModeExtreme => notification.Args?.FirstOrDefault()?.ToString() ?? string.Empty,
+                NotificationType.PowerModeGodMode => notification.Args?.FirstOrDefault()?.ToString() ?? string.Empty,
+                NotificationType.RefreshRate => notification.Args?.FirstOrDefault()?.ToString() ?? string.Empty,
+                NotificationType.RGBKeyboardBacklightOff => notification.Args?.FirstOrDefault()?.ToString() ?? string.Empty,
+                NotificationType.RGBKeyboardBacklightChanged => notification.Args?.FirstOrDefault()?.ToString() ?? string.Empty,
+                NotificationType.SmartKeyDoublePress => notification.Args?.FirstOrDefault()?.ToString() ?? string.Empty,
+                NotificationType.SmartKeySinglePress => notification.Args?.FirstOrDefault()?.ToString() ?? string.Empty,
                 NotificationType.SpectrumBacklightChanged => string.Format(Resource.Notification_SpectrumKeyboardBacklight_Brightness, notification.Args),
                 NotificationType.SpectrumBacklightOff => string.Format(Resource.Notification_SpectrumKeyboardBacklight_Backlight, notification.Args),
                 NotificationType.SpectrumBacklightPresetChanged => string.Format(Resource.Notification_SpectrumKeyboardBacklight_Profile, notification.Args),

@@ -1,4 +1,4 @@
-﻿
+
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable StringLiteralTypo

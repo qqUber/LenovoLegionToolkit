@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -65,6 +65,10 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public int SlideshowIntervalSeconds { get; set; } = 30;
         public bool SlideshowShuffle { get; set; }
         public string? SelectedPreset { get; set; }
+        
+        // Keyboard backlight timeout
+        public bool KeyboardBacklightTimeoutEnabled { get; set; }
+        public int KeyboardBacklightTimeoutSeconds { get; set; } = 30;
     }
 
     public ApplicationSettings() : base("settings.json")

@@ -37,7 +37,7 @@ public static class SnackbarHelper
         snackBar.Show();
     }
 
-    private static void SetupSnackbarAppearance(Wpf.Ui.Controls.Snackbar snackBar, string title, string? message, SnackbarType type)
+    private static void SetupSnackbarAppearance(Compat.Snackbar snackBar, string title, string? message, SnackbarType type)
     {
         snackBar.Appearance = type switch
         {
@@ -47,10 +47,10 @@ public static class SnackbarHelper
         };
         snackBar.Icon = type switch
         {
-            SnackbarType.Warning => SymbolRegular.Warning24.ToIconElement(),
-            SnackbarType.Error => SymbolRegular.ErrorCircle24.ToIconElement(),
-            SnackbarType.Info => SymbolRegular.Info24.ToIconElement(),
-            _ => SymbolRegular.Checkmark24.ToIconElement()
+            SnackbarType.Warning => SymbolRegular.Warning24,
+            SnackbarType.Error => SymbolRegular.ErrorCircle24,
+            SnackbarType.Info => SymbolRegular.Info24,
+            _ => SymbolRegular.Checkmark24
         };
         snackBar.Timeout = type switch
         {
