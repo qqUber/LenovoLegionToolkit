@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using LenovoLegionToolkit.Lib.Controllers;
 using LenovoLegionToolkit.Lib.Controllers.GodMode;
@@ -15,16 +16,22 @@ public class PowerModeListener(
     WindowsPowerPlanController windowsPowerPlanController)
     : AbstractWMIListener<PowerModeListener.ChangedEventArgs, PowerModeState, int>(WMI.LenovoGameZoneSmartFanModeEvent.Listen), INotifyingListener<PowerModeListener.ChangedEventArgs, PowerModeState>
 {
+    // Map power mode states to notification types
+    private static readonly Dictionary<PowerModeState, NotificationType> NotificationTypeMap = new()
+    {
+        [PowerModeState.Quiet] = NotificationType.PowerModeQuiet,
+        [PowerModeState.Balance] = NotificationType.PowerModeBalance,
+        [PowerModeState.Performance] = NotificationType.PowerModePerformance,
+        [PowerModeState.Extreme] = NotificationType.PowerModeExtreme,
+        [PowerModeState.GodMode] = NotificationType.PowerModeGodMode
+    };
+
     public class ChangedEventArgs(PowerModeState state) : EventArgs
     {
         public PowerModeState State { get; } = state;
     }
 
-    protected override PowerModeState GetValue(int value)
-    {
-        var result = (PowerModeState)(value - 1);
-        return result;
-    }
+    protected override PowerModeState GetValue(int value) => (PowerModeState)(value - 1);
 
     protected override ChangedEventArgs GetEventArgs(PowerModeState value) => new(value);
 
@@ -45,29 +52,18 @@ public class PowerModeListener(
         if (value is PowerModeState.GodMode)
             await godModeController.ApplyStateAsync().ConfigureAwait(false);
 
-        await windowsPowerModeController.SetPowerModeAsync(value).ConfigureAwait(false);
-        await windowsPowerPlanController.SetPowerPlanAsync(value).ConfigureAwait(false);
+        // Run power mode and plan updates in parallel for faster response
+        await Task.WhenAll(
+            windowsPowerModeController.SetPowerModeAsync(value),
+            windowsPowerPlanController.SetPowerPlanAsync(value)
+        ).ConfigureAwait(false);
     }
 
     private static void PublishNotification(PowerModeState value)
     {
-        switch (value)
+        if (NotificationTypeMap.TryGetValue(value, out var notificationType))
         {
-            case PowerModeState.Quiet:
-                MessagingCenter.Publish(new NotificationMessage(NotificationType.PowerModeQuiet, value.GetDisplayName()));
-                break;
-            case PowerModeState.Balance:
-                MessagingCenter.Publish(new NotificationMessage(NotificationType.PowerModeBalance, value.GetDisplayName()));
-                break;
-            case PowerModeState.Performance:
-                MessagingCenter.Publish(new NotificationMessage(NotificationType.PowerModePerformance, value.GetDisplayName()));
-                break;
-            case PowerModeState.Extreme:
-                MessagingCenter.Publish(new NotificationMessage(NotificationType.PowerModeExtreme, value.GetDisplayName()));
-                break;
-            case PowerModeState.GodMode:
-                MessagingCenter.Publish(new NotificationMessage(NotificationType.PowerModeGodMode, value.GetDisplayName()));
-                break;
+            MessagingCenter.Publish(new NotificationMessage(notificationType, value.GetDisplayName()));
         }
     }
 }

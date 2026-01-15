@@ -37,7 +37,7 @@ public partial class WindowsPowerModeController(ApplicationSettings settings, IM
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Activating... [powerModeState={powerModeState}]");
 
-        var powerMode = settings.Store.PowerModes.GetValueOrDefault(powerModeState, WindowsPowerMode.Balanced);
+        var powerMode = settings.Store.PowerModes.GetValueOrDefault(powerModeState, GetDefaultWindowsPowerMode(powerModeState));
         var powerModeGuid = GuidForWindowsPowerMode(powerMode);
 
         if (Power.IsBatterySaverEnabled())
@@ -128,6 +128,15 @@ public partial class WindowsPowerModeController(ApplicationSettings settings, IM
         WindowsPowerMode.BestPowerEfficiency => BestPowerEfficiency,
         WindowsPowerMode.BestPerformance => BestPerformance,
         _ => Guid.Empty
+    };
+
+    private static WindowsPowerMode GetDefaultWindowsPowerMode(PowerModeState powerModeState) => powerModeState switch
+    {
+        PowerModeState.Quiet => WindowsPowerMode.BestPowerEfficiency,
+        PowerModeState.Performance => WindowsPowerMode.BestPerformance,
+        PowerModeState.Extreme => WindowsPowerMode.BestPerformance,
+        PowerModeState.GodMode => WindowsPowerMode.BestPerformance,
+        _ => WindowsPowerMode.Balanced // Balance and any others default to Balanced
     };
 
     private static unsafe void ActivateDefaultPowerPlanIfNeeded()

@@ -260,21 +260,21 @@ public class TrayHelper : IDisposable
         }, token);
     }
 
+    private static string GetPowerModeDisplayText(PowerModeState mode) => mode switch
+    {
+        PowerModeState.Quiet => "Quiet",
+        PowerModeState.Balance => "Balanced",
+        PowerModeState.Performance => "Performance",
+        PowerModeState.GodMode => "Custom",
+        _ => "Unknown"
+    };
+
     private void UpdateTooltip()
     {
         if (_notifyIcon is null)
             return;
 
-        var powerModeText = _currentPowerMode switch
-        {
-            PowerModeState.Quiet => "Quiet",
-            PowerModeState.Balance => "Balanced",
-            PowerModeState.Performance => "Performance",
-            PowerModeState.GodMode => "Custom",
-            _ => "Unknown"
-        };
-
-        _notifyIcon.Text = $"{Resource.AppName}\n⚡ {powerModeText}";
+        _notifyIcon.Text = $"{Resource.AppName}\n⚡ {GetPowerModeDisplayText(_currentPowerMode)}";
     }
 
     private async Task UpdateTooltipWithTempsAsync()
@@ -284,14 +284,7 @@ public class TrayHelper : IDisposable
 
         try
         {
-            var powerModeText = _currentPowerMode switch
-            {
-                PowerModeState.Quiet => "Quiet",
-                PowerModeState.Balance => "Balanced",
-                PowerModeState.Performance => "Performance",
-                PowerModeState.GodMode => "Custom",
-                _ => "Unknown"
-            };
+            var powerModeText = GetPowerModeDisplayText(_currentPowerMode);
 
             var sensorData = await _sensorsController.GetDataAsync();
             var cpuTemp = sensorData.CPU.Temperature;

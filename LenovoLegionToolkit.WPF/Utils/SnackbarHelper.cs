@@ -11,30 +11,33 @@ namespace LenovoLegionToolkit.WPF.Utils;
 
 public static class SnackbarHelper
 {
+    private static Compat.Snackbar? GetSnackbar() =>
+        (Application.Current.MainWindow as MainWindow)?.Snackbar;
+
     public static async Task ShowAsync(string title, string? message = null, SnackbarType type = SnackbarType.Success)
     {
-        var mainWindow = Application.Current.MainWindow as MainWindow;
-        var snackBar = mainWindow?.Snackbar;
-
+        var snackBar = GetSnackbar();
         if (snackBar is null)
             return;
 
-        SetupSnackbarAppearance(snackBar, title, message, type);
-        SetTitleAndMessage(snackBar, title, message);
+        ConfigureAndShow(snackBar, title, message, type);
         await snackBar.ShowAsync();
     }
 
     public static void Show(string title, string? message = null, SnackbarType type = SnackbarType.Success)
     {
-        var mainWindow = Application.Current.MainWindow as MainWindow;
-        var snackBar = mainWindow?.Snackbar;
-
+        var snackBar = GetSnackbar();
         if (snackBar is null)
             return;
 
+        ConfigureAndShow(snackBar, title, message, type);
+        snackBar.Show();
+    }
+
+    private static void ConfigureAndShow(Compat.Snackbar snackBar, string title, string? message, SnackbarType type)
+    {
         SetupSnackbarAppearance(snackBar, title, message, type);
         SetTitleAndMessage(snackBar, title, message);
-        snackBar.Show();
     }
 
     private static void SetupSnackbarAppearance(Compat.Snackbar snackBar, string title, string? message, SnackbarType type)
@@ -54,8 +57,8 @@ public static class SnackbarHelper
         };
         snackBar.Timeout = type switch
         {
-            SnackbarType.Success => TimeSpan.FromMilliseconds(2000),
-            _ => TimeSpan.FromMilliseconds(Math.Clamp(GetTextLengthInMilliseconds(title, message), 5000, 10000))
+            SnackbarType.Success => TimeSpan.FromSeconds(2),
+            _ => TimeSpan.FromSeconds(Math.Clamp(GetTimeoutSeconds(title, message), 5, 10))
         };
     }
 
@@ -71,9 +74,10 @@ public static class SnackbarHelper
         }
     }
 
-    private static int GetTextLengthInMilliseconds(string title, string? message)
+    private static int GetTimeoutSeconds(string title, string? message)
     {
-        var length = 2 + (title.Length + (message?.Length ?? 0)) % 10;
-        return length * 1000;
+        // Base 2 seconds + 1 second per 10 characters
+        var charCount = title.Length + (message?.Length ?? 0);
+        return 2 + charCount / 10;
     }
 }
