@@ -145,7 +145,7 @@
                         Appearance="Primary"
                         Click="DownloadButton_Click"
                         ToolTip="{x:Static resources:Resource.PackageControl_Download}">
-                        <wpfui:SymbolIcon Symbol="ArrowDownload24" />
+                        <wpfui:SymbolIcon Symbol="ArrowCircleDown24" />
                     </wpfui:Button>
 
                 </StackPanel>

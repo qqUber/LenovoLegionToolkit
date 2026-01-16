@@ -137,7 +137,8 @@ public partial class UpdateWindow : IProgress<float>
             _cancelDownloadButton.Visibility = Visibility.Visible;
             _cancelDownloadButton.IsEnabled = true;
 
-            _secondaryActions.Visibility = Visibility.Collapsed;
+            _remindLaterButton.IsEnabled = false;
+            _skipVersionButton.IsEnabled = false;
         }
         else
         {
@@ -151,7 +152,8 @@ public partial class UpdateWindow : IProgress<float>
             _cancelDownloadButton.Visibility = Visibility.Collapsed;
             _cancelDownloadButton.IsEnabled = false;
 
-            _secondaryActions.Visibility = Visibility.Visible;
+            _remindLaterButton.IsEnabled = true;
+            _skipVersionButton.IsEnabled = true;
         }
     }
 

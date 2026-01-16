@@ -6,8 +6,8 @@
 		<ApplicationIcon>Assets/icon.ico</ApplicationIcon>
 		<AssemblyName>LOQToolkit</AssemblyName>
 		<Copyright>© 2026 LOQ Toolkit</Copyright>
-		<FileVersion>1.5.0</FileVersion>
-		<Version>1.5.0</Version>
+		<FileVersion>1.5.1</FileVersion>
+		<Version>1.5.1</Version>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>

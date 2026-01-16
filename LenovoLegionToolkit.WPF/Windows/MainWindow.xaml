@@ -235,7 +235,7 @@
                         PageType="{x:Type pages:MacroPage}" />
                     <custom:NavigationItem
                         Content="{x:Static resources:Resource.MainWindow_NavigationItem_Packages}"
-                        Symbol="{x:Static wpfui:SymbolRegular.ArrowDownload24}"
+                        Symbol="{x:Static wpfui:SymbolRegular.ArrowCircleDown24}"
                         PageTag="packages"
                         PageType="{x:Type pages:PackagesPage}" />
                 </compat:NavigationStore.Items>
@@ -272,36 +272,56 @@
             <compat:Snackbar
                 x:Name="_snackbar"
                 Grid.Column="1"
-                MinWidth="300"
+                MinWidth="340"
+                MaxWidth="450"
                 HorizontalAlignment="Center"
                 Visibility="Collapsed"
                 Icon="{x:Static wpfui:SymbolRegular.Checkmark24}">
                 <Grid>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     
-                    <StackPanel Grid.Column="0" Margin="4,4,8,4" VerticalAlignment="Center">
+                    <!-- Icon container -->
+                    <Border 
+                        Grid.Column="0" 
+                        Width="36" 
+                        Height="36" 
+                        Margin="4,4,12,4"
+                        CornerRadius="8"
+                        VerticalAlignment="Center"
+                        Background="{DynamicResource AccentFillColorDefaultBrush}">
+                        <wpfui:SymbolIcon 
+                            x:Name="_snackbarIcon"
+                            Symbol="Checkmark24" 
+                            FontSize="18"
+                            Foreground="White"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
+                    </Border>
+                    
+                    <StackPanel Grid.Column="1" Margin="0,4,8,4" VerticalAlignment="Center">
                         <!--  ReSharper disable once UnusedMember.Global  -->
                         <TextBlock
                             x:Name="_snackbarTitle"
                             VerticalAlignment="Center"
-                            FontSize="16"
-                            FontWeight="Medium"
+                            FontSize="14"
+                            FontWeight="SemiBold"
                             Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                             TextWrapping="WrapWithOverflow" />
                         <!--  ReSharper disable once UnusedMember.Global  -->
                         <TextBlock
                             x:Name="_snackbarMessage"
-                            Margin="0,6,0,0"
-                            FontSize="14"
+                            Margin="0,2,0,0"
+                            FontSize="12"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                     
                     <compat:Button
-                        Grid.Column="1"
+                        Grid.Column="2"
                         Padding="6"
                         VerticalAlignment="Center"
                         Appearance="Transparent"

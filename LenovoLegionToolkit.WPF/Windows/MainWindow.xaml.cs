@@ -336,7 +336,10 @@ public partial class MainWindow
                     switch (_updateChecker.Status)
                     {
                         case UpdateCheckStatus.Success:
-                            await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Success_Title);
+                            await SnackbarHelper.ShowAsync(
+                                Resource.MainWindow_CheckForUpdates_Success_Title,
+                                $"You're running the latest version (v{typeof(MainWindow).Assembly.GetName().Version?.ToString(3)})",
+                                SnackbarType.Success);
                             break;
                         case UpdateCheckStatus.RateLimitReached:
                             await SnackbarHelper.ShowAsync(Resource.MainWindow_CheckForUpdates_Error_Title, Resource.MainWindow_CheckForUpdates_Error_ReachedRateLimit_Message, SnackbarType.Error);

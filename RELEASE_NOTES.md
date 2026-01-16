@@ -1,4 +1,4 @@
-# Release Notes
+# Release Notes - v1.5.1
 
 ## 🐛 Bug Fixes
 
