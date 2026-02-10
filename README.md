@@ -1,5 +1,45 @@
+> [!NOTE]
+> **This is a fork of the original LenovoLegionToolkit (v2.26.1) by BartoszCichecki**
+> 
+> The original project was archived on July 24, 2025. This fork continues development with Windows 11 compatibility updates and bug fixes.
+> 
+> **Original repository:** https://github.com/BartoszCichecki/LenovoLegionToolkit
+> 
+> **Fork repository:** https://github.com/varun875/Varun-LLT
+
+---
+
+# LOQ Toolkit v1.6.0 (Fork)
+
+**Current Version:** 1.6.0  
+**Based on:** LenovoLegionToolkit v2.26.1
+
+## What's New in This Fork
+
+### Changes from Original v2.26.1
+
+- **.NET 9.0 Migration**: Upgraded from .NET 8.0 to .NET 9.0 for better Windows 11 compatibility
+- **Updated Dependencies**:
+  - Microsoft.Windows.CsWin32: 0.3.205
+  - LibreHardwareMonitorLib: 0.9.6-pre625
+- **Enhanced WMI Error Handling**: Improved error messages for fan control operations
+- **Diagnostics System**: Added system diagnostics window to check driver and WMI availability
+- **UI Improvements**:
+  - Added close button (X) to Custom God Mode window
+  - Enhanced logging for fan table data retrieval
+- **Windows 11 Compatibility**: Verified compatibility with Windows 11 (build 22000+)
+
+### Building the Installer
+
+To build the installer:
+1. Install [Inno Setup 6+](https://jrsoftware.org/isdl.php)
+2. Run: `iscc make_installer.iss`
+3. The installer will be created in `build_installer/` folder
+
+---
+
 > [!IMPORTANT]
-> _Archived on July 24, 2025, This project is no longer actively maintained._
+> _Original project archived on July 24, 2025. This project is no longer actively maintained by the original author._
 > 
 > Thank you to everyone who supported, used, contributed to, and shared this project. It's been an amazing journey watching it grow among Legion users.
 > 

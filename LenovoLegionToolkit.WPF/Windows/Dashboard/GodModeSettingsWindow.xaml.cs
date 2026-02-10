@@ -497,6 +497,11 @@ public partial class GodModeSettingsWindow
         await RefreshAsync();
     }
 
+    private void CloseButton_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
+
     private void CpuLongTermPowerLimitSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
         if (_isRefreshing)

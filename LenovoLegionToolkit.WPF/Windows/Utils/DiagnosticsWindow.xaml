@@ -1,0 +1,217 @@
+<local:BaseWindow
+    x:Class="LenovoLegionToolkit.WPF.Windows.Utils.DiagnosticsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:LenovoLegionToolkit.WPF.Controls"
+    xmlns:custom="clr-namespace:LenovoLegionToolkit.WPF.Controls.Custom"
+    xmlns:local="clr-namespace:LenovoLegionToolkit.WPF.Windows"
+    xmlns:resources="clr-namespace:LenovoLegionToolkit.WPF.Resources"
+    xmlns:utils="clr-namespace:LenovoLegionToolkit.WPF.Utils"
+    xmlns:compat="clr-namespace:LenovoLegionToolkit.WPF.Compat"
+    xmlns:wpfui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="System Diagnostics"
+    Width="600"
+    ExtendsContentIntoTitleBar="True"
+    FlowDirection="{x:Static utils:LocalizationHelper.Direction}"
+    Loaded="DiagnosticsWindow_Loaded"
+    ResizeMode="CanMinimize"
+    ShowInTaskbar="False"
+    SizeToContent="Height"
+    WindowStartupLocation="CenterOwner">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <compat:TitleBar
+            Grid.Row="0"
+            CanMaximize="false"
+            ShowMaximize="false"
+            ShowMinimize="false"
+            UseSnapLayout="false" />
+
+        <Grid
+            Grid.Row="0"
+            Height="32"
+            Margin="12,8,12,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                Grid.Column="0"
+                VerticalAlignment="Center"
+                FontSize="12"
+                IsHitTestVisible="False"
+                Text="System Diagnostics" />
+
+            <!-- Close Button -->
+            <Button
+                Grid.Column="1"
+                Width="32"
+                Height="32"
+                Background="Transparent"
+                BorderThickness="0"
+                Click="CloseButton_Click"
+                Cursor="Hand"
+                ToolTip="Close">
+                <TextBlock FontSize="14" Text="✕" />
+            </Button>
+
+        </Grid>
+
+        <wpfui:DynamicScrollViewer Grid.Row="1">
+            <StackPanel Margin="16,0,16,12">
+
+                <TextBlock
+                    Margin="0,16,0,24"
+                    Focusable="True"
+                    FontSize="24"
+                    FontWeight="Medium"
+                    Text="System Information" />
+
+                <!-- Windows Info Section -->
+                <TextBlock
+                    FontSize="16"
+                    FontWeight="Medium"
+                    Text="Windows" />
+
+                <custom:CardControl Margin="0,0,0,8">
+                    <custom:CardControl.Header>
+                        <controls:CardHeaderControl Title="Version" />
+                    </custom:CardControl.Header>
+                    <TextBlock x:Name="_windowsVersionLabel" Focusable="True" Text="-" />
+                </custom:CardControl>
+
+                <custom:CardControl Margin="0,0,0,8">
+                    <custom:CardControl.Header>
+                        <controls:CardHeaderControl Title="Windows 11" />
+                    </custom:CardControl.Header>
+                    <TextBlock x:Name="_windows11Label" Focusable="True" Text="-" />
+                </custom:CardControl>
+
+                <!-- System Requirements -->
+                <TextBlock
+                    Margin="0,16,0,8"
+                    FontSize="16"
+                    FontWeight="Medium"
+                    Text="System Requirements" />
+
+                <custom:CardControl Margin="0,0,0,8">
+                    <custom:CardControl.Header>
+                        <controls:CardHeaderControl Title="Secure Boot" />
+                    </custom:CardControl.Header>
+                    <TextBlock x:Name="_secureBootLabel" Focusable="True" Text="-" />
+                </custom:CardControl>
+
+                <custom:CardControl Margin="0,0,0,8">
+                    <custom:CardControl.Header>
+                        <controls:CardHeaderControl Title="TPM 2.0" />
+                    </custom:CardControl.Header>
+                    <TextBlock x:Name="_tpmLabel" Focusable="True" Text="-" />
+                </custom:CardControl>
+
+                <custom:CardControl Margin="0,0,0,8">
+                    <custom:CardControl.Header>
+                        <controls:CardHeaderControl Title="Administrator Rights" />
+                    </custom:CardControl.Header>
+                    <TextBlock x:Name="_adminLabel" Focusable="True" Text="-" />
+                </custom:CardControl>
+
+                <!-- Drivers Section -->
+                <TextBlock
+                    Margin="0,16,0,8"
+                    FontSize="16"
+                    FontWeight="Medium"
+                    Text="Drivers" />
+
+                <custom:CardControl Margin="0,0,0,8">
+                    <custom:CardControl.Header>
+                        <controls:CardHeaderControl Title="WMI Available" />
+                    </custom:CardControl.Header>
+                    <TextBlock x:Name="_wmiLabel" Focusable="True" Text="-" />
+                </custom:CardControl>
+
+                <custom:CardControl Margin="0,0,0,8">
+                    <custom:CardControl.Header>
+                        <controls:CardHeaderControl Title="Fan Table Data" />
+                    </custom:CardControl.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock x:Name="_fanTableDataLabel" Focusable="True" Text="-" Margin="0,0,8,0" />
+                        <TextBlock x:Name="_fanTableDataCountLabel" Focusable="True" FontSize="12" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    </StackPanel>
+                </custom:CardControl>
+
+                <custom:CardControl Margin="0,0,0,8">
+                    <custom:CardControl.Header>
+                        <controls:CardHeaderControl Title="Fan Control Method" />
+                    </custom:CardControl.Header>
+                    <TextBlock x:Name="_fanMethodLabel" Focusable="True" Text="-" />
+                </custom:CardControl>
+
+                <custom:CardControl Margin="0,0,0,8">
+                    <custom:CardControl.Header>
+                        <controls:CardHeaderControl Title="Energy Management Driver" />
+                    </custom:CardControl.Header>
+                    <TextBlock x:Name="_energyManagementLabel" Focusable="True" Text="-" />
+                </custom:CardControl>
+
+                <custom:CardControl Margin="0,0,0,8">
+                    <custom:CardControl.Header>
+                        <controls:CardHeaderControl Title="Gaming Feature Driver" />
+                    </custom:CardControl.Header>
+                    <TextBlock x:Name="_gamingFeatureLabel" Focusable="True" Text="-" />
+                </custom:CardControl>
+
+                <!-- Conflicting Processes -->
+                <TextBlock
+                    Margin="0,16,0,8"
+                    FontSize="16"
+                    FontWeight="Medium"
+                    Text="Conflicting Processes" />
+
+                <custom:CardControl Margin="0,0,0,8">
+                    <custom:CardControl.Header>
+                        <controls:CardHeaderControl Title="Lenovo Vantage" />
+                    </custom:CardControl.Header>
+                    <TextBlock x:Name="_vantageLabel" Focusable="True" Text="-" />
+                </custom:CardControl>
+
+                <custom:CardControl Margin="0,0,0,8">
+                    <custom:CardControl.Header>
+                        <controls:CardHeaderControl Title="Legion Zone" />
+                    </custom:CardControl.Header>
+                    <TextBlock x:Name="_legionZoneLabel" Focusable="True" Text="-" />
+                </custom:CardControl>
+
+                <!-- Recommendations -->
+                <TextBlock
+                    Margin="0,16,0,8"
+                    FontSize="16"
+                    FontWeight="Medium"
+                    Text="Recommendations" />
+
+                <ItemsControl x:Name="_recommendationsItemsControl">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock
+                                Margin="0,4,0,4"
+                                Text="{Binding}" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+            </StackPanel>
+        </wpfui:DynamicScrollViewer>
+
+        <compat:Snackbar
+            x:Name="_snackBar"
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            CloseButtonEnabled="False"
+            Timeout="1000" />
+    </Grid>
+</local:BaseWindow>

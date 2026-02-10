@@ -1,3 +1,117 @@
+# Release Notes - v1.6.0
+
+## 🚀 New Features
+
+### Added: System Diagnostics Window
+- New diagnostics window to check system compatibility
+- Displays Windows version information
+- Shows WMI interface availability for fan control
+- Checks driver installation status
+- Identifies conflicting processes (Vantage, Legion Zone, Hotkeys)
+- Verifies administrator rights
+
+### Added: Close Button to Custom Mode Window
+- Added X (close) button to Custom God Mode window header
+- Allows users to close the window without saving changes
+- Improved UX consistency with other windows
+
+---
+
+## 🔄 Updates
+
+### .NET Framework Migration
+- **Upgraded from .NET 8.0 to .NET 9.0**
+- Better Windows 11 compatibility
+- Improved performance and security
+
+### Dependency Updates
+- **Microsoft.Windows.CsWin32**: 0.3.183 → 0.3.205
+- **LibreHardwareMonitorLib**: 0.9.5 → 0.9.6-pre625
+
+---
+
+## 🐛 Bug Fixes
+
+### Enhanced WMI Error Handling
+- Improved error messages for fan control operations
+- Better exception handling in `WMI.LenovoFanMethod.cs`
+- Added detailed logging for fan table data retrieval
+- Added `ExistsAsync()` method for WMI availability checking
+
+### Fixed: Fan Table Data Logging
+- Added trace logging for raw fan table data
+- Improved debugging capabilities for fan curve issues
+
+---
+
+## 📁 Files Changed
+
+| File | Type | Description |
+|------|------|-------------|
+| `DriverDiagnostics.cs` | New | System diagnostics utility |
+| `Windows11Compatibility.cs` | New | Windows 11 detection utilities |
+| `DiagnosticsWindow.xaml` | New | Diagnostics UI |
+| `DiagnosticsWindow.xaml.cs` | New | Diagnostics code-behind |
+| `GodModeSettingsWindow.xaml` | Feature | Added close button |
+| `GodModeSettingsWindow.xaml.cs` | Feature | Close button handler |
+| `WMI.LenovoFanMethod.cs` | Bug Fix | Enhanced error handling |
+| `GodModeControllerV2.cs` | Bug Fix | Added fan table logging |
+| `LenovoLegionToolkit.Lib.csproj` | Update | NuGet package updates |
+| `LenovoLegionToolkit.WPF.csproj` | Update | .NET 9.0 migration |
+| `make_installer.iss` | Update | Version 1.6.0 |
+
+---
+
+## 🔍 Technical Details
+
+### WMI Error Handling Enhancement
+```csharp
+try
+{
+    // Fan operation
+    await method.InvokeAsync(...);
+}
+catch (ManagementException ex)
+{
+    if (Log.Instance.IsTraceEnabled)
+        Log.Instance.Trace($"Fan operation failed: {ex.ErrorCode} - {ex.Message}");
+    throw new InvalidOperationException($"Fan control error: {ex.Message}", ex);
+}
+```
+
+### Diagnostics System
+```csharp
+public class DriverDiagnostics
+{
+    public bool WmiAvailable { get; set; }
+    public bool DriversInstalled { get; set; }
+    public bool FanTableDataAvailable { get; set; }
+    public bool FanMethodAvailable { get; set; }
+    public List<string> ConflictingProcesses { get; set; }
+}
+```
+
+---
+
+## ✅ Build Status
+
+- **Version**: 1.6.0
+- **Errors**: 0
+- **Warnings**: 0
+- **.NET**: 9.0
+- **Installer**: `build_installer/LOQToolkitSetup_v1.6.0.exe`
+
+---
+
+## 📝 Migration Notes
+
+This version is based on **LenovoLegionToolkit v2.26.1** by BartoszCichecki.
+
+**Original repository**: https://github.com/BartoszCichecki/LenovoLegionToolkit  
+**Fork repository**: https://github.com/varun875/Varun-LLT
+
+---
+
 # Release Notes - v1.5.1
 
 ## 🐛 Bug Fixes

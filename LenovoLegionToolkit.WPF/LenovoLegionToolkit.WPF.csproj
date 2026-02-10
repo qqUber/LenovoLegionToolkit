@@ -78,7 +78,7 @@
 	<ItemGroup>
 		<PackageReference Include="Autofac" Version="9.0.0" />
 		<PackageReference Include="Humanizer" Version="3.0.1" />
-		<PackageReference Include="LibreHardwareMonitorLib" Version="0.9.5" />
+		<PackageReference Include="LibreHardwareMonitorLib" Version="0.9.6-pre625" />
 		<PackageReference Include="Markdig" Version="0.44.0" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 		<PackageReference Include="PixiEditor.ColorPicker" Version="3.4.2.2" />

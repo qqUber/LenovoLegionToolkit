@@ -402,9 +402,17 @@ public class GodModeControllerV2(
             Log.Instance.Trace($"Reading fan table data...");
 
         var data = await WMI.LenovoFanTableData.ReadAsync().ConfigureAwait(false);
+        var dataArray = data as (int mode, byte fanId, byte sensorId, ushort[] fanTableData, ushort[] sensorTableData)[] ?? data.ToArray();
 
-        var fanTableData = data
-            .Where(d => d.mode == (int)powerModeState + 1)
+        // Log all raw data for debugging
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Raw fan table data count: {dataArray.Length}, data: {string.Join(", ", dataArray.Select(d => $"(mode={d.mode}, fanId={d.fanId}, sensorId={d.sensorId}, fanTableLen={d.fanTableData.Length}, sensorTableLen={d.sensorTableData.Length})"))}");
+
+        var filteredData = dataArray.Where(d => d.mode == (int)powerModeState + 1).ToArray();
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Filtered fan table data (mode={(int)powerModeState + 1}): {filteredData.Length} entries");
+
+        var fanTableData = filteredData
             .Select(d =>
             {
                 var type = (d.fanId, d.sensorId) switch
@@ -424,24 +432,21 @@ public class GodModeControllerV2(
         if (fanTableData.Length != length)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Bad fan table length: {string.Join(", ", fanTableData)}");
-
+                Log.Instance.Trace($"Bad fan table length: {fanTableData.Length} total, {length} known types. Unknown types: {string.Join(", ", fanTableData.Where(ftd => ftd.Type == FanTableType.Unknown).Select(ftd => $"(fanId={ftd.FanId}, sensorId={ftd.SensorId})"))}");
             return null;
         }
 
         if (fanTableData.Count(ftd => ftd.FanSpeeds.Length == 10) != length)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Bad fan table fan speeds length: {string.Join(", ", fanTableData)}");
-
+                Log.Instance.Trace($"Bad fan table fan speeds length. Expected 10, got: {string.Join(", ", fanTableData.Select(ftd => $"(type={ftd.Type}, len={ftd.FanSpeeds.Length})"))}");
             return null;
         }
 
         if (fanTableData.Count(ftd => ftd.Temps.Length == 10) != length)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Bad fan table temps length: {string.Join(", ", fanTableData)}");
-
+                Log.Instance.Trace($"Bad fan table temps length. Expected 10, got: {string.Join(", ", fanTableData.Select(ftd => $"(type={ftd.Type}, len={ftd.Temps.Length})"))}");
             return null;
         }
 

@@ -49,6 +49,37 @@
                 IsHitTestVisible="False"
                 Text="{x:Static resources:Resource.GodModeSettingsWindow_Title}" />
 
+            <Button
+                x:Name="_closeButton"
+                Grid.Column="1"
+                Width="32"
+                Height="24"
+                Click="CloseButton_Click"
+                WindowChrome.IsHitTestVisibleInChrome="True"
+                ToolTip="Close">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border x:Name="bg" Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="bg" Property="Background" Value="#20FFFFFF" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+                <wpfui:SymbolIcon Symbol="Dismiss24" Foreground="{DynamicResource TextFillColorPrimaryBrush}" FontSize="12" />
+            </Button>
+
         </Grid>
 
         <controls:LoadableControl
