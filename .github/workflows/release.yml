@@ -3,32 +3,88 @@ name: Release
 on:
   push:
     tags:
-      - "[0-9]*.[0-9]*.[0-9]*"
+      - "v*"
+
+permissions:
+  contents: write
 
 jobs:
   build:
-
     runs-on: windows-2022
 
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 8.0.x
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
     - name: Restore
       run: dotnet restore
+
     - name: Build
       run: .\make.bat ${{ github.ref_name }}
-    - name: Release
-      uses: softprops/action-gh-release@v0.1.13
+
+    - name: Get installer filename
+      id: installer
+      run: |
+        $installer = Get-ChildItem -Path build_installer -Filter "*.exe" | Select-Object -First 1
+        echo "filename=$($installer.Name)" >> $env:GITHUB_OUTPUT
+        echo "filepath=$($installer.FullName)" >> $env:GITHUB_OUTPUT
+
+    - name: Generate release notes
+      id: release_notes
+      run: |
+        if (Test-Path "RELEASE_NOTES.md") {
+          $content = Get-Content "RELEASE_NOTES.md" -Raw
+          # Extract content for current version
+          $version = "${{ github.ref_name }}" -replace "v", ""
+          $pattern = "# Release Notes - $version([\s\S]*?)(?=# Release Notes|$)"
+          if ($content -match $pattern) {
+            $notes = $matches[1].Trim()
+            $notes = $notes -replace "^# Release Notes - $version\s*", ""
+            echo "notes<<EOF" >> $env:GITHUB_OUTPUT
+            echo $notes >> $env:GITHUB_OUTPUT
+            echo "EOF" >> $env:GITHUB_OUTPUT
+          } else {
+            echo "notes=Release ${{ github.ref_name }}" >> $env:GITHUB_OUTPUT
+          }
+        } else {
+          echo "notes=Release ${{ github.ref_name }}" >> $env:GITHUB_OUTPUT
+        }
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
       with:
-        draft: true
-        files: build_installer/LenovoLegionToolkitSetup.exe
+        name: ${{ github.ref_name }}
+        body: ${{ steps.release_notes.outputs.notes }}
+        draft: false
+        prerelease: false
+        files: ${{ steps.installer.outputs.filepath }}
         fail_on_unmatched_files: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: installer
-        path: build_installer/LenovoLegionToolkitSetup.exe
+        name: installer-${{ github.ref_name }}
+        path: ${{ steps.installer.outputs.filepath }}
+        retention-days: 90
+
+    - name: Display release info
+      run: |
+        Write-Host "Release ${{ github.ref_name }} created successfully!"
+        Write-Host "Installer: ${{ steps.installer.outputs.filename }}"

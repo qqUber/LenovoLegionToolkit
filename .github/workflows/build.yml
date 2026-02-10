@@ -8,22 +8,48 @@ on:
 
 jobs:
   build:
-
     runs-on: windows-2022
 
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 8.0.x
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-
+
     - name: Restore
       run: dotnet restore
+
     - name: Build
       run: .\make.bat
+
+    - name: Get installer filename
+      id: installer
+      run: |
+        $installer = Get-ChildItem -Path build_installer -Filter "*.exe" | Select-Object -First 1
+        echo "filename=$($installer.Name)" >> $env:GITHUB_OUTPUT
+        echo "filepath=$($installer.FullName)" >> $env:GITHUB_OUTPUT
+
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: installer
-        path: build_installer\LenovoLegionToolkitSetup.exe
+        path: ${{ steps.installer.outputs.filepath }}
+        retention-days: 30
+
+    - name: Display build info
+      run: |
+        Write-Host "Build completed successfully!"
+        Write-Host "Installer: ${{ steps.installer.outputs.filename }}"
