@@ -4,7 +4,7 @@ on:
   push:
     branches: [ '**' ]
   pull_request:
-    branches: [ master ]
+    branches: [ "master" ]
   schedule:
     # Run CodeQL analysis weekly on Sundays at 10:00 UTC
     - cron: '0 10 * * 0'
