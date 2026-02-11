@@ -391,6 +391,12 @@ FodyWeavers.xsd
 .idea/
 *.sln.iml
 
+# Project-specific markdown files (keep only essential ones)
+*.md
+!README.md
+!RELEASE_NOTES.md
+!CONTRIBUTING*.md
+
 ### DotnetCore ###
 # .NET Core build folders
 bin/
