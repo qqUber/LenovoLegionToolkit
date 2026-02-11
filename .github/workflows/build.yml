@@ -1,8 +1,6 @@
 name: Build
 
 on:
-  push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
 
@@ -42,7 +40,8 @@ jobs:
         echo "filename=$($installer.Name)" >> $env:GITHUB_OUTPUT
         echo "filepath=$($installer.FullName)" >> $env:GITHUB_OUTPUT
 
-    - name: Upload artifact
+    - name: Upload artifact (PR to master only)
+      if: github.event_name == 'pull_request' && github.base_ref == 'master'
       uses: actions/upload-artifact@v4
       with:
         name: installer
