@@ -1,0 +1,44 @@
+version: 2
+updates:
+  # NuGet dependencies
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Europe/Budapest"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "qqUber"
+    assignees:
+      - "qqUber"
+    labels:
+      - "dependencies"
+      - "nuget"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    # Allow both production and development dependencies
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+    # Ignore specific versions if needed
+    ignore:
+      # Example: ignore updates for specific packages
+      # - dependency-name: "Microsoft.Windows.CsWin32"
+      #   versions: ["0.3.200"]
+    # Group updates for better review
+    groups:
+      # Group all Microsoft packages together
+      microsoft-packages:
+        patterns:
+          - "Microsoft.*"
+      # Group all WPF UI packages together
+      wpf-packages:
+        patterns:
+          - "WpfUi.*"
+      # Group all Autofac packages together
+      autofac-packages:
+        patterns:
+          - "Autofac.*"
